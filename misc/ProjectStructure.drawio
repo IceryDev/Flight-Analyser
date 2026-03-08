@@ -1,0 +1,188 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36" version="29.3.7">
+  <diagram name="Page-1" id="5f0bae14-7c28-e335-631c-24af17079c00">
+    <mxGraphModel dx="2224" dy="1222" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" background="none" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-11" parent="1" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Initial View&lt;/h1&gt;&lt;p&gt;This part covers the properties when the program starts.&lt;/p&gt;" vertex="1">
+          <mxGeometry height="120" width="180" x="167" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-21" parent="1" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;User Query (UQ)&lt;/h1&gt;&lt;p&gt;This part covers the functionality when the user uses a specific search.&lt;/p&gt;" vertex="1">
+          <mxGeometry height="120" width="180" x="167" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-93" edge="1" parent="1" source="dROTMM4a6xVZBx7_3YGa-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="dROTMM4a6xVZBx7_3YGa-48">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-23" parent="1" style="swimlane;whiteSpace=wrap;html=1;" value="Main View" vertex="1">
+          <mxGeometry height="290" width="420" x="387" y="40" as="geometry">
+            <mxRectangle height="30" width="110" x="220" y="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-24" parent="dROTMM4a6xVZBx7_3YGa-23" style="rounded=0;whiteSpace=wrap;html=1;" value="Title &amp;amp; Branding" vertex="1">
+          <mxGeometry height="40" width="100" x="10" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-28" parent="dROTMM4a6xVZBx7_3YGa-23" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=10;" value="Cache" vertex="1">
+          <mxGeometry height="30" width="140" x="10" y="210" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-29" parent="dROTMM4a6xVZBx7_3YGa-23" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="&lt;div style=&quot;text-align: justify;&quot;&gt;&lt;span style=&quot;font-size: 10px; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;- Cache some data for search autocomplete features.&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="140" x="10" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-30" parent="dROTMM4a6xVZBx7_3YGa-23" style="rounded=0;whiteSpace=wrap;html=1;" value="Search Bar" vertex="1">
+          <mxGeometry height="40" width="100" x="10" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-31" parent="dROTMM4a6xVZBx7_3YGa-23" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;rounded=0;" value="&lt;div style=&quot;text-align: justify;&quot;&gt;&lt;span style=&quot;font-size: 10px; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;- More properties to come&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="100" x="10" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-33" edge="1" parent="dROTMM4a6xVZBx7_3YGa-23" source="dROTMM4a6xVZBx7_3YGa-30" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="dROTMM4a6xVZBx7_3YGa-39" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="120" y="110" as="sourcePoint" />
+            <mxPoint x="130" y="110" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-39" parent="dROTMM4a6xVZBx7_3YGa-23" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;" value="Search View" vertex="1">
+          <mxGeometry height="140" width="140" x="130" y="40" as="geometry">
+            <mxRectangle height="110" width="40" x="170" y="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-40" parent="dROTMM4a6xVZBx7_3YGa-39" style="rounded=0;whiteSpace=wrap;html=1;" value="Query Type" vertex="1">
+          <mxGeometry height="20" width="70" x="40" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-41" parent="dROTMM4a6xVZBx7_3YGa-39" style="rounded=0;whiteSpace=wrap;html=1;" value="User Input" vertex="1">
+          <mxGeometry height="20" width="70" x="40" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-42" parent="dROTMM4a6xVZBx7_3YGa-39" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="+" vertex="1">
+          <mxGeometry height="20" width="60" x="45" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-43" parent="dROTMM4a6xVZBx7_3YGa-39" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;OR&lt;/font&gt;&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="45" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-44" parent="dROTMM4a6xVZBx7_3YGa-39" style="rounded=0;whiteSpace=wrap;html=1;" value="Dynamic Input" vertex="1">
+          <mxGeometry height="30" width="70" x="40" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-46" edge="1" parent="dROTMM4a6xVZBx7_3YGa-23" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;endSize=8;curved=0;rounded=0;" value="to: UQ">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="270" y="179.38" as="sourcePoint" />
+            <mxPoint x="310" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-105" edge="1" parent="1" source="dROTMM4a6xVZBx7_3YGa-48" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="dROTMM4a6xVZBx7_3YGa-94">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-48" parent="1" style="swimlane;whiteSpace=wrap;html=1;startSize=20;" value="Query Functions" vertex="1">
+          <mxGeometry height="220" width="420" x="387" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-49" parent="dROTMM4a6xVZBx7_3YGa-48" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=10;" value="SQL Database" vertex="1">
+          <mxGeometry height="30" width="120" x="150" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-50" parent="dROTMM4a6xVZBx7_3YGa-48" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=10;" value="On-Memory Sort/Search" vertex="1">
+          <mxGeometry height="30" width="120" x="10" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-51" parent="dROTMM4a6xVZBx7_3YGa-48" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;fixedSize=1;size=10;" value="Hybrid" vertex="1">
+          <mxGeometry height="30" width="120" x="290" y="100" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-71" parent="dROTMM4a6xVZBx7_3YGa-48" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Search &amp;amp; Sort:" vertex="1">
+          <mxGeometry height="30" width="90" x="10" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-85" parent="dROTMM4a6xVZBx7_3YGa-48" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;fontSize=6;" value="&lt;div style=&quot;box-sizing: border-box; width: 100%; background: rgb(228, 228, 228); padding: 2px;&quot;&gt;Search Functions&lt;/div&gt;&lt;table style=&quot;width: 100%;&quot; cellpadding=&quot;2&quot; cellspacing=&quot;0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Mandatory&lt;/td&gt;&lt;td&gt;Airport Name&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;Mandatory&lt;/td&gt;&lt;td&gt;Date Period&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;br&gt;&lt;/td&gt;&lt;td&gt;&lt;br&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" vertex="1">
+          <mxGeometry height="50" width="140" x="110" y="25" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-86" parent="dROTMM4a6xVZBx7_3YGa-48" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;fontSize=6;" value="&lt;div style=&quot;box-sizing: border-box; width: 100%; background: rgb(228, 228, 228); padding: 2px;&quot;&gt;Sort Functions&lt;/div&gt;&lt;table style=&quot;width: 100%;&quot; cellpadding=&quot;2&quot; cellspacing=&quot;0&quot;&gt;&lt;tbody&gt;&lt;tr&gt;&lt;td&gt;Mandatory&lt;/td&gt;&lt;td&gt;Lateness&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;br&gt;&lt;/td&gt;&lt;td&gt;&lt;br&gt;&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td&gt;&lt;br&gt;&lt;/td&gt;&lt;td&gt;&lt;br&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/tbody&gt;&lt;/table&gt;" vertex="1">
+          <mxGeometry height="50" width="140" x="260" y="25" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-87" parent="dROTMM4a6xVZBx7_3YGa-48" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Options:" vertex="1">
+          <mxGeometry height="30" width="90" x="165" y="75" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-89" parent="dROTMM4a6xVZBx7_3YGa-48" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=10;" value="&lt;span style=&quot;text-align: justify;&quot;&gt;- Use data structures and store each flight within them&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;text-align: justify;&quot;&gt;- Faster but data is deleted after restart&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;text-align: justify;&quot;&gt;- A mixture of HashMaps and BSTs can be used&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="120" x="10" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-90" parent="dROTMM4a6xVZBx7_3YGa-48" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=10;" value="&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;- Use a local SQL database instead&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;- Slower but retains info after restart.&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;- No need for algorithm implementations&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="80" width="120" x="150" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-91" parent="dROTMM4a6xVZBx7_3YGa-48" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;fontSize=10;" value="&lt;div style=&quot;&quot;&gt;- Use both methods, combine them in such a way so it is the most efficient.&lt;/div&gt;" vertex="1">
+          <mxGeometry height="50" width="120" x="290" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-92" parent="1" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Search Results&lt;/h1&gt;&lt;p&gt;This part covers the properties after the user searches a flight or multiple flights.&lt;/p&gt;" vertex="1">
+          <mxGeometry height="120" width="180" x="847" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-159" edge="1" parent="1" source="dROTMM4a6xVZBx7_3YGa-94" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="dROTMM4a6xVZBx7_3YGa-137">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-94" parent="1" style="swimlane;whiteSpace=wrap;html=1;startSize=20;" value="Results View" vertex="1">
+          <mxGeometry height="220" width="420" x="1067" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-133" edge="1" parent="dROTMM4a6xVZBx7_3YGa-94" source="dROTMM4a6xVZBx7_3YGa-106" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" target="dROTMM4a6xVZBx7_3YGa-132" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-106" parent="dROTMM4a6xVZBx7_3YGa-94" style="rounded=0;whiteSpace=wrap;html=1;" value="Entry List" vertex="1">
+          <mxGeometry height="40" width="100" x="300" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-109" parent="dROTMM4a6xVZBx7_3YGa-94" style="rounded=0;whiteSpace=wrap;html=1;" value="&quot;Analyse&quot; Button" vertex="1">
+          <mxGeometry height="40" width="100" x="10" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-110" parent="dROTMM4a6xVZBx7_3YGa-94" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;" value="Analysis View" vertex="1">
+          <mxGeometry height="120" width="140" x="130" y="30" as="geometry">
+            <mxRectangle height="110" width="40" x="170" y="40" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-118" parent="dROTMM4a6xVZBx7_3YGa-110" style="rounded=0;whiteSpace=wrap;html=1;" value="Graphs &amp;amp; Charts" vertex="1">
+          <mxGeometry height="40" width="100" x="30" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-123" edge="1" parent="dROTMM4a6xVZBx7_3YGa-94" source="dROTMM4a6xVZBx7_3YGa-109" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.004;entryY=0.17;entryDx=0;entryDy=0;entryPerimeter=0;" target="dROTMM4a6xVZBx7_3YGa-110">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-134" edge="1" parent="dROTMM4a6xVZBx7_3YGa-94" source="dROTMM4a6xVZBx7_3YGa-132" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;dashed=1;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="410" y="115" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-135" connectable="0" parent="dROTMM4a6xVZBx7_3YGa-134" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;" value="to: MV" vertex="1">
+          <mxGeometry relative="1" x="0.3748" y="2" as="geometry">
+            <mxPoint x="-9" y="-8" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-132" parent="dROTMM4a6xVZBx7_3YGa-94" style="rhombus;whiteSpace=wrap;html=1;rounded=0;fontSize=9;" value="Entry" vertex="1">
+          <mxGeometry height="50" width="50" x="325" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-136" parent="1" style="text;html=1;whiteSpace=wrap;overflow=hidden;rounded=0;" value="&lt;h1 style=&quot;margin-top: 0px;&quot;&gt;Map View (MV)&lt;/h1&gt;&lt;p&gt;This part covers the functions of the map and the shown trajectory of the flight.&lt;/p&gt;" vertex="1">
+          <mxGeometry height="120" width="180" x="847" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-137" parent="1" style="swimlane;whiteSpace=wrap;html=1;startSize=20;" value="Map View" vertex="1">
+          <mxGeometry height="290" width="420" x="1067" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-148" parent="dROTMM4a6xVZBx7_3YGa-137" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="Map API" vertex="1">
+          <mxGeometry height="120" width="140" x="10" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-149" parent="dROTMM4a6xVZBx7_3YGa-148" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="JXMapViewer2" vertex="1">
+          <mxGeometry height="30" width="140" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-150" parent="dROTMM4a6xVZBx7_3YGa-148" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="OpenMap" vertex="1">
+          <mxGeometry height="30" width="140" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-151" parent="dROTMM4a6xVZBx7_3YGa-148" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="Google Maps (?)" vertex="1">
+          <mxGeometry height="30" width="140" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-152" parent="dROTMM4a6xVZBx7_3YGa-137" style="rounded=0;whiteSpace=wrap;html=1;" value="Selected flight route drawing" vertex="1">
+          <mxGeometry height="40" width="120" x="180" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-153" parent="dROTMM4a6xVZBx7_3YGa-137" style="rounded=0;whiteSpace=wrap;html=1;" value="Heatmap of the found flights (i.e. departure/arrival locations)" vertex="1">
+          <mxGeometry height="70" width="120" x="180" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-154" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;spacing=2;spacingRight=2;spacingTop=0;" value="Possible Flight APIs" vertex="1">
+          <mxGeometry height="200" width="140" x="167" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-155" parent="dROTMM4a6xVZBx7_3YGa-154" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;spacingBottom=0;" value="AeroDataBox: Limited free plan" vertex="1">
+          <mxGeometry height="40" width="140" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-156" parent="dROTMM4a6xVZBx7_3YGa-154" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="OpenSky: Free but best for live flights" vertex="1">
+          <mxGeometry height="40" width="140" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-157" parent="dROTMM4a6xVZBx7_3YGa-154" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" value="AirLabs: Limited but better free plan" vertex="1">
+          <mxGeometry height="40" width="140" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="dROTMM4a6xVZBx7_3YGa-158" parent="dROTMM4a6xVZBx7_3YGa-154" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;perimeterSpacing=0;" value="OurAirports CSV: Completely free airport location information" vertex="1">
+          <mxGeometry height="50" width="140" y="150" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
