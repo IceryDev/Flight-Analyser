@@ -16,10 +16,10 @@ public class Settings {
     public static final Font MEDIUM_FONT = loadFont("/Orbitron/Orbitron-Medium.ttf");
     public static final Font BLACK_FONT = loadFont("/Orbitron/Orbitron-Black.ttf");
 
-    public static final Color FOREGROUND = new Color(0x2e3440);
-    public static final Color BACKGROUND = new Color(0xeceff4);
-    public static final Color HIGHLIGHT = new Color(0x8fbcbb);
-    public static final Color GRAY = new Color(0xa1acbf);
+    public static final Color TEXT_COLOR = new Color(0x001917);
+    public static final Color BACKGROUND = new Color(0xeff2f1);
+    public static final Color HIGHLIGHT = new Color(0x01796f);
+    public static final Color GRAY = new Color(0xd1d1d1);
 
     private static Font loadFont(String path) {
         try {
