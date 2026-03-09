@@ -1,11 +1,16 @@
 package com.still_processing.Application;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 
-import java.awt.*;
+import java.awt.BorderLayout;
 
 import static com.still_processing.DefaultSettings.Settings.*;
 
+/**
+ * @author Jagoda Koczwara-Szuba
+ */
 public class MainWindow extends JFrame {
 
     public MainWindow() {
@@ -15,9 +20,13 @@ public class MainWindow extends JFrame {
         this.setVisible(true);
         this.getContentPane().setBackground(BACKGROUND);
 
-        this.setLayout(new FlowLayout());
+        ImageIcon image = new ImageIcon(getClass().getResource("/Images/icon.jpeg"));
+        this.setIconImage(image.getImage());
+
+        this.setLayout(new BorderLayout());
         JLabel label = new JLabel();
         label.setText("Flight Analyser");
+        label.setIcon(image);
         label.setFont(BOLD_FONT.deriveFont(50f));
         this.add(label);
     }
