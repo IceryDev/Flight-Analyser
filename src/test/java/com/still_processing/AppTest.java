@@ -1,4 +1,4 @@
-package org.example;
+package com.still_processing;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
