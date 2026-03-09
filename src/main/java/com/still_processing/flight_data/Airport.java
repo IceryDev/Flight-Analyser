@@ -10,6 +10,8 @@ public class Airport {
     String municipality;
     String iataCode;
 
+    Airport(){}
+
     Airport(long id, String name, float latitude, float longitude, String country, String region,  String municipality, String iataCode){
       this.id = id;
       this.name = name;
