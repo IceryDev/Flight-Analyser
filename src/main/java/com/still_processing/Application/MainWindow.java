@@ -11,7 +11,7 @@ import javax.swing.ImageIcon;
 import static com.still_processing.DefaultSettings.Settings.*;
 
 /**
- * @author Jagoda Koczwara-Szuba
+ * @author Jagoda Koczwara-Szuba (Zhou Sun)
  */
 public class MainWindow extends JFrame {
 
