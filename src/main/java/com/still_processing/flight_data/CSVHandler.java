@@ -43,7 +43,6 @@ public class CSVHandler {
                             tmp.name = args[i];
                             break;
                         case "latitude_deg":
-                            //System.out.println(headerArgs[i] + ":::" + args[i]);
                             tmp.latitude = Float.parseFloat(args[i]);
                             break;
                         case "longitude_deg":
@@ -80,7 +79,6 @@ public class CSVHandler {
         loadAirportCSV();
 
         for (Airport a : Database.airports.values()){
-            System.out.println(a.iataCode);
         }
     }
 }
