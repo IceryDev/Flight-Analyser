@@ -10,7 +10,6 @@ import java.util.Objects;
 
 public class CSVHandler {
 
-    static final int IATA_INDEX = 13;
     static final String CSV_DELIMITER = ",";
     static final String AIRPORT_FILE_PATH = "/airports.csv";
 
@@ -44,7 +43,6 @@ public class CSVHandler {
                             tmp.name = args[i];
                             break;
                         case "latitude_deg":
-                            System.out.println(headerArgs[i] + ":::" + args[i]);
                             tmp.latitude = Float.parseFloat(args[i]);
                             break;
                         case "longitude_deg":
@@ -69,6 +67,7 @@ public class CSVHandler {
 
                 Database.airports.put(tmp.iataCode, tmp);
             }
+            Database.airports.remove(null);
         }
         catch (IOException e){
             e.printStackTrace();
@@ -80,7 +79,6 @@ public class CSVHandler {
         loadAirportCSV();
 
         for (Airport a : Database.airports.values()){
-            System.out.println(a.name);
         }
     }
 }
