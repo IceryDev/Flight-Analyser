@@ -4,7 +4,7 @@ import javax.swing.JFrame;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
-import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 
 import static com.still_processing.DefaultSettings.Settings.*;
 
@@ -23,10 +23,9 @@ public class MainWindow extends JFrame {
         ImageIcon image = new ImageIcon(getClass().getResource("/Images/icon.jpeg"));
         this.setIconImage(image.getImage());
 
-        this.setLayout(new BorderLayout());
+        this.setLayout(new FlowLayout());
         JLabel label = new JLabel();
         label.setText("Flight Analyser");
-        label.setIcon(image);
         label.setFont(BOLD_FONT.deriveFont(50f));
         this.add(label);
     }
