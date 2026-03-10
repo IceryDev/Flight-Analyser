@@ -3,6 +3,7 @@ package com.still_processing.DefaultSettings;
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -38,6 +39,7 @@ public class Settings {
         try {
             InputStream inputStream = Settings.class.getResourceAsStream(path);
             Font font = Font.createFont(Font.TRUETYPE_FONT, inputStream);
+            GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font);
             return font.deriveFont(12f);
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
