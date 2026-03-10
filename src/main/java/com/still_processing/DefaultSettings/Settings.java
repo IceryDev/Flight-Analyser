@@ -21,6 +21,7 @@ public class Settings {
     public static final Font SEMIBOLD_FONT = loadFont("/Orbitron/Orbitron-SemiBold.ttf");
     public static final Font MEDIUM_FONT = loadFont("/Orbitron/Orbitron-Medium.ttf");
     public static final Font BLACK_FONT = loadFont("/Orbitron/Orbitron-Black.ttf");
+    public static final int FONT_SIZE = 12;
 
     public static final Color TEXT_COLOR = new Color(0x001917);
     public static final Color BACKGROUND = new Color(0xeff2f1);
