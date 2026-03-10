@@ -1,11 +1,16 @@
 package com.still_processing.Application;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 
-import java.awt.*;
+import java.awt.FlowLayout;
 
 import static com.still_processing.DefaultSettings.Settings.*;
 
+/**
+ * @author Jagoda Koczwara-Szuba
+ */
 public class MainWindow extends JFrame {
 
     public MainWindow() {
@@ -14,6 +19,9 @@ public class MainWindow extends JFrame {
         this.setSize(1024, 720);
         this.setVisible(true);
         this.getContentPane().setBackground(BACKGROUND);
+
+        ImageIcon image = new ImageIcon(getClass().getResource("/Images/icon.jpeg"));
+        this.setIconImage(image.getImage());
 
         this.setLayout(new FlowLayout());
         JLabel label = new JLabel();
