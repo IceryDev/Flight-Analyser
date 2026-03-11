@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ImageIcon;
 
+import com.still_processing.UILib.ScrollPaneFactory;
 import static com.still_processing.DefaultSettings.Settings.*;
 
 /**
@@ -20,7 +21,7 @@ public class MainWindow extends JFrame {
         this.setIconImage(image.getImage());
 
         JPanel body = new BodyPanel();
-        JScrollPane scrollPane = new JScrollPane();
+        JScrollPane scrollPane = ScrollPaneFactory.createPane();
         scrollPane.setViewportView(body);
         scrollPane.getViewport().setBackground(BACKGROUND);
         this.add(scrollPane, BorderLayout.CENTER);
