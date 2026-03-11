@@ -1,4 +1,4 @@
-package com.still_processing.flight_data;
+package com.still_processing.FlightData;
 
 public class Airport {
     long id;
