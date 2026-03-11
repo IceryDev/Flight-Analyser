@@ -12,7 +12,8 @@ public class Airport {
 
     Airport(){}
 
-    Airport(long id, String name, float latitude, float longitude, String country, String region,  String municipality, String iataCode){
+    Airport(long id, String name, float latitude, float longitude,
+            String country, String region,  String municipality, String iataCode){
       this.id = id;
       this.name = name;
       this.latitude = latitude;
