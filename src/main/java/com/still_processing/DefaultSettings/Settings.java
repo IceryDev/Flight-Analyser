@@ -3,6 +3,7 @@ package com.still_processing.DefaultSettings;
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.io.InputStream;
 import io.github.cdimascio.dotenv.Dotenv;
@@ -21,19 +22,17 @@ public class Settings {
     public static final Font SEMIBOLD_FONT = loadFont("/Orbitron/Orbitron-SemiBold.ttf");
     public static final Font MEDIUM_FONT = loadFont("/Orbitron/Orbitron-Medium.ttf");
     public static final Font BLACK_FONT = loadFont("/Orbitron/Orbitron-Black.ttf");
+    public static final int FONT_SIZE = 12;
 
     public static final Color TEXT_COLOR = new Color(0x001917);
     public static final Color BACKGROUND = new Color(0xeff2f1);
     public static final Color HIGHLIGHT = new Color(0x01796f);
-    public static final Color GRAY = new Color(0xd1d1d1);
+    public static final Color GRAY = new Color(0xaaaaaa);
 
     public static final String API_KEY = Dotenv.load().get("FLIGHT_API");
 
     /**
      * Loads the font from the resouces folder
-     *
-     * @throws FontFormatException if problem with font file's structure or data
-     * @throws IOException         if input file errors (usually file not found)
      *
      * @author Zhou Sun
      */
@@ -41,6 +40,7 @@ public class Settings {
         try {
             InputStream inputStream = Settings.class.getResourceAsStream(path);
             Font font = Font.createFont(Font.TRUETYPE_FONT, inputStream);
+            GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(font);
             return font.deriveFont(12f);
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
