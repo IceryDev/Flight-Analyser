@@ -1,8 +1,13 @@
+package com.still_processing.FlightData;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+
+import com.still_processing.DefaultSettings.Settings;
+import com.still_processing.DefaultSettings.Settings.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -10,7 +15,7 @@ public class ApiData {
 
 
     public static void main(String[] args){
-        historicalData();
+        historicalData(5, 3, 2026, 10, 3, 2026);
         try{
             Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -23,7 +28,7 @@ public class ApiData {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://aerodatabox.p.rapidapi.com/flights/number/DL47/2025-01-01/2025-01-07?dateLocalRole=Both"))
                 .header("x-rapidapi-host", "aerodatabox.p.rapidapi.com")
-                .header("x-rapidapi-key", API_KEY)
+                .header("x-rapidapi-key", Settings.API_KEY)
                 .GET()
                 .build();
         try {
@@ -46,7 +51,7 @@ public class ApiData {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create("https://aerodatabox.p.rapidapi.com/airports/iata/YYZ/stats/routes/daily/" + currentDay))
                 .header("x-rapidapi-host", "aerodatabox.p.rapidapi.com")
-                .header("x-rapidapi-key", API_KEY)
+                .header("x-rapidapi-key", Settings.API_KEY)
                 .GET()
                 .build();
         try {
