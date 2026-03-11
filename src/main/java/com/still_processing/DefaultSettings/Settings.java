@@ -26,13 +26,10 @@ public class Settings {
     public static final Color TEXT_COLOR = new Color(0x001917);
     public static final Color BACKGROUND = new Color(0xeff2f1);
     public static final Color HIGHLIGHT = new Color(0x01796f);
-    public static final Color GRAY = new Color(0xd1d1d1);
+    public static final Color GRAY = new Color(0xaaaaaa);
 
     /**
      * Loads the font from the resouces folder
-     *
-     * @throws FontFormatException if problem with font file's structure or data
-     * @throws IOException         if input file errors (usually file not found)
      *
      * @author Zhou Sun
      */
