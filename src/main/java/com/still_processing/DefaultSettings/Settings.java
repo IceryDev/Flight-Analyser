@@ -26,6 +26,8 @@ public class Settings {
     public static final Color HIGHLIGHT = new Color(0x01796f);
     public static final Color GRAY = new Color(0xd1d1d1);
 
+    static final String API_KEY = "temp";
+
     /**
      * Loads the font from the resouces folder
      *
