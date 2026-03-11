@@ -13,10 +13,20 @@ import javax.swing.plaf.basic.BasicScrollBarUI;
 
 import static com.still_processing.DefaultSettings.Settings.*;
 
+/**
+ * @author Zhou Sun
+ */
 public class ScrollPaneFactory {
     private static final int BAR_SIZE = 10;
     private static final int THUMB_SIZE = BAR_SIZE - 2;
 
+    /**
+     * Create a prestyled JScrollPane,
+     * Horizontal scroll if needed
+     * Vertical scroll if needed
+     * 
+     * @author Zhou Sun
+     */
     public static JScrollPane createPane() {
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -32,6 +42,13 @@ public class ScrollPaneFactory {
         return scrollPane;
     }
 
+    /**
+     * Create a prestyled JScrollPane,
+     * Horizontal scroll hidden
+     * Vertical scroll hidden
+     * 
+     * @author Zhou Sun
+     */
     public static JScrollPane createHideScroll() {
         JScrollPane scrollPane = createPane();
         scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));

@@ -16,6 +16,9 @@ import javax.swing.text.StyledDocument;
 import static com.still_processing.DefaultSettings.Settings.*;
 import com.still_processing.UILib.TextPaneBuilder;
 
+/**
+ * @author Zhou Sun
+ */
 class BodyPanel extends JPanel implements Scrollable {
 
     public BodyPanel() {

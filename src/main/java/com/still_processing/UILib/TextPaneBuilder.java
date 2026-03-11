@@ -10,6 +10,9 @@ import javax.swing.text.DefaultCaret;
 
 import static com.still_processing.DefaultSettings.Settings.*;
 
+/**
+ * @author Zhou Sun
+ */
 public class TextPaneBuilder {
     String text = "";
     int fontSize = 12;
