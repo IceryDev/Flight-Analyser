@@ -54,7 +54,7 @@ class BodyPanel extends JPanel implements Scrollable {
 
     @Override
     public boolean getScrollableTracksViewportHeight() {
-        return true;
+        return false;
     }
 
     @Override
