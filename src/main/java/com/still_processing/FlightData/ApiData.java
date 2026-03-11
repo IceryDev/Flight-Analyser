@@ -8,14 +8,16 @@ import java.net.http.HttpResponse;
 
 import com.still_processing.DefaultSettings.Settings;
 import com.still_processing.DefaultSettings.Settings.*;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+
+import static com.still_processing.FlightData.CheckDate.convertToString;
+
+
 public class ApiData {
 
-
     public static void main(String[] args){
-        historicalData(5, 3, 2026, 10, 3, 2026);
+        historicalData(5, 3, 2025, 10, 3, 2025);
         try{
             Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -23,10 +25,13 @@ public class ApiData {
         }
         liveData();
     }
-    public static void historicalData(int startDate, int startMonth, int startYear, int endDate, int endMonth, int endYear){
+
+    public static HttpResponse<String> historicalData(int startDate, int startMonth, int startYear, int endDate, int endMonth, int endYear){
+        String startData = convertToString(startDate, startMonth, startYear);
+        String endData = convertToString(endDate, endMonth, endYear);
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://aerodatabox.p.rapidapi.com/flights/number/DL47/2025-01-01/2025-01-07?dateLocalRole=Both"))
+                .uri(URI.create("https://aerodatabox.p.rapidapi.com/flights/number/DL47/" +  startData + "/" + endData + "?dateLocalRole=Both"))
                 .header("x-rapidapi-host", "aerodatabox.p.rapidapi.com")
                 .header("x-rapidapi-key", Settings.API_KEY)
                 .GET()
@@ -35,16 +40,20 @@ public class ApiData {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             System.out.println("Status: " + response.statusCode());
             System.out.println("Live Data: " + response.body());
+            return response;
         } catch (IOException e) {
             System.out.println("IOException in historicalData: " + e.getMessage());
+            return null;
         } catch (InterruptedException e) {
             System.out.println("InterruptedException in historicalData: " + e.getMessage());
             Thread.currentThread().interrupt();
+            return null;
         }finally {
             client.close();
         }
     }
-    public static void liveData() { //daily flight statistics and routes
+
+    public static HttpResponse<String> liveData() { //daily flight statistics and routes
         String currentDay = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE);
 
         HttpClient client = HttpClient.newHttpClient();
@@ -58,11 +67,14 @@ public class ApiData {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             System.out.println("Status: " + response.statusCode());
             System.out.println("Live Data: " + response.body());
+            return response;
         } catch (IOException e) {
             System.out.println("IOException in liveData: " + e.getMessage());
+            return null;
         } catch (InterruptedException e) {
             System.out.println("InterruptedException in liveData: " + e.getMessage());
             Thread.currentThread().interrupt();
+            return null;
         }finally {
             client.close();
         }
