@@ -22,7 +22,7 @@ public class Database {
      * @param abstractData An object whose returns a JSON string describing airports & flights routes
      * @throws JsonProcessingException
      */
-    public <T> void serialize(T abstractData) throws JsonProcessingException {
+    public <T> void deserialize(T abstractData) throws JsonProcessingException {
         JsonNode rootNode = new ObjectMapper().readTree(abstractData.toString());
         JsonNode routes = rootNode.get("routes");
         for (JsonNode r : routes) {
