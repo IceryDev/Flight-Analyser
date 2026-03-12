@@ -1,9 +1,12 @@
 package com.still_processing.FlightData;
 import java.time.Year;
-
+/**
+ * Checks to see if the date is valid and returns a string.
+ * @author Jessica Chen
+ */
 public class CheckDate {
 
-    static String convertToString(int date, int month, int year){
+    public static String convertToString(int date, int month, int year){
         String s = "";
         if (isValidDate(date, month, year)){
                 s = s.concat(year + "-" );
@@ -26,11 +29,11 @@ public class CheckDate {
         return s;
     }
 
-    static boolean isLeapYear(int year){
+    public static boolean isLeapYear(int year){
         return ((year % 100 != 0) || (year % 400 == 0) && (year % 4 == 0));
     }
 
-    static boolean isValidDate(int date, int month, int year){
+    public static boolean isValidDate(int date, int month, int year){
         int maxYear = Year.now().getValue() - 1;
         int minYear = Year.now().getValue() - 100;
 
