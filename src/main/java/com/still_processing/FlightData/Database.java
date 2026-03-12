@@ -1,5 +1,7 @@
 package com.still_processing.FlightData;
 
+import java.util.Map;
+import java.util.Collections;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -11,6 +13,9 @@ import java.util.HashMap;
 public class Database {
 
     static HashMap<String, Airport> airports = new HashMap<>();
+
+    public static Map<String, Airport> getAirports() {
+        return Collections.unmodifiableMap(airports);
     static ArrayList<FlightInfo> flights = new ArrayList<>();
 
     /**
