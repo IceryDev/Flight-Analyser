@@ -39,6 +39,9 @@ public class ScrollPaneFactory {
         scrollPane.getHorizontalScrollBar().setUnitIncrement(32);
         scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(BAR_SIZE, Integer.MAX_VALUE));
         scrollPane.getHorizontalScrollBar().setPreferredSize(new Dimension(Integer.MAX_VALUE, BAR_SIZE));
+        scrollPane.getViewport().setBackground(HIGHLIGHT);
+        scrollPane.getViewport().setOpaque(false);
+        scrollPane.setOpaque(false);
         return scrollPane;
     }
 
