@@ -23,7 +23,7 @@ textPane.setBorder(null);       // You can still proceed to do normal to the
                                 // JTextPane
 ```
 
-> ![NOTE]
+> [!NOTE]
 > There is no need to use all the setters, there is nice default value with the
 > builder.
 
