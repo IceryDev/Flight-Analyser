@@ -14,6 +14,7 @@ public class Database {
 
     static HashMap<String, Airport> airports = new HashMap<>();
     static ArrayList<FlightInfo> flights = new ArrayList<>();
+    static ArrayList<FlightInfo> offlineFlights = new ArrayList<>();
 
     public static Map<String, Airport> getAirports() {
         return Collections.unmodifiableMap(airports);

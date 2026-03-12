@@ -32,6 +32,7 @@ public class ApiData {
                 .build();
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
             return response;
         } catch (IOException e) {
             System.out.println("IOException in historicalData: " + e.getMessage());
