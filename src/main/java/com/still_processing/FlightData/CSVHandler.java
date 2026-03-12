@@ -90,26 +90,29 @@ public class CSVHandler {
                 new InputStreamReader(Objects.requireNonNull(
                         CSVHandler.class.getResourceAsStream(OFFLINE_FLIGHT_FILE_PATH))))){
 
-            ArrayList<String> headerArgs = (ArrayList<String>) Arrays.stream(reader.readLine()
-                    .replaceAll("\"", "")
-                    .split(CSV_DELIMITER)).toList();
+            String[] tempArray = reader.readLine()
+                                       .replaceAll("\"", "")
+                                       .split(CSV_DELIMITER);
+
+            ArrayList<String> headerArgs = new ArrayList<>(Arrays.asList(tempArray));
 
             headerArgs.add(4, "ORIGIN_CITY_NAME");
-            headerArgs.add(8, "DEST_CITY_NAME");
+            headerArgs.add(9, "DEST_CITY_NAME");
 
             String line;
             while ((line = reader.readLine()) != null){
 
                 String[] args = line.split(CSV_DELIMITER);
-
+                Airport originTmp = new Airport();
+                Airport destTmp = new Airport();
                 FlightInfo tmp = new FlightInfo();
                 for (int i = 0; i < Math.min(args.length, headerArgs.size()); i++) {
                     args[i] = args[i].trim();
                     if (args[i].startsWith("\"")){
                         continue;
                     }
-                    else if(args[i].endsWith("\n")){
-                        args[i] = args[i-1] + args[i];
+                    else if(args[i].endsWith("\"")){
+                        args[i] = args[i-1] + ", " + args[i];
                     }
 
                     switch(headerArgs.get(i)){
@@ -124,12 +127,53 @@ public class CSVHandler {
                             break;
                         case "ORIGIN":
                             tmp.originAirport = args[i];
+                            originTmp.iataCode = args[i];
+                            break;
+                        case "ORIGIN_CITY_NAME":
+                            originTmp.municipality = args[i];
+                            break;
+                        case "ORIGIN_STATE_ABR":
+                            originTmp.region = args[i];
+                            break;
+                        case "DEST":
+                            destTmp.iataCode = args[i];
+                            break;
+                        case "DEST_CITY_NAME":
+                            destTmp.municipality = args[i];
+                            break;
+                        case "DEST_STATE_ABR":
+                            destTmp.region = args[i];
+                            break;
+                        case "CRS_DEP_TIME":
+                            tmp.CRSDepTime = args[i];
+                            break;
+                        case "DEP_TIME":
+                            tmp.depTime = args[i];
+                            break;
+                        case "CRS_ARR_TIME":
+                            tmp.CRSArrTime = args[i];
+                            break;
+                        case "ARR_TIME":
+                            tmp.arrTime = args[i];
+                            break;
+                        case "CANCELLED":
+                            tmp.cancelled = (args[i].equals("1"));
+                            break;
+                        case "DIVERTED":
+                            tmp.diverted = (args[i].equals("1"));
+                            break;
+                        case "DISTANCE":
+                            tmp.distance = Float.parseFloat(args[i]);
                             break;
                         default:
                             break;
 
                     }
                 }
+
+                tmp.origin = originTmp;
+                tmp.dest = destTmp;
+                Database.offlineFlights.add(tmp);
             }
         }
         catch (IOException e){
@@ -139,9 +183,10 @@ public class CSVHandler {
 
     // For testing
     public static void main(String[] args){
-        loadAirportCSV();
-
-        for (Airport a : Database.airports.values()){
-        }
+//        loadOfflineFlightCSV();
+//
+//        for (FlightInfo a : Database.offlineFlights){
+//            System.out.println(a.dest.iataCode);
+//        }
     }
 }
