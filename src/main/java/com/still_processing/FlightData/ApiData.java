@@ -17,10 +17,7 @@ import java.time.format.DateTimeFormatter;
 import static com.still_processing.FlightData.CheckDate.convertToString;
 
 public class ApiData {
-    /**
-     * Makes HTTP GET requests to the AeroDataBox API to fetch flight information.
-     * @author Jessica Chen
-     */
+
     public static HttpResponse<String> historicalData(int startDate, int startMonth, int startYear, int endDate, int endMonth, int endYear){
         String startData = convertToString(startDate, startMonth, startYear);
         String endData = convertToString(endDate, endMonth, endYear);
