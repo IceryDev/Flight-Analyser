@@ -13,18 +13,12 @@ import java.time.format.DateTimeFormatter;
 
 import static com.still_processing.FlightData.CheckDate.convertToString;
 
-
+/**
+ * Makes HTTP GET requests to the AeroDataBox API to fetch flight information.
+ * @author Jessica Chen
+ */
 public class ApiData {
 
-    public static void main(String[] args){
-        historicalData(5, 3, 2025, 10, 3, 2025);
-        try{
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-        liveData();
-    }
 
     public static HttpResponse<String> historicalData(int startDate, int startMonth, int startYear, int endDate, int endMonth, int endYear){
         String startData = convertToString(startDate, startMonth, startYear);
@@ -38,8 +32,6 @@ public class ApiData {
                 .build();
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println("Status: " + response.statusCode());
-            System.out.println("Live Data: " + response.body());
             return response;
         } catch (IOException e) {
             System.out.println("IOException in historicalData: " + e.getMessage());
@@ -65,8 +57,6 @@ public class ApiData {
                 .build();
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            System.out.println("Status: " + response.statusCode());
-            System.out.println("Live Data: " + response.body());
             return response;
         } catch (IOException e) {
             System.out.println("IOException in liveData: " + e.getMessage());
@@ -79,4 +69,15 @@ public class ApiData {
             client.close();
         }
     }
+
+    // For Testing:
+//    public static void main(String[] args){
+//        historicalData(5, 3, 2025, 10, 3, 2025);
+//        try{
+//            Thread.sleep(1000);
+//        } catch (InterruptedException e) {
+//            Thread.currentThread().interrupt();
+//        }
+//        liveData();
+//    }
 }
