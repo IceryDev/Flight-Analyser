@@ -11,17 +11,16 @@ import com.still_processing.DefaultSettings.Settings;
 import com.still_processing.DefaultSettings.Settings.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 import static com.still_processing.FlightData.CheckDate.convertToString;
 
-/**
- * Makes HTTP GET requests to the AeroDataBox API to fetch flight information.
- * @author Jessica Chen
- */
 public class ApiData {
-
-
+    /**
+     * Makes HTTP GET requests to the AeroDataBox API to fetch flight information.
+     * @author Jessica Chen
+     */
     public static HttpResponse<String> historicalData(int startDate, int startMonth, int startYear, int endDate, int endMonth, int endYear){
         String startData = convertToString(startDate, startMonth, startYear);
         String endData = convertToString(endDate, endMonth, endYear);
@@ -50,16 +49,20 @@ public class ApiData {
 
     /**
      * Extract current live flights data for a given airport IATA code.
+     * Since API only allows maximum range of 12 hours, it gives current live flights with a range from current time and 12 hours previous.
      *
-     * @author Marco Fontana
+     * @author Marco Fontana && Jessica Chen
      * @param iataCode The IATA code of the airport for which to fetch live flight data
     */
+//    API documentation:
     public static HttpResponse<String> extractLiveData(String iataCode) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'");
-        String startingCurrentDate = LocalDateTime.now().format(formatter);
-        // Todo: Data range handling needs to be fixed
-        String endingCurrentDate = startingCurrentDate + "23:59";
-        startingCurrentDate = startingCurrentDate + "00:00";
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime twelveHoursAgo = now.minusHours(12);
+        String endingCurrentDate = now.format(formatter);
+        String startingCurrentDate = twelveHoursAgo.format(formatter);
+
         URI uri = URI.create("https://aerodatabox.p.rapidapi.com/flights/airports/Iata/" +  iataCode + "/" + startingCurrentDate + "/" + endingCurrentDate);
         System.out.println(uri.getPath());
         HttpRequest request = HttpRequest.newBuilder()
@@ -78,6 +81,6 @@ public class ApiData {
 
     public static void main(String[] args) {
         // Testing
-        System.out.println(extractLiveData("YYC").body());
+//          System.out.println(extractLiveData("YYC").body());
     }
 }
