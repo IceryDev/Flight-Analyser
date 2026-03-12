@@ -1,5 +1,9 @@
 package com.still_processing.FlightData;
 
+/**
+ * @author Deea Zaharia
+ */
+
 public class Airport {
     long id;
     String name;
