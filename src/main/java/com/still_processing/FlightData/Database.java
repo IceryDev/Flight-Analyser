@@ -13,10 +13,11 @@ import java.util.HashMap;
 public class Database {
 
     static HashMap<String, Airport> airports = new HashMap<>();
+    static ArrayList<FlightInfo> flights = new ArrayList<>();
 
     public static Map<String, Airport> getAirports() {
         return Collections.unmodifiableMap(airports);
-    static ArrayList<FlightInfo> flights = new ArrayList<>();
+    }
 
     /**
      * Parses a JSON structure containing route information and extracts flight data,

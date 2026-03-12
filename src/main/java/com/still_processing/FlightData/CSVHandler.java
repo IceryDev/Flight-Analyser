@@ -64,7 +64,7 @@ public class CSVHandler {
                             break;
                     }
                 }
-
+                tmp.id = Database.airports.size();
                 Database.airports.put(tmp.iataCode, tmp);
             }
             Database.airports.remove(null);
