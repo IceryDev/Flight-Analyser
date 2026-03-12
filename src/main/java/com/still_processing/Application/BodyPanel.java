@@ -1,11 +1,15 @@
 package com.still_processing.Application;
 
 import java.awt.Rectangle;
+import java.util.Map;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.Scrollable;
 
 import javax.swing.JTextPane;
@@ -14,6 +18,12 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import static com.still_processing.DefaultSettings.Settings.*;
+
+import com.still_processing.FlightData.Airport;
+import com.still_processing.FlightData.CSVHandler;
+import com.still_processing.FlightData.Database;
+import com.still_processing.UILib.ButtonBuilder;
+import com.still_processing.UILib.TableBuilder;
 import com.still_processing.UILib.TextPaneBuilder;
 
 /**
@@ -38,6 +48,35 @@ class BodyPanel extends JPanel implements Scrollable {
         doc.setParagraphAttributes(0, doc.getLength(), center, false);
 
         this.add(textPane);
+
+        CSVHandler.loadAirportCSV();
+        Map<String, Airport> airports = Database.getAirports();
+        String[] columnNames = {
+                "IATA Code", "Name", "Country", "Region"
+        };
+        Object[][] data = new Object[airports.size()][4];
+
+        System.out.println("==== Airports ====");
+        int dataIndex = 0;
+        for (String iata : airports.keySet()) {
+            String iataCode = airports.get(iata).iataCode;
+            String name = airports.get(iata).name;
+            String country = airports.get(iata).country;
+            String region = airports.get(iata).region;
+            data[dataIndex++] = new String[] { iataCode, name, country, region };
+        }
+
+        JScrollPane table = new TableBuilder(data, columnNames)
+                .setFontSize(24)
+                .setFont(BOLD_FONT)
+                .setColumnWidth(new int[] { 100, 500, 100, 100 })
+                .buildPane();
+        table.setPreferredSize(new Dimension(Integer.MAX_VALUE, 800));
+        table.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+        this.add(table);
+
+        JButton button = new ButtonBuilder().setText("maybe").setFontSize(48).build();
+        this.add(button);
     }
 
     @Override

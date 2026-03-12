@@ -1,5 +1,7 @@
 package com.still_processing.FlightData;
 
+import java.util.Map;
+import java.util.Collections;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -12,6 +14,11 @@ public class Database {
 
     static HashMap<String, Airport> airports = new HashMap<>();
     static ArrayList<FlightInfo> flights = new ArrayList<>();
+    static ArrayList<FlightInfo> offlineFlights = new ArrayList<>();
+
+    public static Map<String, Airport> getAirports() {
+        return Collections.unmodifiableMap(airports);
+    }
 
     /**
      * Parses a JSON structure containing route information and extracts flight data,
