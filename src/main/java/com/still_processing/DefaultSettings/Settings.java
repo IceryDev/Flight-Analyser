@@ -6,6 +6,7 @@ import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.io.InputStream;
+import io.github.cdimascio.dotenv.Dotenv;
 
 /**
  * Some reuseable default settings
@@ -27,6 +28,8 @@ public class Settings {
     public static final Color BACKGROUND = new Color(0xeff2f1);
     public static final Color HIGHLIGHT = new Color(0x01796f);
     public static final Color GRAY = new Color(0xaaaaaa);
+
+    public static final String API_KEY = Dotenv.load().get("FLIGHT_API");
 
     /**
      * Loads the font from the resouces folder
