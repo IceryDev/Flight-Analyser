@@ -1,4 +1,4 @@
-package com.still_processing.Application;
+package com.still_processing.Application.HomePage;
 
 import java.awt.Rectangle;
 import java.util.Map;

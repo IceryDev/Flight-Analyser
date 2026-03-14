@@ -1,4 +1,4 @@
-package com.still_processing.Application;
+package com.still_processing.Application.HomePage;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -8,15 +8,16 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ImageIcon;
 
+import com.still_processing.Application.HomePage.BodyPanel
 import com.still_processing.UILib.ScrollPaneFactory;
 import static com.still_processing.DefaultSettings.Settings.*;
 
 /**
  * @author Jagoda Koczwara-Szuba (Zhou Sun)
  */
-public class MainWindow extends JFrame {
 
-    public MainWindow() {
+public class HomePage extends JFrame {
+    public HomePage() {
         ImageIcon image = new ImageIcon(getClass().getResource("/Images/icon.jpeg"));
         this.setIconImage(image.getImage());
 
@@ -34,3 +35,4 @@ public class MainWindow extends JFrame {
         this.setVisible(true);
     }
 }
+
