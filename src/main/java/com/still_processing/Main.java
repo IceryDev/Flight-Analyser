@@ -1,10 +1,10 @@
 package com.still_processing;
+package com.still_processing.Application.HomePage;
 
 import javax.swing.UIManager;
 
 import javax.swing.BorderFactory;
 
-import com.still_processing.Application.MainWindow;
 import static com.still_processing.DefaultSettings.Settings.*;
 
 /**
@@ -27,6 +27,6 @@ public class Main {
             e.printStackTrace();
         }
 
-        new MainWindow();
+        new HomePage();
     }
 }
