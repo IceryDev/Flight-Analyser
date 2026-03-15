@@ -1,5 +1,5 @@
 package com.still_processing;
-package com.still_processing.Application.HomePage;
+import com.still_processing.Application.HomePage.HomePage;
 
 import javax.swing.UIManager;
 
