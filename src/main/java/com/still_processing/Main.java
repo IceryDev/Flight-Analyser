@@ -1,5 +1,6 @@
 package com.still_processing;
-package com.still_processing.Application.HomePage;
+
+import com.still_processing.Application.MainWindow;
 
 import javax.swing.UIManager;
 
@@ -27,6 +28,7 @@ public class Main {
             e.printStackTrace();
         }
 
-        new HomePage();
+
+        new MainWindow().setVisible(true);
     }
 }
