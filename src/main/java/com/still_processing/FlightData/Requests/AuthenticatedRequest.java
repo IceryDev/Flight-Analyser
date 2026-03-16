@@ -25,8 +25,12 @@ import java.util.concurrent.CompletableFuture;
  */
 public class AuthenticatedRequest {
 
-    private final String apiKey;
+    private static final int RATE_LIMIT_CODE = 429;
+    private static final int SUCCESS = 200;
+    private static final int DEFAULT_DELAY = 30;
 
+    private final String clientSecret;
+    private final String clientId;
     private final HttpClient client;
 
     /**
@@ -36,9 +40,12 @@ public class AuthenticatedRequest {
      *
      * @author Ulaş İçer
      */
-    public AuthenticatedRequest(HttpClient client, String key){
-        this.apiKey = key;
+    public AuthenticatedRequest(HttpClient client, String clientId, String key){
+        this.clientSecret = key;
+        this.clientId = clientId;
         this.client = client;
+
+
     }
 
     /**
@@ -47,12 +54,30 @@ public class AuthenticatedRequest {
      * @return Response as a String
      * @throws IOException Default possible exception from the .send() method.
      * @throws InterruptedException Default possible exception from the .send() method.
+     * @throws RateLimitException Thrown when the API limit is exceeded.
      *
      * @author Ulaş İçer
      */
-    public HttpResponse<String> send(String url) throws IOException, InterruptedException {
+    public HttpResponse<String> send(String url) throws IOException, InterruptedException, RateLimitException {
+        HttpResponse<String> response = client.send(this.buildRequest(url), HttpResponse.BodyHandlers.ofString());
+        if(response.statusCode() == RATE_LIMIT_CODE){
+            int delay;
+            try{
+                delay = Integer.parseInt(response.headers()
+                        .firstValue("X-Rate-Limit-Retry-After-Seconds")
+                        .orElse("" + DEFAULT_DELAY));
+            }
+            catch (NumberFormatException e){
+                delay = DEFAULT_DELAY;
+            }
 
-        return client.send(this.buildRequest(url), HttpResponse.BodyHandlers.ofString());
+            throw new RateLimitException("RateLimitException: API rate limit exceeded.", delay, RATE_LIMIT_CODE);
+        }
+        else if (response.statusCode() != SUCCESS){
+            throw new RateLimitException(
+                    "RateLimitException: An error occurred during request.", DEFAULT_DELAY, response.statusCode());
+        }
+        return response;
     }
 
     /**
@@ -64,7 +89,28 @@ public class AuthenticatedRequest {
      */
     public CompletableFuture<HttpResponse<String>> sendAsync(String url){
 
-        return client.sendAsync(this.buildRequest(url), HttpResponse.BodyHandlers.ofString());
+        return client.sendAsync(this.buildRequest(url), HttpResponse.BodyHandlers.ofString())
+                     .thenApply(response -> {
+                         if (response.statusCode() == RATE_LIMIT_CODE){
+                             int delay;
+                             try{
+                                 delay = Integer.parseInt(response.headers()
+                                         .firstValue("X-Rate-Limit-Retry-After-Seconds")
+                                         .orElse("" + DEFAULT_DELAY));
+                             }
+                             catch (NumberFormatException e){
+                                 delay = DEFAULT_DELAY;
+                             }
+
+                             throw new RateLimitException(
+                                     "RateLimitException: API rate limit exceeded.", delay, RATE_LIMIT_CODE);
+                         }
+                         else if (response.statusCode() != SUCCESS){
+                             throw new RateLimitException(
+                                     "RateLimitException: An error occurred during request.", DEFAULT_DELAY, response.statusCode());
+                         }
+                         else return response;
+                     });
     }
 
     /**
@@ -77,7 +123,7 @@ public class AuthenticatedRequest {
     private HttpRequest buildRequest(String url){
         return HttpRequest.newBuilder()
                 .uri(URI.create(url))
-                .header("Authorization", "Bearer " + apiKey)
+                .header("Authorization", "Bearer " + clientSecret)
                 .GET().build();
     }
 }
