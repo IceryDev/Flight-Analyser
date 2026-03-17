@@ -51,6 +51,7 @@ public class Histogram extends JPanel implements Runnable, Graph {
     private int toolTipWidth = 40;
     private int toolTipHeight = 20;
     private int toolTipPadding = 20;
+    private float toolTipFontSize = 12;
 
     /**
      * Create the histogram (subclass of JPanel)
@@ -291,6 +292,7 @@ public class Histogram extends JPanel implements Runnable, Graph {
             int showValue = barValues[toolTipIndex];
             String output = String.format("%d", showValue);
 
+            g2d.setFont(labelFont.deriveFont(toolTipFontSize));
             g2d.setColor(new Color(0, 0, 0, 99));
             g2d.fillRoundRect(toolTipx - toolTipPadding, toolTipY - 20 - toolTipPadding,
                     toolTipWidth + 2 * toolTipPadding, toolTipHeight + 2 * toolTipPadding, 20, 20);
@@ -384,5 +386,10 @@ public class Histogram extends JPanel implements Runnable, Graph {
     public void setToolTipPadding(int toolTipPadding) {
         if (toolTipPadding > 0)
             this.toolTipPadding = toolTipPadding;
+    }
+
+    public void setToolTipFontSize(float toolTipFontSize) {
+        if (toolTipFontSize > 0)
+            this.toolTipFontSize = toolTipFontSize;
     }
 }
