@@ -23,18 +23,17 @@ import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 public class PieChartGraph extends JPanel implements Runnable {
     private String chartTitle = "Pie Chart";
-    private JLabel  titleField;
 
     Thread graphThread;
     private final int FPS = 60;
     private int height;
 
     private static final Color[] PALETTE = {
-            new Color(0xFF6B6B),
+            new Color(0xD31E91B3, true),
             new Color(0x4ECDC4),
             new Color(0x45B7D1),
             new Color(0x96CEB4),
-            new Color(0xFECEA8),
+            new Color(0x16599C),
             new Color(0xD4A5A5),
             new Color(0x9B59B6),
             new Color(0x3498DB),
@@ -64,7 +63,7 @@ public class PieChartGraph extends JPanel implements Runnable {
 
         JLabel label = new JLabel(chartTitle);
         label.setForeground(new Color(180, 185, 210));
-        label.setFont(new Font("SansSerif", Font.BOLD, 13));
+        label.setFont(new Font("SansSerif", Font.BOLD, 20));
         bar.add(label);
 
         return bar;
@@ -115,8 +114,8 @@ public class PieChartGraph extends JPanel implements Runnable {
         int panelWidth  = getWidth();
         int panelHeight = getHeight();
 
-        int legendWidth   = 180;
-        int padding       = 40;
+        int legendWidth = 180;
+        int padding = 40;
         int chartDiameter = Math.min(panelWidth - legendWidth - padding * 2, panelHeight - padding * 4);
         chartDiameter = Math.max(chartDiameter, 100);
 
@@ -149,10 +148,10 @@ public class PieChartGraph extends JPanel implements Runnable {
             startAngle += sweep;
         }
 
-        int legendX      = chartX + chartDiameter + padding + 50;
+        int legendX  = chartX + chartDiameter + padding + 50;
         int legendStartY = chartY + 80;
-        int swatchSize   = 16;
-        int rowHeight    = 28;
+        int swatchSize = 16;
+        int rowHeight = 28;
 
         g2d.setFont(new Font("SansSerif", Font.PLAIN, 13));
 
