@@ -26,7 +26,7 @@ import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
  */
 
 public class PieChartGraph extends JPanel implements Runnable {
-    private String chartTitle = "Pie Chart";
+    private final String CHART_TITLE = "Pie Chart";
 
     Thread graphThread;
     private final int FPS = 60;
@@ -45,6 +45,7 @@ public class PieChartGraph extends JPanel implements Runnable {
             new Color(0x9B59B6),
             new Color(0x3498DB),
     };
+
     private final HashMap<String, Integer> data = getData();
     private static HashMap<String, Integer> getData() {
         HashMap<String, Integer> data = new HashMap<>();
@@ -56,7 +57,7 @@ public class PieChartGraph extends JPanel implements Runnable {
     }
 
     public PieChartGraph() {
-        this.setPreferredSize(new Dimension(780, 600));
+        this.setPreferredSize(new Dimension(760, 600));
         this.setMinimumSize(new Dimension(300, 400));
         this.setDoubleBuffered(true);
         setLayout(new BorderLayout(0, 0));
@@ -68,37 +69,29 @@ public class PieChartGraph extends JPanel implements Runnable {
     private JPanel buildTopBar() {
         JPanel bar = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 10));
         bar.setBackground(new Color(40, 44, 60));
-
-        JLabel label = new JLabel(chartTitle);
+        JLabel label = new JLabel(CHART_TITLE);
         label.setForeground(new Color(180, 185, 210));
         label.setFont(new Font("SansSerif", Font.BOLD, 20));
         bar.add(label);
-
         return bar;
     }
-
 
     @Override
     public void run() {
         double drawInterval = 1_000_000_000.0 / FPS;
         double nextDrawTime = System.nanoTime() + drawInterval;
-
         while (graphThread != null) {
             update();
             repaint();
-
             try {
                 double remainingTime = nextDrawTime - System.nanoTime();
                 remainingTime /= 1_000_000.0; // Converts to milliseconds
                 remainingTime = (remainingTime < 0) ? 0 : remainingTime;
-
                 Thread.sleep((long) remainingTime);
                 nextDrawTime += drawInterval;
-
             } catch (InterruptedException error) {
                 error.printStackTrace();
             }
-
         }
     }
 
@@ -118,7 +111,7 @@ public class PieChartGraph extends JPanel implements Runnable {
         return -(Math.cos(Math.PI * time) - 1.0) / 2.0;
     }
 
-    // actually draw method
+    // draw method
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
@@ -128,23 +121,17 @@ public class PieChartGraph extends JPanel implements Runnable {
 
         int panelWidth  = getWidth();
         int panelHeight = getHeight();
-
         int legendWidth = 180;
-        int padding = 40;
+        int padding = 50;
         int chartDiameter = Math.min(panelWidth - legendWidth - padding * 2, panelHeight - padding * 4);
         chartDiameter = Math.max(chartDiameter, 100);
-
         int chartY = (panelHeight - chartDiameter) / 2 + TOP_BAR.getHeight() / 2;
         int chartX = padding;
-
         double animatedSweep = sineMotion(animationProgress)*360;
-
         List<String> keys  = new ArrayList<>(data.keySet());
         int total          = keys.stream().mapToInt(data::get).sum();
         double startAngle  = 0;
         double remainingAngle = animatedSweep;
-
-
         for (int i = 0; i < keys.size(); i++) {
             if (remainingAngle <= 0){
                 break;
@@ -162,7 +149,6 @@ public class PieChartGraph extends JPanel implements Runnable {
                 int labelR = chartDiameter / 4;
                 int labelX = chartX + chartDiameter / 2 + (int) (labelR * Math.cos(midAngle));
                 int labelY = chartY + chartDiameter / 2 - (int) (labelR * Math.sin(midAngle));
-
                 String pct = String.format("%.1f%%", 100.0 * value / total);
                 g2d.setColor(Color.WHITE);
                 g2d.setFont(new Font("SansSerif", Font.BOLD, 13));
@@ -173,40 +159,36 @@ public class PieChartGraph extends JPanel implements Runnable {
             remainingAngle -= drawingSweep;
         }
 
-        int legendX  = chartX + chartDiameter + padding + 50;
+        int legendX  = chartX + chartDiameter + padding + 80;
         int legendStartY = chartY + 80;
         int swatchSize = 16;
         int rowHeight = 28;
-
         g2d.setFont(new Font("SansSerif", Font.PLAIN, 13));
-
         for (int i = 0; i < keys.size(); i++) {
             String label = keys.get(i);
             int value = data.get(label);
             int rowY  = legendStartY + i * rowHeight;
-
             g2d.setColor(PALETTE[i % PALETTE.length]);
             g2d.fillRoundRect(legendX, rowY, swatchSize, swatchSize, 4, 4);
             g2d.setColor(new Color(60, 60, 60));
             g2d.setStroke(new BasicStroke(1f));
             g2d.drawRoundRect(legendX, rowY, swatchSize, swatchSize, 4, 4);
-
             g2d.setColor(getForeground());
             g2d.drawString(label + " (" + value + ")", legendX + swatchSize + 8, rowY + swatchSize - 2);
         }
         g2d.dispose();
     }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Pie Chart");
-        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-        PieChartGraph chart = new PieChartGraph();
-        frame.add(chart);
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-
-        chart.animate();
-    }
+//Testing:
+//    public static void main(String[] args) {
+//        JFrame frame = new JFrame("Pie Chart");
+//        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+//
+//        PieChartGraph chart = new PieChartGraph();
+//        frame.add(chart);
+//        frame.pack();
+//        frame.setLocationRelativeTo(null);
+//        frame.setVisible(true);
+//
+//        chart.animate();
+//    }
 }
