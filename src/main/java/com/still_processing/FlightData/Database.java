@@ -61,7 +61,7 @@ public class Database {
                 assert airlineCode != null;
                 FlightInfo flight = new FlightInfo();
                 flight.dest = destinationAirport;
-                flight.IATA_Code_Marketing_Airline = airlineCode;
+                flight.iataCode = airlineCode;
                 flights.add(flight);
             }
         }

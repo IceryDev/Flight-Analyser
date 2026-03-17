@@ -3,9 +3,7 @@ package com.still_processing.FlightData;
 
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
@@ -120,10 +118,10 @@ public class CSVHandler {
                             tmp.flightDate = args[i];
                             break;
                         case "MKT_CARRIER":
-                            tmp.IATA_Code_Marketing_Airline = args[i];
+                            tmp.iataCode = args[i];
                             break;
                         case "MKT_CARRIER_FL_NUM":
-                            tmp.Flight_Number_Marketing_Airline = args[i];
+                            tmp.flightNumber = args[i];
                             break;
                         case "ORIGIN":
                             tmp.originAirport = args[i];
