@@ -1,6 +1,6 @@
 package com.still_processing.FlightData;
 
-class SpatialInfo {
+class PlaneInfo {
 
     String icao24;
     String callSign;

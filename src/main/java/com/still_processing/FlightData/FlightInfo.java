@@ -15,5 +15,8 @@ public class FlightInfo {
     boolean diverted;
     float distance;
 
+    PlaneInfo plane;
+    String airline;
+
     FlightInfo(){}
 }

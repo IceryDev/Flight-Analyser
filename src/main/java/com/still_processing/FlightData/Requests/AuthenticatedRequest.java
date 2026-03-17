@@ -181,4 +181,8 @@ public class AuthenticatedRequest {
         }
         return false;
     }
+
+    public HttpClient getClient(){
+        return this.client;
+    }
 }
