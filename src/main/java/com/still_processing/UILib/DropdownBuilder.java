@@ -31,8 +31,6 @@ public class DropdownBuilder {
 
     private String[] options;
 
-//    private ActionListener listener;
-
     public JComboBox build() {
 
         JComboBox<String> dropdown = new JComboBox<>(options);       // options must be a String
