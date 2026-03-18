@@ -13,6 +13,7 @@ import java.util.HashMap;
 public class Database {
 
     static HashMap<String, Airport> airports = new HashMap<>();
+    static HashMap<String, AirlineCode> airlineIcaoToIata = new HashMap<>();
     static ArrayList<FlightInfo> flights = new ArrayList<>();
     static ArrayList<FlightInfo> offlineFlights = new ArrayList<>();
 

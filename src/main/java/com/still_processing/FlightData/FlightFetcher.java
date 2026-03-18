@@ -9,15 +9,15 @@ import com.still_processing.FlightData.Requests.RateLimitException;
 import com.still_processing.FlightData.Requests.RequestFailedException;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.*;
 
 /**
  * Fetches OpenSky flight data
@@ -26,14 +26,21 @@ import java.util.concurrent.Executors;
  */
 public class FlightFetcher {
 
+    // URLs
     private static final String API_URL = "https://opensky-network.org/api/states/all";
     private static final String OAUTH_URL =
             "https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token";
     private static final String GET_AIRCRAFT_URL = "https://hexdb.io/api/v1/aircraft/";
-    private static final String GET_IATA_URL = "https://hexdb.io/api/v1/icao-iata?icao=";
+    private static final String GET_IATA_URL = "https://hexdb.io/icao-iata?icao=";
     private static final String GET_ROUTE_URL = "https://hexdb.io/api/v1/route/iata/";
-    private static final int MAX_RETRY = 3;
 
+    // Data Processing
+    private static final String AIRLINE_FILE_PATH = "/airlines.json";
+    private static final String ROUTE_SPLIT_DELIMITER = "-";
+    private static final int MAX_RETRY = 3;
+    private static final int BATCH_SIZE = 25;
+
+    // Request Codes
     private static final int ERROR_CODE = 400;
     private static final int SUCCESS = 200;
 
@@ -55,7 +62,7 @@ public class FlightFetcher {
         }
         boolean processFinished = false;
         while (!processFinished) {
-            try (ExecutorService executor = Executors.newFixedThreadPool(5)){
+            try {
 
                 response = aRequest.sendAsync(API_URL);
 
@@ -63,83 +70,7 @@ public class FlightFetcher {
 
                 extractPlaneInfo(result, responseAsHttp.body(), mapper);
 
-                ArrayList<CompletableFuture<JsonNode>> futures = new ArrayList<>();
-                for (FlightInfo info : result){
-                    CompletableFuture<JsonNode> future = CompletableFuture
-                            .supplyAsync(() -> {
-                                try {
-                                    HttpResponse<String> aircraftResponse = aRequest.getClient().send(
-                                            HttpRequest.newBuilder()
-                                                    .uri(URI.create(GET_AIRCRAFT_URL + info.plane.icao24))
-                                                    .GET()
-                                                    .build(), HttpResponse.BodyHandlers.ofString()
-                                    );
-                                    return mapper.readTree(aircraftResponse.body());
-                                }
-                                catch (IOException | InterruptedException e){
-                                    System.err.println("Error: A network error occurred during stage 1 hexDb. " + e.getMessage());
-                                    return null;
-                                }
-                            })
-                            .thenApplyAsync(json -> {
-                                try {
-                                    String airlineIcao;
-                                    if (json != null){
-                                        info.airline = json.get("RegisteredOwners").asText();
-                                        airlineIcao = json.get("OperatorFlagCode").asText();
-                                    }
-                                    else{
-                                        return null;
-                                    }
-
-                                    HttpResponse<String> iataResponse = aRequest.getClient().send(
-                                            HttpRequest.newBuilder()
-                                                    .uri(URI.create(GET_IATA_URL + airlineIcao))
-                                                    .GET()
-                                                    .build(), HttpResponse.BodyHandlers.ofString()
-                                    );
-                                    if (iataResponse.statusCode() != SUCCESS){
-                                        throw new IOException();
-                                    }
-                                    info.iataCode = iataResponse.body();
-                                    return mapper.readTree(iataResponse.body());
-                                }
-                                catch (IOException | InterruptedException e){
-                                    System.err.println("Error: A network error occurred during stage 2 hexDb. " + e.getMessage());
-                                    return null;
-                                }
-                            })
-                            .thenApplyAsync(json -> {
-                                try {
-
-                                    HttpResponse<String> routeResponse = aRequest.getClient().send(
-                                            HttpRequest.newBuilder()
-                                                    .uri(URI.create(GET_ROUTE_URL + info.iataCode + info.plane.callSign.trim().substring(3)))
-                                                    .GET()
-                                                    .build(), HttpResponse.BodyHandlers.ofString()
-                                    );
-                                    return mapper.readTree(routeResponse.body());
-                                }
-                                catch (IOException | InterruptedException e){
-                                    System.err.println("Error: A network error occurred during stage 3 hexDb. " + e.getMessage());
-                                    return null;
-                                }
-                            })
-                            .thenApply(json -> {
-                                String[] route;
-                                if (json != null) {
-                                    route = json.get("route").asText().split("-");
-                                    info.origin = Database.airports.get(route[0]);
-                                    info.dest = Database.airports.get(route[1]);
-                                }
-                                else {
-                                    System.err.println("Error: A network error occurred during stage 4 hexDb.");
-                                }
-                                return null;
-                            });
-                    futures.add(future);
-                }
-                CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+                completeFlightInfo(result, mapper, false, 100);
 
                 processFinished = true;
             }
@@ -175,6 +106,117 @@ public class FlightFetcher {
         return result;
     }
 
+    static void completeFlightInfo(ArrayList<FlightInfo> array, ObjectMapper mapper, boolean debug, int limit) throws InterruptedException {
+        try (ExecutorService executor = Executors.newFixedThreadPool(10)) {
+
+            Map<String, String> iataCodes = new ConcurrentHashMap<>();
+
+            for (int i = 0; i < array.size() && i < limit; i+=BATCH_SIZE) {
+                ArrayList<CompletableFuture<?>> futures = new ArrayList<>();
+                int end = Math.min(Math.min(limit, i + BATCH_SIZE), array.size());
+                ArrayList<FlightInfo> processed = new ArrayList<>(array.subList(i, end));
+
+                for (FlightInfo info : processed) {
+                    if (info.plane.callSign == null || info.plane.callSign.isBlank()) {
+                        continue;
+                    }
+                    CompletableFuture<?> future = CompletableFuture
+                            .supplyAsync(() -> {
+                                int status = 0;
+                                try {
+                                    HttpResponse<String> aircraftResponse = aRequest.getClient().send(
+                                            HttpRequest.newBuilder()
+                                                    .uri(URI.create(GET_AIRCRAFT_URL + info.plane.icao24))
+                                                    .GET()
+                                                    .build(), HttpResponse.BodyHandlers.ofString()
+                                    );
+                                    status = aircraftResponse.statusCode();
+                                    System.out.println("Body Stage 1: " + aircraftResponse.body());
+
+                                    return mapper.readTree(aircraftResponse.body());
+
+                                } catch (IOException | InterruptedException e) {
+                                    if (debug) {
+                                        System.err.println(
+                                                "Skip: A network error occurred while getting aircraft info. Skipping instance..." +
+                                                        "\nRequest Status Code: " + status);
+                                    }
+                                    return null;
+                                }
+                            }, executor)
+                            .thenApplyAsync(json -> {
+                                int status = 0;
+                                String airlineIcao;
+
+                                if (json != null && json.get("OperatorFlagCode") != null) {
+                                    airlineIcao = json.get("OperatorFlagCode").asText();
+                                    if (!Database.airlineIcaoToIata.containsKey(airlineIcao)){
+                                        return null;
+                                    }
+                                    info.iataCode = Database.airlineIcaoToIata.get(airlineIcao).iata();
+                                    info.airline = Database.airlineIcaoToIata.get(airlineIcao).name();
+
+                                    System.out.println(info.iataCode + ":" + info.airline);
+                                    return info.iataCode;
+                                } else {
+                                    return null;
+                                }
+
+                            }, executor)
+                            .thenApplyAsync(iata -> {
+                                int status = 0;
+                                try {
+                                    if (iata == null) {
+                                        return null;
+                                    }
+                                    info.plane.callSign = info.iataCode + info.plane.callSign.trim().substring(3);
+                                    HttpResponse<String> routeResponse = aRequest.getClient().send(
+                                            HttpRequest.newBuilder()
+                                                    .uri(URI.create(GET_ROUTE_URL + info.plane.callSign))
+                                                    .GET()
+                                                    .build(), HttpResponse.BodyHandlers.ofString()
+                                    );
+
+                                    System.out.println("Call 3: " + routeResponse.body());
+                                    status = routeResponse.statusCode();
+                                    return mapper.readTree(routeResponse.body());
+                                } catch (IOException | InterruptedException e) {
+                                    if (debug) {
+                                        System.err.println("Skip: A network error occurred while getting route info. " +
+                                                "Skipping instance...\nRequest Status Code: " + status);
+                                    }
+                                    return null;
+                                }
+                            }, executor)
+                            .thenApply(json -> {
+                                String[] route;
+                                if (json != null && json.get("route") != null) {
+                                    route = json.get("route").asText().split(ROUTE_SPLIT_DELIMITER);
+                                    info.origin = Database.airports.get(route[0]);
+                                    info.dest = Database.airports.get(route[1]);
+                                } else {
+                                    if (debug) {
+                                        System.err.println("Skip: No match found for instance. Skipping...");
+                                    }
+                                }
+                                return null;
+                            });
+                    futures.add(future);
+
+                }
+                CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+                processed.removeIf(info ->
+                        info.iataCode == null || info.iataCode.isBlank() ||
+                                info.origin == null ||
+                                info.dest == null
+                );
+                Database.flights.addAll(processed);
+                Thread.sleep(400);
+            }
+
+        }
+    }
+
     static void extractPlaneInfo(ArrayList<FlightInfo> array, String body, ObjectMapper mapper) throws JsonProcessingException{
         JsonNode root = mapper.readTree(body);
         JsonNode states = root.get("states");
@@ -202,12 +244,39 @@ public class FlightFetcher {
         }
     }
 
-    public static void main(String[] args) throws InterruptedException {
-        try{
-            ArrayList<FlightInfo> a = FlightFetcher.fetchLiveFlightInfo();
+    public static void getAirlineCodes(){
+        ObjectMapper mapper = new ObjectMapper();
+        InputStream is = Objects.requireNonNull(
+                CSVHandler.class.getResourceAsStream(AIRLINE_FILE_PATH));
 
-            for (FlightInfo b : a){
-                System.out.println(b.origin.iataCode);
+
+        try {
+            JsonNode root = mapper.readTree(is);
+            for (JsonNode airline : root){
+                if (airline != null){
+                    String iata = airline.get("iata").asText().trim();
+                    Database.airlineIcaoToIata.put(airline.get("icao").asText().trim(),
+                            new AirlineCode(
+                                    (iata.isBlank()) ? "N/A" : iata,
+                                    airline.get("name").asText().trim()));
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        CSVHandler.loadAirportCSV();
+        getAirlineCodes();
+        for (AirlineCode c : Database.airlineIcaoToIata.values()){
+            System.out.println(c.iata());
+        }
+        try{
+            FlightFetcher.fetchLiveFlightInfo();
+
+            for (FlightInfo b : Database.flights){
+                System.out.println(b.airline);
             }
         } catch (RequestFailedException e) {
             System.err.println(e.getStatusCode());
