@@ -1,12 +1,10 @@
 package com.still_processing;
 
-import com.still_processing.Application.MainWindow;
-
 import javax.swing.UIManager;
-
 import javax.swing.BorderFactory;
 
 import static com.still_processing.DefaultSettings.Settings.*;
+import com.still_processing.Application.MainWindow;
 
 /**
  * Application Entry point
@@ -27,7 +25,6 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
 
         new MainWindow().setVisible(true);
     }
