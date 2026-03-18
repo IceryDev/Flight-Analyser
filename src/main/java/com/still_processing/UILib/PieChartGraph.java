@@ -1,8 +1,6 @@
 package com.still_processing.UILib;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JFrame;
+import javax.swing.*;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.BorderLayout;
@@ -26,14 +24,14 @@ import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
  */
 
 public class PieChartGraph extends JPanel implements Runnable {
-    private final String CHART_TITLE = "Pie Chart";
 
     Thread graphThread;
+    private final String CHART_TITLE = "Pie Chart";
     private final int FPS = 60;
-
+    private final JPanel TOP_BAR;
     private double animationProgress = 0.0;
     private static final double ANIMATION_DURATION = 300.0;
-    private final JPanel TOP_BAR;
+    private HashMap<String, Integer> data;
 
     private static final Color[] PALETTE = {
             new Color(0xD31E91B3, true),
@@ -46,17 +44,10 @@ public class PieChartGraph extends JPanel implements Runnable {
             new Color(0x3498DB),
     };
 
-    private final HashMap<String, Integer> data = getData();
-    private static HashMap<String, Integer> getData() {
-        HashMap<String, Integer> data = new HashMap<>();
-        data.put("RyanAir", 3);
-        data.put("AerLingus", 5);
-        data.put("Scoot", 3);
-        data.put("Other Airlines", 3);
-        return data;
-    }
-
-    public PieChartGraph() {
+    public PieChartGraph(HashMap<String,Integer> data) {
+        if(data != null && !data.isEmpty()){
+            this.data = data;
+        }
         this.setPreferredSize(new Dimension(760, 600));
         this.setMinimumSize(new Dimension(300, 400));
         this.setDoubleBuffered(true);
@@ -129,7 +120,7 @@ public class PieChartGraph extends JPanel implements Runnable {
         int chartX = padding;
         double animatedSweep = sineMotion(animationProgress)*360;
         List<String> keys  = new ArrayList<>(data.keySet());
-        int total          = keys.stream().mapToInt(data::get).sum();
+        int total = keys.stream().mapToInt(data::get).sum();
         double startAngle  = 0;
         double remainingAngle = animatedSweep;
         for (int i = 0; i < keys.size(); i++) {
@@ -158,7 +149,6 @@ public class PieChartGraph extends JPanel implements Runnable {
             startAngle += sweep;
             remainingAngle -= drawingSweep;
         }
-
         int legendX  = chartX + chartDiameter + padding + 80;
         int legendStartY = chartY + 80;
         int swatchSize = 16;
@@ -178,17 +168,25 @@ public class PieChartGraph extends JPanel implements Runnable {
         }
         g2d.dispose();
     }
-//Testing:
+//
 //    public static void main(String[] args) {
 //        JFrame frame = new JFrame("Pie Chart");
 //        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+//        SwingUtilities.invokeLater(()->{
+//            HashMap<String, Integer> categorical = new HashMap<>();
+//            categorical.put("Scoot", 15);
+//            categorical.put("AerLingus", 30);
+//            categorical.put("1", 40);
+//            categorical.put("2", 10);
 //
-//        PieChartGraph chart = new PieChartGraph();
-//        frame.add(chart);
-//        frame.pack();
-//        frame.setLocationRelativeTo(null);
-//        frame.setVisible(true);
+//            PieChartGraph chart = new PieChartGraph(categorical);
+//            frame.add(chart);
+//            frame.pack();
+//            frame.setLocationRelativeTo(null);
+//            frame.setVisible(true);
 //
-//        chart.animate();
+//            chart.animate();
+//        });
+//
 //    }
 }
