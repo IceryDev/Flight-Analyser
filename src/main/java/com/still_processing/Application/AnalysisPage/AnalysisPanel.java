@@ -1,8 +1,10 @@
 package com.still_processing.Application.AnalysisPage;
 
+import com.still_processing.FlightData.CSVHandler;
 import com.still_processing.UILib.ButtonBuilder;
 import com.still_processing.UILib.Histogram;
 import com.still_processing.UILib.TextPaneBuilder;
+import com.still_processing.FlightData.Database;
 
 import javax.swing.*;
 import javax.swing.text.SimpleAttributeSet;
@@ -21,6 +23,7 @@ import static com.still_processing.DefaultSettings.Settings.*;
 
 public class AnalysisPanel extends JPanel implements Scrollable {
     Histogram histogram;
+    Histogram latenessHistogram;
     public AnalysisPanel(ActionListener a){
 
         System.out.println("=== Analysis Panel ===");
@@ -61,10 +64,18 @@ public class AnalysisPanel extends JPanel implements Scrollable {
         };
         histogram = new Histogram(data, 5, 3);
         this.add(histogram);
+
+        CSVHandler.loadOfflineFlightCSV();
+
+        float[] latenessData = Database.getLateness(Database.offlineFlights);
+        System.out.println(latenessData.length);
+        latenessHistogram = new Histogram(latenessData, 240, 1000);
+        this.add(latenessHistogram);
     }
 
     public void startRender(){
         histogram.animate();
+        latenessHistogram.animate();
     }
 
     @Override

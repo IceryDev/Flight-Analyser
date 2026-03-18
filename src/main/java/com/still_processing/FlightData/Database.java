@@ -12,15 +12,15 @@ import java.util.HashMap;
 
 public class Database {
 
-    static HashMap<String, Airport> airports = new HashMap<>();
-    static ArrayList<FlightInfo> flights = new ArrayList<>();
-    static ArrayList<FlightInfo> offlineFlights = new ArrayList<>();
+    public static HashMap<String, Airport> airports = new HashMap<>();
+    public static ArrayList<FlightInfo> flights = new ArrayList<>();
+    public static ArrayList<FlightInfo> offlineFlights = new ArrayList<>();
 
     public static Map<String, Airport> getAirports() {
         return Collections.unmodifiableMap(airports);
     }
 
-    public float[] getLateness(ArrayList<FlightInfo> array){
+    public static float[] getLateness(ArrayList<FlightInfo> array){
         float[] lateness = new float[array.size()];
 
         for (int i = 0; i < array.size(); i++){
