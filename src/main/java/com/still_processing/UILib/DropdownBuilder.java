@@ -14,11 +14,7 @@ import java.awt.Font;
 
 public class DropdownBuilder {
 
-    private final int[] size = new int[2];
-
-    {
-        size[1] = 50;
-    }
+    private final int[] size;
 
     private Color background = BACKGROUND;
     private Color foreground = TEXT_COLOR;
@@ -31,7 +27,15 @@ public class DropdownBuilder {
 
     private String[] options;
 
-    public JComboBox build() {
+    public DropdownBuilder(String[] options) {
+        if (options != null && options.length != 0) {
+            this.options = options;
+        }
+        size = new int[2];
+        size[1] = 50;
+    }
+
+    public JComboBox<String> build() {
 
         JComboBox<String> dropdown = new JComboBox<>(options);
 
@@ -83,11 +87,6 @@ public class DropdownBuilder {
 
     public DropdownBuilder setBorderWidth(int width) {
         this.borderWidth = width;
-        return this;
-    }
-
-    public DropdownBuilder setOptions(String[] options) {
-        this.options = options;
         return this;
     }
 }
