@@ -4,9 +4,11 @@ import javax.accessibility.Accessible;
 import javax.swing.JComboBox;
 
 import static com.still_processing.DefaultSettings.Settings.*;
-import javax.swing.*;
+
+import javax.swing.border.LineBorder;
 import javax.swing.event.ListDataListener;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -32,9 +34,12 @@ public class DropdownBuilder {
     private int fontSize = FONT_SIZE;
     private Font font = REGULAR_FONT;
 
-    private Vector<String> options = new Vector<>();
+    boolean hasBorder = false;
+    int borderWidth = 5;
 
-    private ActionListener listener;
+    private String[] options;
+
+//    private ActionListener listener;
 
     public JComboBox build() {
 
@@ -48,14 +53,23 @@ public class DropdownBuilder {
 
         dropdown.setFont(this.font.deriveFont(Font.PLAIN, this.fontSize));
 
+        if (hasBorder) {
+            dropdown.setBorder(new LineBorder(Color.BLACK, borderWidth));
+        }
+
         dropdown.setMaximumRowCount(10);
 
-        if (listener != null) {
-            dropdown.addActionListener(e -> {
-                JComboBox source = (JComboBox) e.getSource();
-                System.out.println("Selected: " + source.getSelectedItem());
-            });
-        }
+//        dropdown.addActionListener(e -> {
+//            String selected = (String) dropdown.getSelectedItem();
+//            System.out.println("Selected: " + selected);
+//        });
+
+//        if (listener != null) {
+//            dropdown.addActionListener(e -> {
+//                JComboBox source = (JComboBox) e.getSource();
+//                System.out.println("Selected: " + source.getSelectedItem());
+//            });
+//        }
 
         return dropdown;
     }
@@ -86,13 +100,23 @@ public class DropdownBuilder {
         return this;
     }
 
-    public DropdownBuilder setOptions(Vector<String> options) {
+    public DropdownBuilder setBorder(boolean hasBorder) {
+        this.hasBorder = hasBorder;
+        return this;
+    }
+
+    public DropdownBuilder setBorderWidth(int width) {
+        this.borderWidth = width;
+        return this;
+    }
+
+    public DropdownBuilder setOptions(String[] options) {
         this.options = options;
         return this;
     }
 
-    public DropdownBuilder select(ActionListener listener) {
-        this.listener = listener;
-        return this;
-    }
+//    public DropdownBuilder select(ActionListener listener) {
+//        this.listener = listener;
+//        return this;
+//    }
 }
