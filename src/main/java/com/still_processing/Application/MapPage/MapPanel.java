@@ -42,6 +42,7 @@ public class MapPanel extends JPanel implements Scrollable {
 
         JButton button = new ButtonBuilder().setSize(25, 25).setBackground(HIGHLIGHT).setText("Home Page").setFontSize(35).build();
         this.add(button);
+        button.addActionListener(a);
     }
 
     @Override

@@ -42,9 +42,11 @@ public class AnalysisPanel extends JPanel implements Scrollable {
 
         JButton button1 = new ButtonBuilder().setSize(25, 25).setBackground(HIGHLIGHT).setText("Analyse").setFontSize(35).build();
         this.add(button1);
+        button1.addActionListener(a);
 
         JButton button2 = new ButtonBuilder().setSize(25, 25).setBackground(HIGHLIGHT).setText("Home Page").setFontSize(35).build();
         this.add(button2);
+        button2.addActionListener(a);
     }
 
 

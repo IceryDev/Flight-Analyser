@@ -9,7 +9,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ImageIcon;
 
+import com.still_processing.Application.AnalysisPage.AnalysisPanel;
 import com.still_processing.Application.HomePage.BodyPanel;
+import com.still_processing.Application.MapPage.MapPanel;
 import com.still_processing.Application.SearchPage.SearchPanel;
 import com.still_processing.UILib.ScrollPaneFactory;
 import static com.still_processing.DefaultSettings.Settings.*;
@@ -23,7 +25,7 @@ public class MainWindow extends JFrame implements ActionListener {
     Panel cards = new Panel(cardLayout);
 
     public MainWindow() {
-        ImageIcon image = new ImageIcon(getClass().getResource("/Images/icon.jpeg"));
+        ImageIcon image = new ImageIcon(getClass().getResource("/Images/logo.jpg"));
         this.setIconImage(image.getImage());
 
         JPanel body = new BodyPanel(this);
@@ -35,25 +37,25 @@ public class MainWindow extends JFrame implements ActionListener {
 
         JPanel search = new SearchPanel(this);
         scrollPane = ScrollPaneFactory.createPane();
-        scrollPane.setViewportView(body);
+        scrollPane.setViewportView(search);
         scrollPane.getViewport().setBackground(BACKGROUND);
         cards.add(scrollPane, "Search");
 
 
-        JPanel analysis = new BodyPanel(this);
+        JPanel analyse = new AnalysisPanel(this);
         scrollPane = ScrollPaneFactory.createPane();
-        scrollPane.setViewportView(body);
+        scrollPane.setViewportView(analyse);
         scrollPane.getViewport().setBackground(BACKGROUND);
         cards.add(scrollPane, "Analyse");
 
 
-        JPanel map = new BodyPanel(this);
+        JPanel map = new MapPanel(this);
         scrollPane = ScrollPaneFactory.createPane();
-        scrollPane.setViewportView(body);
+        scrollPane.setViewportView(map);
         scrollPane.getViewport().setBackground(BACKGROUND);
         cards.add(scrollPane, "Map");
 
-        this.add(scrollPane, BorderLayout.CENTER);
+        this.add(cards, BorderLayout.CENTER);
 
         this.setTitle("Flight Analyser");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -62,10 +64,15 @@ public class MainWindow extends JFrame implements ActionListener {
         this.setMinimumSize(new Dimension(512, 512));
         this.setVisible(true);
     }
+
+/**
+* @author Deea Zaharia
+*/
+
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()){
-            case "Main":
+            case "Home Page":
                 cardLayout.show(cards, "Main");
                 break;
             case "Search":
@@ -74,7 +81,7 @@ public class MainWindow extends JFrame implements ActionListener {
             case "Analyse":
                 cardLayout.show(cards, "Analyse");
                 break;
-            case "Map":
+            case "Map View":
                 cardLayout.show(cards, "Map");
                 break;
         }

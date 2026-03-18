@@ -87,8 +87,11 @@ public class BodyPanel extends JPanel implements Scrollable {
         JButton button3 = new ButtonBuilder().setSize(25, 25).setBackground(HIGHLIGHT).setText("Search").setFontSize(35).build();
 
         this.add(button1);
+        button1.addActionListener(a);
         this.add(button2);
+        button2.addActionListener(a);
         this.add(button3);
+        button3.addActionListener(a);
     }
 
     @Override
