@@ -26,7 +26,7 @@ public class BarChartGraph extends JPanel implements Runnable{
     private String[] labels;
     private float[] values;
     private int yStep = 5;
-    private int padding = 60;
+    private int padding = 90;
     private int barGap = 8;
     private double renderPercentage = 0;
     private final String CHART_TITLE = "Bar Chart";
@@ -131,7 +131,7 @@ public class BarChartGraph extends JPanel implements Runnable{
             g2d.drawRect(xPos, barTop, barWidth, barProgress);
         }
         drawAxis(g2d, max);
-        drawAxisTitles(g2d, "Values", "Category");
+        drawAxisTitles(g2d, "Category", "Value");
         g2d.dispose();
     }
     private JPanel buildTopBar() {
