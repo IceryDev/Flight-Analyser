@@ -33,7 +33,7 @@ public class DropdownBuilder {
 
     public JComboBox build() {
 
-        JComboBox<String> dropdown = new JComboBox<>(options);       // options must be a String
+        JComboBox<String> dropdown = new JComboBox<>(options);
 
         dropdown.setEditable(false);
         dropdown.setSize(size[0], size[1]);
