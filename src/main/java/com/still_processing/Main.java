@@ -1,5 +1,9 @@
 package com.still_processing;
 
+import javax.swing.UIManager;
+import javax.swing.BorderFactory;
+
+import static com.still_processing.DefaultSettings.Settings.*;
 import com.still_processing.Application.MainWindow;
 
 /**
@@ -14,6 +18,14 @@ public class Main {
         System.setProperty("awt.useSystemAAFontSettings", "on");
         System.setProperty("swing.aatext", "true");
 
-        new MainWindow();
+        try {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+            UIManager.getDefaults().put("TableHeader.cellBorder", BorderFactory.createMatteBorder(5, 0, 5, 0, GRAY));
+            UIManager.getDefaults().put("TableBody.cellBorder", BorderFactory.createMatteBorder(5, 0, 5, 0, GRAY));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        new MainWindow().setVisible(true);
     }
 }
