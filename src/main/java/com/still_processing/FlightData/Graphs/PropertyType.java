@@ -9,19 +9,20 @@ package com.still_processing.FlightData.Graphs;
 public enum PropertyType {
     DATE(false),
     IATA(true),
+    AIRLINE(true),
     ORIGIN(true),
     DESTINATION(true),
     DEPARTURE(false),           //Departure Time
     ARRIVAL(false),             //Arrival Time
     DISTANCE(false),
+    LATENESS(false),
     CANCELLED(true),
     DIVERTED(true);
 
 
 
-    final boolean isCategorical;
+    public final boolean isCategorical;
     PropertyType(boolean isCategorical){
-
         this.isCategorical = isCategorical;
     }
 }

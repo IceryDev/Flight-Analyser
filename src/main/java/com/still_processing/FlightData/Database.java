@@ -6,6 +6,7 @@ import java.util.Collections;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.still_processing.FlightData.Graphs.PropertyType;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,7 +23,7 @@ public class Database {
         return Collections.unmodifiableMap(airports);
     }
 
-    public float[] getLateness(ArrayList<FlightInfo> array){
+    public static float[] getLateness(ArrayList<FlightInfo> array){
         float[] lateness = new float[array.size()];
 
         for (int i = 0; i < array.size(); i++){
@@ -32,7 +33,7 @@ public class Database {
         return lateness;
     }
 
-    public float[] getDistance(ArrayList<FlightInfo> array){
+    public static float[] getDistance(ArrayList<FlightInfo> array){
         float[] dist = new float[array.size()];
 
         for (int i = 0; i < array.size(); i++){
@@ -40,6 +41,49 @@ public class Database {
         }
 
         return dist;
+    }
+
+    public static HashMap<String, Integer> getCategoricalFreq(ArrayList<FlightInfo> array, PropertyType parameter){
+        if (!parameter.isCategorical){
+            System.err.println("Use the other method to get frequency bins for quantitative data."); //Replace other with the name after
+            return null;
+        }
+
+        HashMap<String, Integer> result = new HashMap<>();
+
+        for (FlightInfo info : array){
+            String tmp = getCorrespondingValue(info, parameter);
+
+            if (!result.containsKey(tmp)){
+                result.put(tmp, 1);
+            }
+            else{
+                result.replace(tmp, result.get(tmp) + 1);
+            }
+        }
+
+        return result;
+    }
+
+//    public static HashMap<String, Integer> getCrossTabulation(
+//            ArrayList<FlightInfo> array, PropertyType param1, PropertyType param2){
+//
+//        for (FlightInfo info : array){
+//
+//        }
+//    }
+
+    private static String getCorrespondingValue(FlightInfo info, PropertyType type){
+        String tmp;
+        switch (type){
+            case ORIGIN -> tmp = info.origin.name;
+            case DESTINATION -> tmp = info.dest.name;
+            case IATA -> tmp = info.iataCode;
+            case AIRLINE -> tmp = info.airline;
+            case CANCELLED -> tmp = (info.cancelled) ? "Cancelled" : "Departed";
+            default -> tmp = "";
+        }
+        return tmp;
     }
 
     /**
