@@ -15,16 +15,7 @@ import java.util.concurrent.CompletableFuture;
 
 /**
  * An {@code AuthenticatedRequest} object will wrap around the {@code HttpRequest}
- * to handle the "Bearer" type authentication.
- * <p>
- * Example use:
- * {@snippet :
- * AuthenticatedRequest aRequest = new AuthenticatedRequest(HttpClient.newHttpClient(), API_KEY);
- * //Synchronous Request
- * HttpResponse<String> response = aRequest.send(REQUEST_URL);
- * //Asynchronous Request
- * CompletableFuture<HttpResponse<String>> response = aRequest.sendAsync(REQUEST_URL);
- * }
+ * to handle OAuth2 and additionally the "Bearer" type of authentication.
  *
  * @author Ulaş İçer
  *
@@ -146,6 +137,11 @@ public class AuthenticatedRequest {
                 .GET().build();
     }
 
+    /**
+     * Retrieves the OAuth2 token required by OpenSky API.
+     * @throws RequestFailedException Thrown if credentials are incorrect or does not exist.
+     * @author Ulaş İçer
+     */
     private void retrieveToken() throws RequestFailedException{
         String postData = "grant_type=client_credentials" + "&client_id=" +
                 URLEncoder.encode(clientId, StandardCharsets.UTF_8) + "&client_secret=" +
@@ -173,6 +169,11 @@ public class AuthenticatedRequest {
 
     }
 
+    /**
+     * Determines whether the OAuth2 token needs refreshing.
+     * @return true/false -> refresh/no refresh
+     * @author Ulaş İçer
+     */
     private boolean checkTokenUpdate(){
         long current = Instant.now().getEpochSecond();
         if (current - lastRetrieved >= TOKEN_REFRESH){

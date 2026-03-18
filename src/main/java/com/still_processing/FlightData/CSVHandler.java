@@ -34,6 +34,7 @@ public class CSVHandler {
             while ((line = reader.readLine()) != null){
                 // Split commas between {"}, {,}, {any digit}, and {-} to get individual data.
                 String[] args = line.split(CSV_SPLIT_REGEX);
+                String tempIcao = "";
 
                 Airport tmp = new Airport();
                 for (int i = 0; i < Math.min(args.length, 19); i++){
@@ -62,12 +63,18 @@ public class CSVHandler {
                         case "iata_code":
                             tmp.iataCode = args[i];
                             break;
+                        case "icao_code":
+                            tempIcao = args[i];
+                            break;
                         default:
                             break;
                     }
                 }
                 tmp.id = Database.airports.size();
                 Database.airports.put(tmp.iataCode, tmp);
+                if (!tempIcao.isEmpty() && tmp.iataCode != null && !tmp.iataCode.isEmpty()) {
+                    Database.airportIcaoToIata.put(tempIcao, tmp.iataCode);
+                }
             }
             Database.airports.remove(null);
         }
