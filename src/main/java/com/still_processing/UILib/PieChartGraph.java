@@ -44,6 +44,10 @@ public class PieChartGraph extends JPanel implements Runnable {
             new Color(0x3498DB),
     };
 
+    /**
+     *
+     * @author Jessica Chen
+     */
     public PieChartGraph(HashMap<String,Integer> data) {
         if(data != null && !data.isEmpty()){
             this.data = data;
@@ -57,6 +61,10 @@ public class PieChartGraph extends JPanel implements Runnable {
         setVisible(true);
     }
 
+    /**
+     * Build top Bar
+     * @author Jessica Chen
+     */
     private JPanel buildTopBar() {
         JPanel bar = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 10));
         bar.setBackground(new Color(40, 44, 60));
@@ -66,7 +74,10 @@ public class PieChartGraph extends JPanel implements Runnable {
         bar.add(label);
         return bar;
     }
-
+    /**
+     * Animation
+     * @author Zhou Sun
+     */
     @Override
     public void run() {
         double drawInterval = 1_000_000_000.0 / FPS;
@@ -91,18 +102,23 @@ public class PieChartGraph extends JPanel implements Runnable {
         graphThread.start();
     }
 
-    // Update variables
+    /**
+     * Update Variables
+     * @author Jessica Chen
+     */
     private void update() {
         if (animationProgress < 1.0) {
             animationProgress = Math.min(animationProgress + 1.0 / ANIMATION_DURATION, 1.0);
         }
     }
-
     private double sineMotion(double time){
         return -(Math.cos(Math.PI * time) - 1.0) / 2.0;
     }
 
-    // draw method
+    /**
+     * Draw method
+     * @author Jessica Chen
+     */
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
