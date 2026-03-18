@@ -8,7 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ImageIcon;
 
-import com.still_processing.Application.HomePage.BodyPanel;
+//import com.still_processing.Application.HomePage.BodyPanel;
 import com.still_processing.UILib.ScrollPaneFactory;
 import static com.still_processing.DefaultSettings.Settings.*;
 
