@@ -17,6 +17,9 @@ public class CSVHandler {
     static final String OFFLINE_FLIGHT_FILE_PATH = "/flights10k.csv";
     static final String CSV_SPLIT_REGEX = ",(?=[\",\\d-]|$)(?<=[\",\\d-])";
 
+    static final int MIN_IN_HRS = 60;
+    static final String TIME_DELIMITER = ":";
+
     /**
      * Takes the airport.csv file, extracts all data, and stores it in a hashmap
      * whose keys are the IATA codes, and the values are Airport objects.
@@ -145,16 +148,16 @@ public class CSVHandler {
                             destTmp.region = args[i];
                             break;
                         case "CRS_DEP_TIME":
-                            tmp.CRSDepTime = args[i];
+                            tmp.CRSDepTime = formatTimeString(args[i]);
                             break;
                         case "DEP_TIME":
-                            tmp.depTime = args[i];
+                            tmp.depTime = formatTimeString(args[i]);
                             break;
                         case "CRS_ARR_TIME":
-                            tmp.CRSArrTime = args[i];
+                            tmp.CRSArrTime = formatTimeString(args[i]);
                             break;
                         case "ARR_TIME":
-                            tmp.arrTime = args[i];
+                            tmp.arrTime = formatTimeString(args[i]);
                             break;
                         case "CANCELLED":
                             tmp.cancelled = (args[i].equals("1"));
@@ -171,6 +174,9 @@ public class CSVHandler {
                     }
                 }
 
+                tmp.lateness = (tmp.cancelled) ? 0 :
+                        formattedTimeToMinutes(tmp.depTime) - formattedTimeToMinutes(tmp.CRSDepTime);
+
                 tmp.origin = originTmp;
                 tmp.dest = destTmp;
                 Database.offlineFlights.add(tmp);
@@ -181,12 +187,44 @@ public class CSVHandler {
         }
     }
 
+    /**
+     * Returns how many minutes from start of the day has elapsed until the
+     * given time string of format "00:00"
+     * @param time Formatted time string as above.
+     * @return Equivalent value in minutes from the start of the day.
+     */
+    private static int formattedTimeToMinutes(String time){
+        if (time.length() < 4) { return 0; }
+
+        int mins = Integer.parseInt(time.substring(time.length()-2));
+        int hrs = Integer.parseInt(time.substring(0, time.length()-3));
+
+        return mins + (hrs*MIN_IN_HRS);
+    }
+
+    /**
+     * Takes in a non-formatted time string as "1234" and formats it as "12:34"
+     * Warning! Assumes the time is a valid time of the day.
+     * @param time The non-formatted string.
+     * @return Formatted string.
+     */
+    private static String formatTimeString(String time){
+        if (time.isEmpty() || !time.replaceAll("\\d", "").isEmpty()) { return "00:00"; }
+
+        if (time.length() != 4){
+            time = "0".repeat(4 - time.length()) + time;
+        }
+        time = String.format("%02d:%02d", Integer.parseInt(time.substring(0, time.length()-2)),
+                Integer.parseInt(time.substring(time.length()-2)));
+        return time;
+    }
+
     // For testing
     public static void main(String[] args){
 //        loadOfflineFlightCSV();
 //
 //        for (FlightInfo a : Database.offlineFlights){
-//            System.out.println(a.dest.iataCode);
+//            System.out.println(a.lateness);
 //        }
     }
 }
