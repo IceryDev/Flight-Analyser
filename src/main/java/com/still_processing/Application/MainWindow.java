@@ -23,33 +23,37 @@ import static com.still_processing.DefaultSettings.Settings.*;
 public class MainWindow extends JFrame implements ActionListener {
     CardLayout cardLayout = new CardLayout();
     Panel cards = new Panel(cardLayout);
+    private AnalysisPanel analyse;
+    private MapPanel map;
+    private SearchPanel search;
+    private BodyPanel body;
 
     public MainWindow() {
         ImageIcon image = new ImageIcon(getClass().getResource("/Images/logo.jpg"));
         this.setIconImage(image.getImage());
 
-        JPanel body = new BodyPanel(this);
+        body = new BodyPanel(this);
         JScrollPane scrollPane = ScrollPaneFactory.createPane();
         scrollPane.setViewportView(body);
         scrollPane.getViewport().setBackground(BACKGROUND);
         cards.add(scrollPane, "Main");
 
 
-        JPanel search = new SearchPanel(this);
+        search = new SearchPanel(this);
         scrollPane = ScrollPaneFactory.createPane();
         scrollPane.setViewportView(search);
         scrollPane.getViewport().setBackground(BACKGROUND);
         cards.add(scrollPane, "Search");
 
 
-        JPanel analyse = new AnalysisPanel(this);
+        analyse = new AnalysisPanel(this);
         scrollPane = ScrollPaneFactory.createPane();
         scrollPane.setViewportView(analyse);
         scrollPane.getViewport().setBackground(BACKGROUND);
         cards.add(scrollPane, "Analyse");
 
 
-        JPanel map = new MapPanel(this);
+        map = new MapPanel(this);
         scrollPane = ScrollPaneFactory.createPane();
         scrollPane.setViewportView(map);
         scrollPane.getViewport().setBackground(BACKGROUND);
@@ -80,6 +84,7 @@ public class MainWindow extends JFrame implements ActionListener {
                 break;
             case "Analyse":
                 cardLayout.show(cards, "Analyse");
+                analyse.startRender();
                 break;
             case "Map View":
                 cardLayout.show(cards, "Map");

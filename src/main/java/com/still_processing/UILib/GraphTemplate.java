@@ -1,4 +1,4 @@
-package DashboardLib;
+package com.still_processing.UILib;
 
 import java.awt.BasicStroke;
 import java.awt.Dimension;
@@ -16,7 +16,7 @@ public class GraphTemplate extends JPanel implements Runnable {
     private int height;
 
     // Define your own types
-    private final float[] data;
+  //  private final float[] data;
 
     public GraphTemplate() {
         this.setPreferredSize(new Dimension(0, height));

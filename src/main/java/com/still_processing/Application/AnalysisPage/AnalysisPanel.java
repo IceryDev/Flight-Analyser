@@ -1,6 +1,7 @@
 package com.still_processing.Application.AnalysisPage;
 
 import com.still_processing.UILib.ButtonBuilder;
+import com.still_processing.UILib.Histogram;
 import com.still_processing.UILib.TextPaneBuilder;
 
 import javax.swing.*;
@@ -19,6 +20,7 @@ import static com.still_processing.DefaultSettings.Settings.*;
  */
 
 public class AnalysisPanel extends JPanel implements Scrollable {
+    Histogram histogram;
     public AnalysisPanel(ActionListener a){
 
         System.out.println("=== Analysis Panel ===");
@@ -40,15 +42,30 @@ public class AnalysisPanel extends JPanel implements Scrollable {
 
         this.add(textPane);
 
-        JButton button1 = new ButtonBuilder().setSize(25, 25).setBackground(HIGHLIGHT).setText("Analyse").setFontSize(35).build();
-        this.add(button1);
-        button1.addActionListener(a);
-
         JButton button2 = new ButtonBuilder().setSize(25, 25).setBackground(HIGHLIGHT).setText("Home Page").setFontSize(35).build();
         this.add(button2);
         button2.addActionListener(a);
+
+
+        float[] data = {
+                27.0f, 22.0f, 27.0f, 30.0f, 31.0f, 28.0f, 26.0f, 25.0f, 18.0f, 43.0f,
+                31.0f, 30.0f, 33.0f, 25.0f, 19.0f, 24.0f, 27.0f, 25.0f, 23.0f, 18.0f,
+                23.0f, 27.0f, 30.0f, 39.0f, 21.0f, 25.0f, 34.0f, 24.0f, 25.0f, 26.0f,
+                32.0f, 35.0f, 27.0f, 21.0f, 22.0f, 32.0f, 21.0f, 25.0f, 22.0f, 20.0f,
+                32.0f, 24.0f, 31.0f, 28.0f, 22.0f, 24.0f, 31.0f, 28.0f, 33.0f, 41.0f,
+                25.0f, 36.0f, 32.0f, 32.0f, 37.0f, 26.0f, 30.0f, 25.0f, 21.0f, 23.0f,
+                18.0f, 28.0f, 28.0f, 29.0f, 37.0f, 30.0f, 26.0f, 18.0f, 22.0f, 31.0f,
+                25.0f, 30.0f, 37.0f, 24.0f, 28.0f, 29.0f, 27.0f, 26.0f, 16.0f, 31.0f,
+                24.0f, 23.0f, 39.0f, 30.0f, 28.0f, 28.0f, 20.0f, 24.0f, 30.0f, 27.0f,
+                24.0f, 24.0f, 33.0f, 32.0f, 32.0f, 25.0f, 36.0f, 28.0f, 32.0f, 32.0f
+        };
+        histogram = new Histogram(data, 5, 3);
+        this.add(histogram);
     }
 
+    public void startRender(){
+        histogram.animate();
+    }
 
     @Override
     protected void paintComponent(Graphics graphics) {
