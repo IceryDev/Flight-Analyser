@@ -12,7 +12,9 @@ import java.util.HashMap;
 
 public class Database {
 
-    public static HashMap<String, Airport> airports = new HashMap<>();
+    static HashMap<String, Airport> airports = new HashMap<>();
+    static HashMap<String, String> airportIcaoToIata = new HashMap<>();
+    static HashMap<String, AirlineCode> airlineIcaoToIata = new HashMap<>();
     public static ArrayList<FlightInfo> flights = new ArrayList<>();
     public static ArrayList<FlightInfo> offlineFlights = new ArrayList<>();
 
@@ -20,20 +22,20 @@ public class Database {
         return Collections.unmodifiableMap(airports);
     }
 
-    public static float[] getLateness(ArrayList<FlightInfo> array){
+    public static float[] getLateness(ArrayList<FlightInfo> array) {
         float[] lateness = new float[array.size()];
 
-        for (int i = 0; i < array.size(); i++){
+        for (int i = 0; i < array.size(); i++) {
             lateness[i] = array.get(i).lateness;
         }
 
         return lateness;
     }
 
-    public float[] getDistance(ArrayList<FlightInfo> array){
+    public static float[] getDistance(ArrayList<FlightInfo> array) {
         float[] dist = new float[array.size()];
 
-        for (int i = 0; i < array.size(); i++){
+        for (int i = 0; i < array.size(); i++) {
             dist[i] = array.get(i).distance;
         }
 
@@ -41,12 +43,15 @@ public class Database {
     }
 
     /**
-     * Parses a JSON structure containing route information and extracts flight data,
+     * Parses a JSON structure containing route information and extracts flight
+     * data,
      * adding them to the internal collections of flights.
      *
      * @author Marco Fontana
-     * @param <T> Related type of input data containing the JSON representation
-     * @param abstractData An object whose returns a JSON string describing airports & flights routes
+     * @param <T>          Related type of input data containing the JSON
+     *                     representation
+     * @param abstractData An object whose returns a JSON string describing airports
+     *                     & flights routes
      * @throws JsonProcessingException
      */
     public <T> void deserialize(T abstractData) throws JsonProcessingException {
@@ -62,7 +67,8 @@ public class Database {
             JsonNode countryNode = destinationNode.get("countryCode");
             JsonNode municipalityNode = destinationNode.get("municipalityName");
             JsonNode iataNode = destinationNode.get("iata");
-            if (nameNode == null || locationNode == null || countryNode == null || municipalityNode == null || iataNode == null) {
+            if (nameNode == null || locationNode == null || countryNode == null || municipalityNode == null
+                    || iataNode == null) {
                 continue;
             }
             JsonNode latitudeNode = locationNode.get("lat");
@@ -81,7 +87,7 @@ public class Database {
                 assert airlineCode != null;
                 FlightInfo flight = new FlightInfo();
                 flight.dest = destinationAirport;
-                flight.IATA_Code_Marketing_Airline = airlineCode;
+                flight.iataCode = airlineCode;
                 flights.add(flight);
             }
         }

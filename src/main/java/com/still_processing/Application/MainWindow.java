@@ -23,37 +23,30 @@ import static com.still_processing.DefaultSettings.Settings.*;
 public class MainWindow extends JFrame implements ActionListener {
     CardLayout cardLayout = new CardLayout();
     Panel cards = new Panel(cardLayout);
-    private AnalysisPanel analyse;
-    private MapPanel map;
-    private SearchPanel search;
-    private BodyPanel body;
 
     public MainWindow() {
         ImageIcon image = new ImageIcon(getClass().getResource("/Images/logo.jpg"));
         this.setIconImage(image.getImage());
 
-        body = new BodyPanel(this);
+        JPanel body = new BodyPanel(this);
         JScrollPane scrollPane = ScrollPaneFactory.createPane();
         scrollPane.setViewportView(body);
         scrollPane.getViewport().setBackground(BACKGROUND);
         cards.add(scrollPane, "Main");
 
-
-        search = new SearchPanel(this);
+        JPanel search = new SearchPanel(this);
         scrollPane = ScrollPaneFactory.createPane();
         scrollPane.setViewportView(search);
         scrollPane.getViewport().setBackground(BACKGROUND);
         cards.add(scrollPane, "Search");
 
-
-        analyse = new AnalysisPanel(this);
+        JPanel analyse = new AnalysisPanel(this);
         scrollPane = ScrollPaneFactory.createPane();
         scrollPane.setViewportView(analyse);
         scrollPane.getViewport().setBackground(BACKGROUND);
         cards.add(scrollPane, "Analyse");
 
-
-        map = new MapPanel(this);
+        JPanel map = new MapPanel(this);
         scrollPane = ScrollPaneFactory.createPane();
         scrollPane.setViewportView(map);
         scrollPane.getViewport().setBackground(BACKGROUND);
@@ -69,13 +62,13 @@ public class MainWindow extends JFrame implements ActionListener {
         this.setVisible(true);
     }
 
-/**
-* @author Deea Zaharia
-*/
+    /**
+     * @author Deea Zaharia
+     */
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        switch (e.getActionCommand()){
+        switch (e.getActionCommand()) {
             case "Home Page":
                 cardLayout.show(cards, "Main");
                 break;
@@ -84,7 +77,6 @@ public class MainWindow extends JFrame implements ActionListener {
                 break;
             case "Analyse":
                 cardLayout.show(cards, "Analyse");
-                analyse.startRender();
                 break;
             case "Map View":
                 cardLayout.show(cards, "Map");
@@ -92,4 +84,3 @@ public class MainWindow extends JFrame implements ActionListener {
         }
     }
 }
-
