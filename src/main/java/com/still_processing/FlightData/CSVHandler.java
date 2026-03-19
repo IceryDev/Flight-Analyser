@@ -3,9 +3,7 @@ package com.still_processing.FlightData;
 
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
@@ -39,6 +37,7 @@ public class CSVHandler {
             while ((line = reader.readLine()) != null){
                 // Split commas between {"}, {,}, {any digit}, and {-} to get individual data.
                 String[] args = line.split(CSV_SPLIT_REGEX);
+                String tempIcao = "";
 
                 Airport tmp = new Airport();
                 for (int i = 0; i < Math.min(args.length, 19); i++){
@@ -67,12 +66,18 @@ public class CSVHandler {
                         case "iata_code":
                             tmp.iataCode = args[i];
                             break;
+                        case "icao_code":
+                            tempIcao = args[i];
+                            break;
                         default:
                             break;
                     }
                 }
                 tmp.id = Database.airports.size();
                 Database.airports.put(tmp.iataCode, tmp);
+                if (!tempIcao.isEmpty() && tmp.iataCode != null && !tmp.iataCode.isEmpty()) {
+                    Database.airportIcaoToIata.put(tempIcao, tmp.iataCode);
+                }
             }
             Database.airports.remove(null);
         }
@@ -123,10 +128,10 @@ public class CSVHandler {
                             tmp.flightDate = args[i];
                             break;
                         case "MKT_CARRIER":
-                            tmp.IATA_Code_Marketing_Airline = args[i];
+                            tmp.iataCode = args[i];
                             break;
                         case "MKT_CARRIER_FL_NUM":
-                            tmp.Flight_Number_Marketing_Airline = args[i];
+                            tmp.flightNumber = args[i];
                             break;
                         case "ORIGIN":
                             tmp.originAirport = args[i];

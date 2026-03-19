@@ -13,6 +13,8 @@ import java.util.HashMap;
 public class Database {
 
     static HashMap<String, Airport> airports = new HashMap<>();
+    static HashMap<String, String> airportIcaoToIata = new HashMap<>();
+    static HashMap<String, AirlineCode> airlineIcaoToIata = new HashMap<>();
     public static ArrayList<FlightInfo> flights = new ArrayList<>();
     public static ArrayList<FlightInfo> offlineFlights = new ArrayList<>();
 
@@ -85,7 +87,7 @@ public class Database {
                 assert airlineCode != null;
                 FlightInfo flight = new FlightInfo();
                 flight.dest = destinationAirport;
-                flight.IATA_Code_Marketing_Airline = airlineCode;
+                flight.iataCode = airlineCode;
                 flights.add(flight);
             }
         }
