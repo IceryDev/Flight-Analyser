@@ -66,7 +66,7 @@ public class FlightFetcher {
      *
      * @author Ulaş İçer
      */
-    static void fetchLiveFlightInfo(int limit) throws RequestFailedException, InterruptedException {
+    public static void fetchLiveFlightInfo(int limit) throws RequestFailedException, InterruptedException {
 
         int retryCount = 0;
 
