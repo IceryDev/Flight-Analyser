@@ -19,12 +19,15 @@ public class ScatterPlot extends JPanel implements Runnable {
     private final static int MINIMUM_PIXEL_SPACING = 20;
 
     Thread graphThread;
+    private Graphics2D g2d;
     private float minimumValue;
     private float maximumValue;
     private final float[][] data;
+    private final String title;
 
-    public ScatterPlot(float[][] data) {
+    public ScatterPlot(float[][] data, String title) {
         this.data = data;
+        this.title = title;
         this.minimumValue = Float.MAX_VALUE;
         this.maximumValue = Float.MIN_VALUE;
         this.setPreferredSize(new Dimension(0, getHeight()));
@@ -58,10 +61,16 @@ public class ScatterPlot extends JPanel implements Runnable {
         }
     }
 
+    public void setTitle() {
+        FontMetrics metrics = g2d.getFontMetrics();
+        g2d.setFont(new Font("Arial", Font.BOLD, 18));
+        g2d.drawString(title, (getWidth() - metrics.stringWidth(title)) / 2, STD_MARGIN / 2);
+    }
+
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
-        Graphics2D g2d = (Graphics2D) graphics;
+        g2d = (Graphics2D) graphics;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         int plotWidth = getWidth() - (STD_MARGIN * 2);
         int plotHeight = getHeight() - (STD_MARGIN * 2);
@@ -114,7 +123,8 @@ public class ScatterPlot extends JPanel implements Runnable {
         }
         // Draw axis names
         g2d.drawString("X", getWidth() - MINIMUM_PIXEL_SPACING, getHeight() / 2);
-        g2d.drawString("Y", getWidth() / 2, MINIMUM_PIXEL_SPACING);
+        g2d.drawString("Y", getWidth() / 2, MINIMUM_PIXEL_SPACING * 2);
+        setTitle();
         g2d.dispose();
     }
 }
