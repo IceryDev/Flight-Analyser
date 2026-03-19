@@ -1,6 +1,7 @@
 package com.still_processing.Application.AnalysisPage;
 
 import com.still_processing.UILib.ButtonBuilder;
+import com.still_processing.UILib.DropdownBuilder;
 import com.still_processing.UILib.Histogram;
 import com.still_processing.UILib.TextPaneBuilder;
 import com.still_processing.FlightData.Database;
@@ -20,10 +21,12 @@ import static com.still_processing.DefaultSettings.Settings.*;
  * @author Deea Zaharia
  */
 
-public class AnalysisPanel extends JPanel implements Scrollable {
+public class AnalysisPanel extends JPanel implements Scrollable, ActionListener {
+    JPanel graphDisplay;
     Histogram histogram;
     Histogram latenessHistogram;
     Histogram distanceHistogram;
+    CardLayout cardLayout;
     public AnalysisPanel(ActionListener a){
 
         System.out.println("=== Analysis Panel ===");
@@ -55,6 +58,15 @@ public class AnalysisPanel extends JPanel implements Scrollable {
         this.add(button2Container);
 
         button2.addActionListener(a);
+        JPanel dropDownContainer = new JPanel();
+        dropDownContainer.setOpaque(false);
+        String[] graphOptions = {"--Select Option--", "poisson", "lateness", "distance" };
+        JComboBox<String> dropDown = new DropdownBuilder(graphOptions)
+                .setFontSize(24)
+                .build();
+        dropDown.addActionListener(this);
+        dropDownContainer.add(dropDown);
+        this.add(dropDownContainer);
 
 
         float[] data = {
@@ -70,21 +82,60 @@ public class AnalysisPanel extends JPanel implements Scrollable {
                 24.0f, 24.0f, 33.0f, 32.0f, 32.0f, 25.0f, 36.0f, 28.0f, 32.0f, 32.0f
         };
         histogram = new Histogram(data, 5, 3);
-        this.add(histogram);
+        histogram.setPreferredSize(new Dimension(0, 1024));
+    //    this.add(histogram);
 
         float[] latenessData = Database.getLateness(Database.offlineFlights);
         latenessHistogram = new Histogram(latenessData, 240, 1000);
-        this.add(latenessHistogram);
+        latenessHistogram.setPreferredSize(new Dimension(0, 1024));
+    //   this.add(latenessHistogram);
 
         float[] distance = Database.getDistance(Database.offlineFlights);
         distanceHistogram = new Histogram(distance, 240, 1000);
-        this.add(distanceHistogram);
+        distanceHistogram.setPreferredSize(new Dimension(0, 1024));
+    //    this.add(distanceHistogram);
+
+        cardLayout = new CardLayout();
+        graphDisplay = new JPanel(cardLayout);
+        graphDisplay.add(histogram, "poisson");
+        graphDisplay.add(latenessHistogram, "lateness");
+        graphDisplay.add(distanceHistogram, "distance");
+        this.add(graphDisplay);
+
     }
 
     public void startRender(){
         histogram.animate();
         latenessHistogram.animate();
         distanceHistogram.animate();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        JComboBox dropDown = (JComboBox)e.getSource();
+        System.out.println(dropDown.getSelectedItem());
+
+        switch ((String)dropDown.getSelectedItem()){
+            case "--Select Option--":
+                break;
+            case "poisson":
+                System.out.println("Poisson");
+
+                cardLayout.show(graphDisplay, "poisson");
+                histogram.animate();
+                break;
+            case "lateness":
+                System.out.println("Late");
+
+                cardLayout.show(graphDisplay, "lateness");
+                latenessHistogram.animate();
+                break;
+            case "distance":
+                System.out.println("Distance");
+                cardLayout.show(graphDisplay,"distance");
+                distanceHistogram.animate();
+                break;
+        }
     }
 
     @Override
