@@ -20,6 +20,26 @@ public class Database {
         return Collections.unmodifiableMap(airports);
     }
 
+    public float[] getLateness(ArrayList<FlightInfo> array){
+        float[] lateness = new float[array.size()];
+
+        for (int i = 0; i < array.size(); i++){
+            lateness[i] = array.get(i).lateness;
+        }
+
+        return lateness;
+    }
+
+    public float[] getDistance(ArrayList<FlightInfo> array){
+        float[] dist = new float[array.size()];
+
+        for (int i = 0; i < array.size(); i++){
+            dist[i] = array.get(i).distance;
+        }
+
+        return dist;
+    }
+
     /**
      * Parses a JSON structure containing route information and extracts flight data,
      * adding them to the internal collections of flights.

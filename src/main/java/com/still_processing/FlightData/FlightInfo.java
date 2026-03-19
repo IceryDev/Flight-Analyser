@@ -18,6 +18,7 @@ public class FlightInfo {
     boolean cancelled;
     boolean diverted;
     float distance;
+    float lateness;
 
     FlightInfo(){}
 
