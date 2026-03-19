@@ -1,9 +1,8 @@
 package com.still_processing.UILib;
 
-import javax.swing.SwingUtilities;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -15,41 +14,53 @@ import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.FontMetrics;
 import java.awt.Font;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
-public class BarChartGraph extends JPanel implements Runnable{
+import javax.swing.SwingUtilities;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+
+import static com.still_processing.DefaultSettings.Settings.*;
+
+public class BarChartGraph extends JPanel implements Runnable {
     Thread graphThread;
     private final int FPS = 60;
     private Map<String, Float> data = null;
+
+    private Color fontColor = TEXT_COLOR;
+    private Font font = REGULAR_FONT;
+    private float fontSize = 24;
+    private float labelFontSize = 12;
+
     private String[] labels;
     private float[] values;
+
     private int yStep = 5;
     private int padding = 90;
     private int barGap = 8;
+
     private double renderPercentage = 0;
     private final String CHART_TITLE = "Bar Chart";
 
     public BarChartGraph(Map<String, Float> data) {
 
-        if(data != null && !data.isEmpty()){
+        if (data != null && !data.isEmpty()) {
             this.data = data;
             labels = new String[data.size()];
             values = new float[data.size()];
 
             int i = 0;
             for (Map.Entry<String, Float> entry : data.entrySet()) {
-                if (entry.getKey().length() > 3){
-                    labels[i] = entry.getKey().substring(0,3);
-                }
-                else {
+                if (entry.getKey().length() > 3) {
+                    labels[i] = entry.getKey().substring(0, 3);
+                } else {
                     labels[i] = entry.getKey();
                 }
                 values[i] = entry.getValue();
                 i++;
             }
         }
+
         this.setPreferredSize(new Dimension(700, 450));
         this.setMinimumSize(new Dimension(300, 400));
         this.setDoubleBuffered(true);
@@ -57,7 +68,6 @@ public class BarChartGraph extends JPanel implements Runnable{
         add(buildTopBar(), BorderLayout.NORTH);
         setVisible(true);
     }
-
 
     @Override
     public void run() {
@@ -91,10 +101,10 @@ public class BarChartGraph extends JPanel implements Runnable{
 
     // Update variables
     private void update() {
-        if(renderPercentage < 1){
+        if (renderPercentage < 1) {
             renderPercentage += 0.02;
         }
-        if (renderPercentage > 1){
+        if (renderPercentage > 1) {
             renderPercentage = 1;
         }
     }
@@ -110,18 +120,18 @@ public class BarChartGraph extends JPanel implements Runnable{
         for (float value : values) {
             max = Math.max(max, value);
         }
-        int chartWidth = getWidth() - 2*padding;
-        int chartHeight = getHeight() - 2*padding;
+        int chartWidth = getWidth() - 2 * padding;
+        int chartHeight = getHeight() - 2 * padding;
 
         int totalGaps = barGap * (values.length - 1);
-        int barWidth = (chartWidth - totalGaps)/values.length;
-        double maxValue = (Math.floor(max / yStep) + 1) * yStep;
+        int barWidth = (chartWidth - totalGaps) / values.length;
+        double maxValue = max + yStep;
 
-        for (int i = 0; i < values.length; i++){
-            int xPos = padding + i*(barWidth + barGap);
+        for (int i = 0; i < values.length; i++) {
+            int xPos = padding + i * (barWidth + barGap);
             int yPos = (int) (chartHeight * values[i] / maxValue);
-            int barProgress = (int)(yPos * renderPercentage);
-            int barTop = (int)(getHeight() - padding - barProgress);
+            int barProgress = (int) (yPos * renderPercentage);
+            int barTop = (int) (getHeight() - padding - barProgress);
 
             g2d.setColor(new Color(0x01796F));
             g2d.fillRect(xPos, barTop, barWidth, barProgress);
@@ -134,6 +144,7 @@ public class BarChartGraph extends JPanel implements Runnable{
         drawAxisTitles(g2d, "Category", "Value");
         g2d.dispose();
     }
+
     private JPanel buildTopBar() {
         JPanel bar = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 10));
         bar.setBackground(new Color(40, 44, 60));
@@ -143,26 +154,27 @@ public class BarChartGraph extends JPanel implements Runnable{
         bar.add(label);
         return bar;
     }
-    private void drawAxis(Graphics2D g2d, double max){
-        if(data == null){
+
+    private void drawAxis(Graphics2D g2d, double max) {
+        if (data == null) {
             return;
         }
-        int chartWidth = getWidth() - 2*padding;
-        int chartHeight = getHeight() - 2*padding;
+        int chartWidth = getWidth() - 2 * padding;
+        int chartHeight = getHeight() - 2 * padding;
 
         int totalGaps = barGap * (values.length - 1);
-        int barWidth = (chartWidth - totalGaps)/values.length;
+        int barWidth = (chartWidth - totalGaps) / values.length;
 
         g2d.setColor(new Color(0x001917));
 
         g2d.setStroke(new BasicStroke(2));
         g2d.drawLine(padding, getHeight() - padding, getWidth() - padding, getHeight() - padding);
         g2d.drawLine(padding, padding, padding, chartHeight + padding);
-        g2d.setFont(new Font("Arial", Font.BOLD, 12));
+        g2d.setFont(font.deriveFont(labelFontSize));
         FontMetrics fm = g2d.getFontMetrics();
 
         for (int i = 0; i < values.length; i++) {
-            int xPos  = padding + i * (barWidth + barGap);
+            int xPos = padding + i * (barWidth + barGap);
             int tickX = xPos + barWidth / 2;
 
             g2d.setStroke(new BasicStroke(2));
@@ -173,9 +185,9 @@ public class BarChartGraph extends JPanel implements Runnable{
 
         }
         int maxYsteps = (int) Math.ceil(max / yStep);
-        float scale =  (float)chartHeight / maxYsteps;
+        float scale = (float) chartHeight / maxYsteps;
 
-        g2d.setFont(new Font("Arial", Font.BOLD, 11));
+        g2d.setFont(font.deriveFont(labelFontSize));
         FontMetrics font = g2d.getFontMetrics();
 
         for (int i = 0; i <= maxYsteps; i++) {
@@ -183,24 +195,24 @@ public class BarChartGraph extends JPanel implements Runnable{
 
             g2d.drawLine(padding, y, padding - 4, y);
 
-            String label = String.format("%.1f", i * (double) yStep);
+            String label = String.format("%d.0", i * yStep);
             int labelWidth = font.stringWidth(label);
 
             g2d.drawString(label, padding - labelWidth - 6, y + 4);
         }
 
     }
-    private void drawAxisTitles(Graphics2D g2d, String xTitle, String yTitle){
+
+    private void drawAxisTitles(Graphics2D g2d, String xTitle, String yTitle) {
 
         AffineTransform original = g2d.getTransform();
-        g2d.setFont(new Font("SansSerif", Font.BOLD, 13));
-        g2d.setColor(new Color(5, 37, 46, 211));
+        g2d.setFont(font.deriveFont(fontSize));
+        g2d.setColor(fontColor);
         FontMetrics fontValues = g2d.getFontMetrics();
 
-        int xTitleX = (getWidth()/2) - fontValues.stringWidth(xTitle)/2;
-        int xTitleY = getHeight() - padding/3 ;
+        int xTitleX = (getWidth() / 2) - fontValues.stringWidth(xTitle) / 2;
+        int xTitleY = getHeight() - padding / 3;
         g2d.drawString(xTitle, xTitleX, xTitleY);
-
 
         AffineTransform originalTransform = g2d.getTransform();
         g2d.rotate(-Math.PI / 2);
@@ -209,18 +221,30 @@ public class BarChartGraph extends JPanel implements Runnable{
         g2d.drawString(yTitle, yTitleX, yTitleY);
         g2d.setTransform(originalTransform);
 
-
     }
-    public static void main(String[] args){
+
+    public void setFontColor(Color fontColor) {
+        if (fontColor != null) {
+            this.fontColor = fontColor;
+        }
+    }
+
+    public void setFont(Font font) {
+        if (font != null) {
+            this.font = font;
+        }
+    }
+
+    public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             Map<String, Float> categoricalData = new LinkedHashMap<>();
             categoricalData.put("Monday", 12.0F);
             categoricalData.put("Te", 7.5F);
             categoricalData.put("Wed", 19.0F);
-            categoricalData.put("Thu",  5.0F);
+            categoricalData.put("Thu", 5.0F);
             categoricalData.put("Fri", 14.5F);
             categoricalData.put("Sat", 22.0F);
-            categoricalData.put("Sun",  9.0F);
+            categoricalData.put("Sun", 9.0F);
 
             JFrame catFrame = new JFrame("Bar Chart - Days of Week");
             catFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
