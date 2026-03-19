@@ -14,6 +14,8 @@ import java.awt.geom.Arc2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.still_processing.DefaultSettings.Settings.*;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 /**
@@ -26,24 +28,27 @@ import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 public class PieChartGraph extends JPanel implements Runnable {
 
     Thread graphThread;
-    private final String CHART_TITLE = "Pie Chart";
+    private String chartTitle = "Pie Chart";
     private final int FPS = 60;
     private final JPanel TOP_BAR;
     private double animationProgress = 0.0;
     private static final double ANIMATION_DURATION = 300.0;
     private HashMap<String, Integer> data;
+    private int legendWidth = 180;
+    private int padding = 50;
 
-    private static final Color[] PALETTE = {
-            new Color(0xD31E91B3, true),
-            new Color(0x4ECDC4),
-            new Color(0x45B7D1),
-            new Color(0x96CEB4),
-            new Color(0x16599C),
-            new Color(0xD4A5A5),
-            new Color(0x9B59B6),
-            new Color(0x3498DB),
+    private JLabel title;
+//    private static Color color1 = LIGHT_BLUE;
+
+    private static Color[] PALETTE = {
+            LIGHT_BLUE,
+            HIGHLIGHT,
+            LIGHT_GREEN,
+            CYAN,
+            DARK_CYAN,
+            LIGHT_BURGUNDY,
+            BURGUNDY,
     };
-
     /**
      *
      * @author Jessica Chen
@@ -67,11 +72,11 @@ public class PieChartGraph extends JPanel implements Runnable {
      */
     private JPanel buildTopBar() {
         JPanel bar = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 10));
-        bar.setBackground(new Color(40, 44, 60));
-        JLabel label = new JLabel(CHART_TITLE);
-        label.setForeground(new Color(180, 185, 210));
-        label.setFont(new Font("SansSerif", Font.BOLD, 20));
-        bar.add(label);
+        bar.setBackground(LABEL_COLOR);
+        title = new JLabel(chartTitle);
+        title.setForeground(BACKGROUND);
+        title.setFont(BOLD_FONT);
+        bar.add(title);
         return bar;
     }
     /**
@@ -128,8 +133,7 @@ public class PieChartGraph extends JPanel implements Runnable {
 
         int panelWidth  = getWidth();
         int panelHeight = getHeight();
-        int legendWidth = 180;
-        int padding = 50;
+
         int chartDiameter = Math.min(panelWidth - legendWidth - padding * 2, panelHeight - padding * 4);
         chartDiameter = Math.max(chartDiameter, 100);
         int chartY = (panelHeight - chartDiameter) / 2 + TOP_BAR.getHeight() / 2;
@@ -157,8 +161,8 @@ public class PieChartGraph extends JPanel implements Runnable {
                 int labelX = chartX + chartDiameter / 2 + (int) (labelR * Math.cos(midAngle));
                 int labelY = chartY + chartDiameter / 2 - (int) (labelR * Math.sin(midAngle));
                 String pct = String.format("%.1f%%", 100.0 * value / total);
-                g2d.setColor(Color.WHITE);
-                g2d.setFont(new Font("SansSerif", Font.BOLD, 13));
+                g2d.setColor(BACKGROUND);
+                g2d.setFont(BOLD_FONT);
                 int textW = g2d.getFontMetrics().stringWidth(pct);
                 g2d.drawString(pct, labelX - textW / 2, labelY + 5);
             }
@@ -169,14 +173,14 @@ public class PieChartGraph extends JPanel implements Runnable {
         int legendStartY = chartY + 80;
         int swatchSize = 16;
         int rowHeight = 28;
-        g2d.setFont(new Font("SansSerif", Font.PLAIN, 13));
+        g2d.setFont(REGULAR_FONT);
         for (int i = 0; i < keys.size(); i++) {
             String label = keys.get(i);
             int value = data.get(label);
             int rowY  = legendStartY + i * rowHeight;
             g2d.setColor(PALETTE[i % PALETTE.length]);
             g2d.fillRoundRect(legendX, rowY, swatchSize, swatchSize, 4, 4);
-            g2d.setColor(new Color(60, 60, 60));
+            g2d.setColor(LABEL_COLOR);
             g2d.setStroke(new BasicStroke(1f));
             g2d.drawRoundRect(legendX, rowY, swatchSize, swatchSize, 4, 4);
             g2d.setColor(getForeground());
@@ -184,25 +188,50 @@ public class PieChartGraph extends JPanel implements Runnable {
         }
         g2d.dispose();
     }
-//
-//    public static void main(String[] args) {
-//        JFrame frame = new JFrame("Pie Chart");
-//        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-//        SwingUtilities.invokeLater(()->{
-//            HashMap<String, Integer> categorical = new HashMap<>();
-//            categorical.put("Scoot", 15);
-//            categorical.put("AerLingus", 30);
-//            categorical.put("1", 40);
-//            categorical.put("2", 10);
-//
-//            PieChartGraph chart = new PieChartGraph(categorical);
-//            frame.add(chart);
-//            frame.pack();
-//            frame.setLocationRelativeTo(null);
-//            frame.setVisible(true);
-//
-//            chart.animate();
-//        });
-//
-//    }
+    /**
+     * Create Setters
+     * @author Jessica Chen
+     */
+    public void setChartTitle (String chartTitle ){
+        if (chartTitle != null){
+            this.chartTitle = chartTitle;
+            this.title.setText(this.chartTitle);
+        }
+    }
+
+    public void setLegendWidth (int legendWidth ){
+        if (legendWidth > 0){
+            this.legendWidth = legendWidth;
+        }
+    }
+
+    public void setPadding (int padding ){
+        if (padding > 0){
+            this.padding = padding;
+        }
+    }
+
+    public static void main(String[] args) {
+        JFrame frame = new JFrame();
+        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+        SwingUtilities.invokeLater(()->{
+            HashMap<String, Integer> categorical = new HashMap<>();
+            categorical.put("Scoot", 15);
+            categorical.put("AerLingus", 30);
+            categorical.put("1", 40);
+            categorical.put("2", 10);
+
+            PieChartGraph chart = new PieChartGraph(categorical);
+            chart.setChartTitle("Testing");
+            frame.add(chart);
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+
+            chart.animate();
+        });
+
+
+    }
 }
