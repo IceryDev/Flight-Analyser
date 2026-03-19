@@ -1,6 +1,5 @@
 package com.still_processing.Application.AnalysisPage;
 
-import com.still_processing.FlightData.CSVHandler;
 import com.still_processing.UILib.ButtonBuilder;
 import com.still_processing.UILib.Histogram;
 import com.still_processing.UILib.TextPaneBuilder;
@@ -24,6 +23,7 @@ import static com.still_processing.DefaultSettings.Settings.*;
 public class AnalysisPanel extends JPanel implements Scrollable {
     Histogram histogram;
     Histogram latenessHistogram;
+    Histogram distanceHistogram;
     public AnalysisPanel(ActionListener a){
 
         System.out.println("=== Analysis Panel ===");
@@ -46,7 +46,14 @@ public class AnalysisPanel extends JPanel implements Scrollable {
         this.add(textPane);
 
         JButton button2 = new ButtonBuilder().setSize(25, 25).setBackground(HIGHLIGHT).setText("Home Page").setFontSize(35).build();
-        this.add(button2);
+        JPanel button2Container = new JPanel();
+        button2Container.setLayout(new BoxLayout(button2Container, BoxLayout.X_AXIS));
+        button2Container.add(Box.createHorizontalGlue());
+        button2Container.add(button2);
+        button2Container.add(Box.createHorizontalGlue());
+        button2Container.setOpaque(false);
+        this.add(button2Container);
+
         button2.addActionListener(a);
 
 
@@ -65,17 +72,19 @@ public class AnalysisPanel extends JPanel implements Scrollable {
         histogram = new Histogram(data, 5, 3);
         this.add(histogram);
 
-        CSVHandler.loadOfflineFlightCSV();
-
         float[] latenessData = Database.getLateness(Database.offlineFlights);
-        System.out.println(latenessData.length);
         latenessHistogram = new Histogram(latenessData, 240, 1000);
         this.add(latenessHistogram);
+
+        float[] distance = Database.getDistance(Database.offlineFlights);
+        distanceHistogram = new Histogram(distance, 240, 1000);
+        this.add(distanceHistogram);
     }
 
     public void startRender(){
         histogram.animate();
         latenessHistogram.animate();
+        distanceHistogram.animate();
     }
 
     @Override

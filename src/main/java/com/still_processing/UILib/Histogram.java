@@ -137,6 +137,7 @@ public class Histogram extends JPanel implements Runnable, Graph {
      */
     @Override
     public void animate() {
+        renderPercentage = 0;
         graphThread = new Thread(this);
         graphThread.start();
     }
