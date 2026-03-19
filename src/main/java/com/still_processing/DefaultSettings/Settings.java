@@ -28,8 +28,7 @@ public class Settings {
     public static final Color BACKGROUND = new Color(0xeff2f1);
     public static final Color HIGHLIGHT = new Color(0x01796f);
     public static final Color GRAY = new Color(0xaaaaaa);
-
-    public static final String API_KEY = Dotenv.load().get("FLIGHT_API");
+    
     public static final String CLIENT_SECRET = Dotenv.load().get("CLIENT_SECRET"); //For OpenSky API
     public static final String USER_NAME_OPENSKY = Dotenv.load().get("CLIENT_ID"); //For OpenSky API
 
