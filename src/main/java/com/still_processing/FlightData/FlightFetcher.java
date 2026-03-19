@@ -177,6 +177,9 @@ public class FlightFetcher {
                                     String[] route;
                                     if (json != null && json.get("route") != null) {
                                         route = json.get("route").asText().split(ROUTE_SPLIT_DELIMITER);
+                                        if (route.length < 2){
+                                            return null;
+                                        }
                                         info.origin = Database.airports.get(route[0]);
                                         info.dest = Database.airports.get(route[1]);
                                     } else {
