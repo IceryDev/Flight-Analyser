@@ -7,7 +7,8 @@ public class ScatterPlot extends JPanel implements Runnable {
 
     private final static int FPS = 60;
     private final static int POINT_SIZE = 8;
-    private final static int STD_MARGIN = 0;
+    private final static int STD_MARGIN = 45;
+    private final static int STD_PADDING = 50;
     private final static int STD_TICK_SEPARATOR = 5;
     private final static int MINIMUM_PIXEL_SPACING = 20;
 
@@ -72,8 +73,8 @@ public class ScatterPlot extends JPanel implements Runnable {
         float scaleX = (float) plotWidth / range;
         float scaleY = (float) plotHeight / range;
         g2d.setColor(Color.RED);
-        g2d.drawLine(0, centeredY, getWidth(), centeredY);     // X-axis
-        g2d.drawLine(centeredX, 0, centeredX, getHeight());    // Y-axis
+        g2d.drawLine(STD_PADDING, centeredY, getWidth() - STD_PADDING, centeredY);     // X-axis
+        g2d.drawLine(centeredX, STD_PADDING, centeredX, getHeight() - STD_PADDING);    // Y-axis
         FontMetrics metrics = g2d.getFontMetrics();
         g2d.setColor(Color.GRAY);
         float tickStep = 1f;
@@ -105,6 +106,9 @@ public class ScatterPlot extends JPanel implements Runnable {
             int parsedY = y - (POINT_SIZE / 2);
             g2d.fillOval(parsedX, parsedY, POINT_SIZE, POINT_SIZE);
         }
+        // Draw axis names
+        g2d.drawString("X", getWidth() - MINIMUM_PIXEL_SPACING, getHeight() / 2);
+        g2d.drawString("Y", getWidth() / 2, MINIMUM_PIXEL_SPACING);
         g2d.dispose();
     }
 }
