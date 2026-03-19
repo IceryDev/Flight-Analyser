@@ -111,4 +111,5 @@ public class ScatterPlot extends JPanel implements Runnable {
         g2d.drawString("Y", getWidth() / 2, MINIMUM_PIXEL_SPACING);
         g2d.dispose();
     }
+
 }
