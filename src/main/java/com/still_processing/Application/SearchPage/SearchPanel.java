@@ -20,7 +20,7 @@ import static com.still_processing.DefaultSettings.Settings.HIGHLIGHT;
  */
 
 public class SearchPanel extends JPanel implements Scrollable {
-    public SearchPanel(ActionListener a){
+    public SearchPanel(ActionListener a) {
 
         System.out.println("=== Search Panel ===");
 
@@ -35,10 +35,14 @@ public class SearchPanel extends JPanel implements Scrollable {
         SimpleAttributeSet center = new SimpleAttributeSet();
         StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
         doc.setParagraphAttributes(0, doc.getLength(), center, false);
-
         this.add(textPane);
 
-        JButton button = new ButtonBuilder().setSize(25, 25).setBackground(HIGHLIGHT).setText("Analyse").setFontSize(35).build();
+        JButton button = new ButtonBuilder()
+                .setSize(25, 25)
+                .setBackground(HIGHLIGHT)
+                .setText("Analyse")
+                .setFontSize(35)
+                .build();
         this.add(button);
 
         button.addActionListener(a);

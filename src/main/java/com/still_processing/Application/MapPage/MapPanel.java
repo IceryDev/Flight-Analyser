@@ -19,7 +19,7 @@ import static com.still_processing.DefaultSettings.Settings.*;
  */
 
 public class MapPanel extends JPanel implements Scrollable {
-    public MapPanel(ActionListener a){
+    public MapPanel(ActionListener a) {
 
         System.out.println("=== Map Panel ===");
 
@@ -40,8 +40,20 @@ public class MapPanel extends JPanel implements Scrollable {
 
         this.add(textPane);
 
-        JButton button = new ButtonBuilder().setSize(25, 25).setBackground(HIGHLIGHT).setText("Home Page").setFontSize(35).build();
-        this.add(button);
+        JButton button = new ButtonBuilder()
+                .setSize(25, 25)
+                .setBackground(HIGHLIGHT)
+                .setText("Home Page")
+                .setFontSize(35)
+                .build();
+
+        JPanel buttonContainer = new JPanel();
+        buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.X_AXIS));
+        buttonContainer.add(Box.createHorizontalGlue());
+        buttonContainer.add(button);
+        buttonContainer.add(Box.createHorizontalGlue());
+        buttonContainer.setOpaque(false);
+        this.add(buttonContainer);
         button.addActionListener(a);
     }
 
