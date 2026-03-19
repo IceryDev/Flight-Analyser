@@ -26,7 +26,7 @@ import com.still_processing.UILib.TableBuilder;
 import com.still_processing.UILib.TextPaneBuilder;
 
 /**
- * @author Zhou Sun
+ * @author Zhou Sun, Deea Zaharia
  */
 public class BodyPanel extends JPanel implements Scrollable {
 
