@@ -38,16 +38,23 @@ public class PieChartGraph extends JPanel implements Runnable {
     private int padding = 50;
 
     private JLabel title;
-//    private static Color color1 = LIGHT_BLUE;
+    private Color color1 = LIGHT_BLUE;
+    private Color color2 = HIGHLIGHT;
+    private Color color3 = LIGHT_GREEN;
+    private Color color4 = CYAN;
+    private Color color5 = DARK_CYAN;
+    private Color color6 = LIGHT_BURGUNDY;
+    private Color color7 = BURGUNDY;
 
-    private static Color[] PALETTE = {
-            LIGHT_BLUE,
-            HIGHLIGHT,
-            LIGHT_GREEN,
-            CYAN,
-            DARK_CYAN,
-            LIGHT_BURGUNDY,
-            BURGUNDY,
+
+    private Color[] PALETTE = {
+            color1,
+            color2,
+            color3,
+            color4,
+            color5,
+            color6,
+            color7
     };
     /**
      *
