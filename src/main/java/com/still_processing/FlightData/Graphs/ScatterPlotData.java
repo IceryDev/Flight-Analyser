@@ -1,9 +1,9 @@
 package com.still_processing.FlightData.Graphs;
 
 public class ScatterPlotData {
-    String axisX;
-    String axisY;
-    float[][] data;
+    public String axisX;
+    public String axisY;
+    public float[][] data;
 
     public ScatterPlotData(String x, String y, float[][] data){
         this.axisX = x;
