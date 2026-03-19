@@ -1,7 +1,5 @@
 package com.still_processing.UILib;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import javax.swing.*;
 import java.awt.*;
 
