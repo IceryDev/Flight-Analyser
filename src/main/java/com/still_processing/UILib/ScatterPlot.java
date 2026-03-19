@@ -1,8 +1,16 @@
 package com.still_processing.UILib;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Generate a Scatter plot graph based on a 2D array of float values,
+ * where each inner array represents a point (x, y).
+ *
+ * @author Marco Fontana
+ */
 public class ScatterPlot extends JPanel implements Runnable {
 
     private final static int FPS = 60;
@@ -111,5 +119,4 @@ public class ScatterPlot extends JPanel implements Runnable {
         g2d.drawString("Y", getWidth() / 2, MINIMUM_PIXEL_SPACING);
         g2d.dispose();
     }
-
 }
