@@ -1,5 +1,9 @@
 package com.still_processing.FlightData;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.Year;
+import java.time.ZoneId;
+
 /**
  * Checks to see if the date is valid and returns a string.
  * @author Jessica Chen
@@ -58,5 +62,49 @@ public class CheckDate {
             return (date <= 30);
         }
         return true;
+    }
+
+    /**
+     * Takes a dd/mm/yyyy format string and a delimiter, and returns a {@code LocalDate} object.
+     *
+     * @param dateString The date string of format dd/mm/yyyy
+     * @param delimiter The delimiter to split the date string (if above, it is "/")
+     * @param mode Whether to work with dd/mm/yyyy (true) or mm/dd/yyyy (false) format
+     * @return Corresponding {@code LocalDate} object
+     * @author IceryDev (Ulaş İçer)
+     */
+    public static LocalDate getDateFromString(String dateString,
+                                              String delimiter, boolean mode) {
+        String[] values = dateString.split(delimiter);
+        int[] dateTimeParams = new int[3];
+        for (int i = 0; i < dateTimeParams.length; i++){
+            dateTimeParams[i] = Integer.parseInt(values[i]);
+        }
+        if (!mode) { //Switch register contents if US format
+            dateTimeParams[0] ^= dateTimeParams[1];
+            dateTimeParams[1] ^= dateTimeParams[0];
+            dateTimeParams[0] ^= dateTimeParams[1];
+        }
+
+        if (!isValidDate(dateTimeParams[0], dateTimeParams[1], dateTimeParams[2])) {
+            System.err.printf("Date %s is not valid.\n", dateString);
+        }
+
+        return LocalDate.of(dateTimeParams[2], dateTimeParams[1], dateTimeParams[1]);
+    }
+
+    /**
+     * Return Unix time (epoch seconds) of a given date.
+     * @param date Date to be turned into Unix time
+     * @return {@code long} epochSeconds
+     * @author IceryDev (Ulaş İçer)
+     */
+    public static long getUnixTime(LocalDate date){
+        Instant time = date.atStartOfDay().atZone(ZoneId.of("UTC")).toInstant();
+        return time.getEpochSecond();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(getUnixTime(getDateFromString("12/12/2005", "/", true)));
     }
 }
