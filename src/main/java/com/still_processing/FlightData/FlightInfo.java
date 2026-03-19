@@ -14,6 +14,7 @@ public class FlightInfo {
     boolean cancelled;
     boolean diverted;
     float distance;
+    float lateness;
 
     PlaneInfo plane;
     String airline;
