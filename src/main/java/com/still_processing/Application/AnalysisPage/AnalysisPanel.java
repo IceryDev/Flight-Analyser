@@ -1,0 +1,106 @@
+package com.still_processing.Application.AnalysisPage;
+
+import com.still_processing.UILib.ButtonBuilder;
+import com.still_processing.UILib.TextPaneBuilder;
+
+import javax.swing.*;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import static com.still_processing.DefaultSettings.Settings.*;
+
+/**
+ * @author Deea Zaharia
+ */
+
+public class AnalysisPanel extends JPanel implements Scrollable {
+    public AnalysisPanel(ActionListener a) {
+
+        System.out.println("=== Analysis Panel ===");
+
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.setBackground(BACKGROUND);
+
+        String title = "Flight Analysis";
+        JTextPane textPane = new TextPaneBuilder()
+                .setText(title)
+                .setFontSize(48)
+                .setFont(BOLD_FONT)
+                .build();
+
+        StyledDocument doc = textPane.getStyledDocument();
+        SimpleAttributeSet center = new SimpleAttributeSet();
+        StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
+        doc.setParagraphAttributes(0, doc.getLength(), center, false);
+        this.add(textPane);
+
+        JButton button1 = new ButtonBuilder()
+                .setSize(25, 25)
+                .setBackground(HIGHLIGHT)
+                .setText("Analyse")
+                .setFontSize(35)
+                .build();
+        button1.addActionListener(a);
+
+        JPanel buttonContainer = new JPanel();
+        buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.X_AXIS));
+        buttonContainer.add(Box.createHorizontalGlue());
+        buttonContainer.add(button1);
+        buttonContainer.add(Box.createHorizontalGlue());
+        buttonContainer.setOpaque(false);
+        this.add(buttonContainer);
+
+        JButton button2 = new ButtonBuilder()
+                .setSize(25, 25)
+                .setBackground(HIGHLIGHT)
+                .setText("Home Page")
+                .setFontSize(35)
+                .build();
+        button2.addActionListener(a);
+        JPanel button2Container = new JPanel();
+        button2Container.setLayout(new BoxLayout(button2Container, BoxLayout.X_AXIS));
+        button2Container.add(Box.createHorizontalGlue());
+        button2Container.add(button2);
+        button2Container.add(Box.createHorizontalGlue());
+        button2Container.setOpaque(false);
+        this.add(button2Container);
+    }
+
+    @Override
+    protected void paintComponent(Graphics graphics) {
+        super.paintComponent(graphics);
+    }
+
+    @Override
+    public Dimension getPreferredScrollableViewportSize() {
+
+        return null;
+    }
+
+    @Override
+    public boolean getScrollableTracksViewportWidth() {
+
+        return true;
+    }
+
+    @Override
+    public boolean getScrollableTracksViewportHeight() {
+
+        return false;
+    }
+
+    @Override
+    public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
+        return 32;
+    }
+
+    @Override
+    public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
+        return 32;
+    }
+}
