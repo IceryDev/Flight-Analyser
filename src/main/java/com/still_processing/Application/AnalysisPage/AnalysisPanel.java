@@ -19,7 +19,7 @@ import static com.still_processing.DefaultSettings.Settings.*;
  */
 
 public class AnalysisPanel extends JPanel implements Scrollable {
-    public AnalysisPanel(ActionListener a){
+    public AnalysisPanel(ActionListener a) {
 
         System.out.println("=== Analysis Panel ===");
 
@@ -37,18 +37,39 @@ public class AnalysisPanel extends JPanel implements Scrollable {
         SimpleAttributeSet center = new SimpleAttributeSet();
         StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
         doc.setParagraphAttributes(0, doc.getLength(), center, false);
-
         this.add(textPane);
 
-        JButton button1 = new ButtonBuilder().setSize(25, 25).setBackground(HIGHLIGHT).setText("Analyse").setFontSize(35).build();
-        this.add(button1);
+        JButton button1 = new ButtonBuilder()
+                .setSize(25, 25)
+                .setBackground(HIGHLIGHT)
+                .setText("Analyse")
+                .setFontSize(35)
+                .build();
         button1.addActionListener(a);
 
-        JButton button2 = new ButtonBuilder().setSize(25, 25).setBackground(HIGHLIGHT).setText("Home Page").setFontSize(35).build();
-        this.add(button2);
-        button2.addActionListener(a);
-    }
+        JPanel buttonContainer = new JPanel();
+        buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.X_AXIS));
+        buttonContainer.add(Box.createHorizontalGlue());
+        buttonContainer.add(button1);
+        buttonContainer.add(Box.createHorizontalGlue());
+        buttonContainer.setOpaque(false);
+        this.add(buttonContainer);
 
+        JButton button2 = new ButtonBuilder()
+                .setSize(25, 25)
+                .setBackground(HIGHLIGHT)
+                .setText("Home Page")
+                .setFontSize(35)
+                .build();
+        button2.addActionListener(a);
+        JPanel button2Container = new JPanel();
+        button2Container.setLayout(new BoxLayout(button2Container, BoxLayout.X_AXIS));
+        button2Container.add(Box.createHorizontalGlue());
+        button2Container.add(button2);
+        button2Container.add(Box.createHorizontalGlue());
+        button2Container.setOpaque(false);
+        this.add(button2Container);
+    }
 
     @Override
     protected void paintComponent(Graphics graphics) {
@@ -83,5 +104,3 @@ public class AnalysisPanel extends JPanel implements Scrollable {
         return 32;
     }
 }
-
-

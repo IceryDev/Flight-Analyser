@@ -34,20 +34,17 @@ public class MainWindow extends JFrame implements ActionListener {
         scrollPane.getViewport().setBackground(BACKGROUND);
         cards.add(scrollPane, "Main");
 
-
         JPanel search = new SearchPanel(this);
         scrollPane = ScrollPaneFactory.createPane();
         scrollPane.setViewportView(search);
         scrollPane.getViewport().setBackground(BACKGROUND);
         cards.add(scrollPane, "Search");
 
-
         JPanel analyse = new AnalysisPanel(this);
         scrollPane = ScrollPaneFactory.createPane();
         scrollPane.setViewportView(analyse);
         scrollPane.getViewport().setBackground(BACKGROUND);
         cards.add(scrollPane, "Analyse");
-
 
         JPanel map = new MapPanel(this);
         scrollPane = ScrollPaneFactory.createPane();
@@ -65,13 +62,13 @@ public class MainWindow extends JFrame implements ActionListener {
         this.setVisible(true);
     }
 
-/**
-* @author Deea Zaharia
-*/
+    /**
+     * @author Deea Zaharia
+     */
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        switch (e.getActionCommand()){
+        switch (e.getActionCommand()) {
             case "Home Page":
                 cardLayout.show(cards, "Main");
                 break;
@@ -87,4 +84,3 @@ public class MainWindow extends JFrame implements ActionListener {
         }
     }
 }
-
