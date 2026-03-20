@@ -11,7 +11,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 /**
  * Some reuseable default settings
  * 
- * @author Zhou Sun, Jagoda Kocszwara-Szuba
+ * @author Zhou Sun, Jagoda Kocszwara-Szuba, Ulaş İçer
  */
 public class Settings {
     private Settings() {
@@ -37,6 +37,8 @@ public class Settings {
     public static final Color LIGHT_BURGUNDY = new Color(0xFFC17676);
     public static final Color BURGUNDY = new Color(0x431928);
     public static final String API_KEY = Dotenv.load().get("FLIGHT_API");
+    public static final String CLIENT_SECRET = Dotenv.load().get("CLIENT_SECRET"); //For OpenSky API
+    public static final String USER_NAME_OPENSKY = Dotenv.load().get("CLIENT_ID"); //For OpenSky API
 
     /**
      * Loads the font from the resouces folder
