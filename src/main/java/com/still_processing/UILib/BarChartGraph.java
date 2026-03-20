@@ -40,7 +40,9 @@ public class BarChartGraph extends JPanel implements Runnable {
     private int barGap = 8;
 
     private double renderPercentage = 0;
-    private final String CHART_TITLE = "Bar Chart";
+    private String chartTitle = "Bar Chart";
+
+    private JLabel title;
 
     public BarChartGraph(Map<String, Float> data) {
 
@@ -104,8 +106,9 @@ public class BarChartGraph extends JPanel implements Runnable {
         if (renderPercentage < 1) {
             renderPercentage += 0.02;
         }
-        if (renderPercentage > 1) {
+        if (renderPercentage >= 1) {
             renderPercentage = 1;
+            graphThread = null; //Terminate thread
         }
     }
 
@@ -148,10 +151,10 @@ public class BarChartGraph extends JPanel implements Runnable {
     private JPanel buildTopBar() {
         JPanel bar = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 10));
         bar.setBackground(new Color(40, 44, 60));
-        JLabel label = new JLabel(CHART_TITLE);
-        label.setForeground(new Color(180, 185, 210));
-        label.setFont(new Font("SansSerif", Font.BOLD, 15));
-        bar.add(label);
+        this.title = new JLabel(this.chartTitle);
+        this.title.setForeground(new Color(180, 185, 210));
+        this.title.setFont(new Font("SansSerif", Font.BOLD, 15));
+        bar.add(this.title);
         return bar;
     }
 
@@ -233,6 +236,11 @@ public class BarChartGraph extends JPanel implements Runnable {
         if (font != null) {
             this.font = font;
         }
+    }
+
+    public void setTitle(String titleString){
+        this.chartTitle = titleString;
+        this.title.setText(this.chartTitle);
     }
 
     public static void main(String[] args) {
