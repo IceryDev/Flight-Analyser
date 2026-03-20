@@ -3,9 +3,6 @@ package com.still_processing.FlightData;
 import java.util.Map;
 import java.util.Collections;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.still_processing.FlightData.Graphs.PropertyType;
 import com.still_processing.FlightData.Graphs.ScatterPlotData;
 
