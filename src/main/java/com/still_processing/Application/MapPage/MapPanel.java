@@ -17,7 +17,6 @@ import static com.still_processing.DefaultSettings.Settings.*;
 /**
  * @author Deea Zaharia
  */
-
 public class MapPanel extends JPanel implements Scrollable {
     public MapPanel(ActionListener a) {
 
@@ -37,7 +36,6 @@ public class MapPanel extends JPanel implements Scrollable {
         SimpleAttributeSet center = new SimpleAttributeSet();
         StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
         doc.setParagraphAttributes(0, doc.getLength(), center, false);
-
         this.add(textPane);
 
         JButton button = new ButtonBuilder()
