@@ -94,7 +94,7 @@ public class PieChartGraph extends JPanel implements Runnable {
     public void run() {
         double drawInterval = 1_000_000_000.0 / FPS;
         double nextDrawTime = System.nanoTime() + drawInterval;
-        while (graphThread != null) {
+        while (graphThread != null && animationProgress != 1) {
             update();
             repaint();
             try {
@@ -110,6 +110,7 @@ public class PieChartGraph extends JPanel implements Runnable {
     }
 
     public void animate() {
+        animationProgress = 0;
         graphThread = new Thread(this);
         graphThread.start();
     }
@@ -216,29 +217,5 @@ public class PieChartGraph extends JPanel implements Runnable {
         if (padding > 0){
             this.padding = padding;
         }
-    }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame();
-        frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-        SwingUtilities.invokeLater(()->{
-            HashMap<String, Integer> categorical = new HashMap<>();
-            categorical.put("Scoot", 15);
-            categorical.put("AerLingus", 30);
-            categorical.put("1", 40);
-            categorical.put("2", 10);
-
-            PieChartGraph chart = new PieChartGraph(categorical);
-            chart.setChartTitle("Testing");
-            frame.add(chart);
-            frame.pack();
-            frame.setLocationRelativeTo(null);
-            frame.setVisible(true);
-
-            chart.animate();
-        });
-
-
     }
 }
