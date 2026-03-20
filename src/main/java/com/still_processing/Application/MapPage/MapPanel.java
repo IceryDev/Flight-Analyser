@@ -4,7 +4,6 @@ import com.still_processing.UILib.ButtonBuilder;
 import com.still_processing.UILib.TextPaneBuilder;
 
 import javax.swing.*;
-import java.awt.Component;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
@@ -14,9 +13,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import static com.still_processing.DefaultSettings.Settings.*;
-
-import com.still_processing.UILib.ButtonBuilder;
-import com.still_processing.UILib.TextPaneBuilder;
 
 /**
  * @author Deea Zaharia
@@ -42,24 +38,20 @@ public class MapPanel extends JPanel implements Scrollable {
         doc.setParagraphAttributes(0, doc.getLength(), center, false);
         this.add(textPane);
 
-        JPanel panel = new JPanel();
-        JButton button1 = new JButton("Search");
-        button1.setAlignmentX(Component.LEFT_ALIGNMENT);
-        button1.setBackground(GRAY);
-        button1.setSize(30, 30);
+        JButton button = new ButtonBuilder()
+                .setSize(25, 25)
+                .setBackground(HIGHLIGHT)
+                .setText("Home Page")
+                .setFontSize(35)
+                .build();
 
-        JButton button2 = new ButtonBuilder().setSize(25, 25).setFontSize(15).setBackground(HIGHLIGHT).setText("From")
-                .setBorderWidth(2).build();
-        JButton button3 = new ButtonBuilder().setSize(25, 25).setFontSize(15).setBackground(HIGHLIGHT).setText("To")
-                .setBorderWidth(2).build();
-        panel.add(button2);
-        panel.add(button3);
-        panel.add(button1);
-        this.add(panel);
-
-        JButton button = new ButtonBuilder().setSize(25, 25).setBackground(HIGHLIGHT).setText("Home Page")
-                .setFontSize(35).build();
-        this.add(button);
+        JPanel buttonContainer = new JPanel();
+        buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.X_AXIS));
+        buttonContainer.add(Box.createHorizontalGlue());
+        buttonContainer.add(button);
+        buttonContainer.add(Box.createHorizontalGlue());
+        buttonContainer.setOpaque(false);
+        this.add(buttonContainer);
         button.addActionListener(a);
     }
 

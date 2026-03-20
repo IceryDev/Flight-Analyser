@@ -7,21 +7,24 @@ package com.still_processing.FlightData.Graphs;
  * @author IceryDev (Ulaş İçer)
  */
 public enum PropertyType {
-    DATE(false),
-    IATA(true),
-    ORIGIN(true),
-    DESTINATION(true),
-    DEPARTURE(false),           //Departure Time
-    ARRIVAL(false),             //Arrival Time
-    DISTANCE(false),
-    CANCELLED(true),
-    DIVERTED(true);
+    DATE(false, "Date"),
+    IATA(true, "IATA Code"),
+    AIRLINE(true, "Airline Name"),
+    ORIGIN(true, "Origin Airport"),
+    DESTINATION(true, "Destination Airport"),
+    DEPARTURE(false, "Departure Time"),           //Departure Time
+    ARRIVAL(false, "Arrival Time"),             //Arrival Time
+    DISTANCE(false, "Flight Distance"),
+    LATENESS(false, "Flight Lateness"),
+    CANCELLED(true, "Cancelled"),
+    DIVERTED(true, "Diverted");
 
 
 
-    final boolean isCategorical;
-    PropertyType(boolean isCategorical){
-
+    public final boolean isCategorical;
+    public final String paramName;
+    PropertyType(boolean isCategorical, String name){
         this.isCategorical = isCategorical;
+        this.paramName = name;
     }
 }
