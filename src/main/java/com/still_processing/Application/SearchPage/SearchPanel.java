@@ -14,8 +14,7 @@ import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-import static com.still_processing.DefaultSettings.Settings.BOLD_FONT;
-import static com.still_processing.DefaultSettings.Settings.HIGHLIGHT;
+import static com.still_processing.DefaultSettings.Settings.*;
 
 /**
  * @author Deea Zaharia
@@ -25,6 +24,9 @@ public class SearchPanel extends JPanel implements Scrollable {
     public SearchPanel(ActionListener a) {
 
         System.out.println("=== Search Panel ===");
+
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.setBackground(BACKGROUND);
 
         String title = "Search";
         JTextPane textPane = new TextPaneBuilder()
@@ -45,7 +47,13 @@ public class SearchPanel extends JPanel implements Scrollable {
                 .setText("Analyse")
                 .setFontSize(35)
                 .build();
-        this.add(button);
+        JPanel buttonContainer = new JPanel();
+        buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.X_AXIS));
+        buttonContainer.add(Box.createHorizontalGlue());
+        buttonContainer.add(button);
+        buttonContainer.add(Box.createHorizontalGlue());
+        buttonContainer.setOpaque(false);
+        this.add(buttonContainer);
 
         button.addActionListener(a);
     }

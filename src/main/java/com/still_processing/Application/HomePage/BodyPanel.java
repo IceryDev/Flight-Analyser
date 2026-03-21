@@ -6,14 +6,8 @@ import java.util.Map;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.Scrollable;
+import javax.swing.*;
 
-import javax.swing.JTextPane;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
@@ -30,7 +24,7 @@ import com.still_processing.UILib.TableBuilder;
 import com.still_processing.UILib.TextPaneBuilder;
 
 /**
- * @author Zhou Sun
+ * @author Zhou Sun, Deea Zaharia
  */
 public class BodyPanel extends JPanel implements Scrollable {
 
@@ -81,14 +75,34 @@ public class BodyPanel extends JPanel implements Scrollable {
         this.add(table);
 
         JButton button1 = new ButtonBuilder().setSize(25, 25).setBackground(HIGHLIGHT).setText("Analyse").setFontSize(35).build();
-        JButton button2 = new ButtonBuilder().setSize(25, 25).setBackground(HIGHLIGHT).setText("Map View").setFontSize(35).build();
-        JButton button3 = new ButtonBuilder().setSize(25, 25).setBackground(HIGHLIGHT).setText("Search").setFontSize(35).build();
+        JPanel button1Container = new JPanel();
+        button1Container.setLayout(new BoxLayout(button1Container, BoxLayout.X_AXIS));
+        button1Container.add(Box.createHorizontalGlue());
+        button1Container.add(button1);
+        button1Container.add(Box.createHorizontalGlue());
+        button1Container.setOpaque(false);
+        this.add(button1Container);
 
-        this.add(button1);
+        JButton button2 = new ButtonBuilder().setSize(25, 25).setBackground(HIGHLIGHT).setText("Map View").setFontSize(35).build();
+        JPanel button2Container = new JPanel();
+        button2Container.setLayout(new BoxLayout(button2Container, BoxLayout.X_AXIS));
+        button2Container.add(Box.createHorizontalGlue());
+        button2Container.add(button2);
+        button2Container.add(Box.createHorizontalGlue());
+        button2Container.setOpaque(false);
+        this.add(button2Container);
+
+        JButton button3 = new ButtonBuilder().setSize(25, 25).setBackground(HIGHLIGHT).setText("Search").setFontSize(35).build();
+        JPanel button3Container = new JPanel();
+        button3Container.setLayout(new BoxLayout(button3Container, BoxLayout.X_AXIS));
+        button3Container.add(Box.createHorizontalGlue());
+        button3Container.add(button3);
+        button3Container.add(Box.createHorizontalGlue());
+        button3Container.setOpaque(false);
+        this.add(button3Container);
+
         button1.addActionListener(a);
-        this.add(button2);
         button2.addActionListener(a);
-        this.add(button3);
         button3.addActionListener(a);
     }
 
