@@ -1,13 +1,15 @@
 package com.still_processing.Application;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JPanel;
 
 import com.still_processing.Application.AnalysisPage.AnalysisPanel;
 import com.still_processing.Application.HomePage.BodyPanel;
@@ -22,7 +24,7 @@ import static com.still_processing.DefaultSettings.Settings.*;
 
 public class MainWindow extends JFrame implements ActionListener {
     CardLayout cardLayout = new CardLayout();
-    Panel cards = new Panel(cardLayout);
+    JPanel cards = new JPanel(cardLayout);
     private AnalysisPanel analyse;
     private MapPanel map;
     private SearchPanel search;
@@ -38,20 +40,17 @@ public class MainWindow extends JFrame implements ActionListener {
         scrollPane.getViewport().setBackground(BACKGROUND);
         cards.add(scrollPane, "Main");
 
-
         search = new SearchPanel(this);
         scrollPane = ScrollPaneFactory.createPane();
         scrollPane.setViewportView(search);
         scrollPane.getViewport().setBackground(BACKGROUND);
         cards.add(scrollPane, "Search");
 
-
         analyse = new AnalysisPanel(this);
         scrollPane = ScrollPaneFactory.createPane();
         scrollPane.setViewportView(analyse);
         scrollPane.getViewport().setBackground(BACKGROUND);
         cards.add(scrollPane, "Analyse");
-
 
         map = new MapPanel(this);
         scrollPane = ScrollPaneFactory.createPane();
@@ -75,7 +74,7 @@ public class MainWindow extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        switch (e.getActionCommand()){
+        switch (e.getActionCommand()) {
             case "Home Page":
                 cardLayout.show(cards, "Main");
                 break;
@@ -90,5 +89,6 @@ public class MainWindow extends JFrame implements ActionListener {
                 cardLayout.show(cards, "Map");
                 break;
         }
+        cards.repaint();
     }
 }

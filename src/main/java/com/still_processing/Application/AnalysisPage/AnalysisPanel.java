@@ -1,19 +1,28 @@
 package com.still_processing.Application.AnalysisPage;
 
-import com.still_processing.UILib.ButtonBuilder;
-import com.still_processing.UILib.DropdownBuilder;
-import com.still_processing.UILib.Histogram;
-import com.still_processing.UILib.TextPaneBuilder;
-import com.still_processing.FlightData.Database;
+import java.awt.CardLayout;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
+import javax.swing.JTextPane;
+import javax.swing.Scrollable;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import java.awt.*;
-import java.awt.event.ActionListener;
-
+import com.still_processing.FlightData.Database;
+import com.still_processing.UILib.ButtonBuilder;
+import com.still_processing.UILib.DropdownBuilder;
+import com.still_processing.UILib.Histogram;
+import com.still_processing.UILib.TextPaneBuilder;
 import static com.still_processing.DefaultSettings.Settings.*;
 
 /**
@@ -26,7 +35,8 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
     Histogram latenessHistogram;
     Histogram distanceHistogram;
     CardLayout cardLayout;
-    public AnalysisPanel(ActionListener a){
+
+    public AnalysisPanel(ActionListener a) {
 
         System.out.println("=== Analysis Panel ===");
 
@@ -47,7 +57,8 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
 
         this.add(textPane);
 
-        JButton button2 = new ButtonBuilder().setSize(25, 25).setBackground(HIGHLIGHT).setText("Home Page").setFontSize(35).build();
+        JButton button2 = new ButtonBuilder().setSize(25, 25).setBackground(HIGHLIGHT).setText("Home Page")
+                .setFontSize(35).build();
         JPanel button2Container = new JPanel();
         button2Container.setLayout(new BoxLayout(button2Container, BoxLayout.X_AXIS));
         button2Container.add(Box.createHorizontalGlue());
@@ -59,14 +70,13 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         button2.addActionListener(a);
         JPanel dropDownContainer = new JPanel();
         dropDownContainer.setOpaque(false);
-        String[] graphOptions = {"--Select Option--", "poisson", "lateness", "distance" };
+        String[] graphOptions = { "--Select Option--", "poisson", "lateness", "distance" };
         JComboBox<String> dropDown = new DropdownBuilder(graphOptions)
                 .setFontSize(24)
                 .build();
         dropDown.addActionListener(this);
         dropDownContainer.add(dropDown);
         this.add(dropDownContainer);
-
 
         float[] data = {
                 27.0f, 22.0f, 27.0f, 30.0f, 31.0f, 28.0f, 26.0f, 25.0f, 18.0f, 43.0f,
@@ -82,17 +92,17 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         };
         histogram = new Histogram(data, 5, 3);
         histogram.setPreferredSize(new Dimension(0, 1024));
-    //    this.add(histogram);
+        // this.add(histogram);
 
         float[] latenessData = Database.getLateness(Database.offlineFlights);
         latenessHistogram = new Histogram(latenessData, 240, 1000);
         latenessHistogram.setPreferredSize(new Dimension(0, 1024));
-    //   this.add(latenessHistogram);
+        // this.add(latenessHistogram);
 
         float[] distance = Database.getDistance(Database.offlineFlights);
         distanceHistogram = new Histogram(distance, 240, 1000);
         distanceHistogram.setPreferredSize(new Dimension(0, 1024));
-    //    this.add(distanceHistogram);
+        // this.add(distanceHistogram);
 
         cardLayout = new CardLayout();
         graphDisplay = new JPanel(cardLayout);
@@ -103,7 +113,7 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
 
     }
 
-    public void startRender(){
+    public void startRender() {
         histogram.animate();
         latenessHistogram.animate();
         distanceHistogram.animate();
@@ -111,10 +121,11 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        JComboBox dropDown = (JComboBox)e.getSource();
+        JComboBox<String> dropDown = (JComboBox<String>) e.getSource();
         System.out.println(dropDown.getSelectedItem());
+        dropDown.getParent().repaint();
 
-        switch ((String)dropDown.getSelectedItem()){
+        switch ((String) dropDown.getSelectedItem()) {
             case "--Select Option--":
                 break;
             case "poisson":
@@ -131,7 +142,7 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
                 break;
             case "distance":
                 System.out.println("Distance");
-                cardLayout.show(graphDisplay,"distance");
+                cardLayout.show(graphDisplay, "distance");
                 distanceHistogram.animate();
                 break;
         }
@@ -170,5 +181,3 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         return 32;
     }
 }
-
-

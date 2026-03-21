@@ -1,16 +1,22 @@
 package com.still_processing.Application.MapPage;
 
-import com.still_processing.UILib.ButtonBuilder;
-import com.still_processing.UILib.TextPaneBuilder;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JTextPane;
+import javax.swing.Scrollable;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import java.awt.*;
-import java.awt.event.ActionListener;
-
+import com.still_processing.UILib.ButtonBuilder;
+import com.still_processing.UILib.TextPaneBuilder;
 import static com.still_processing.DefaultSettings.Settings.*;
 
 /**
