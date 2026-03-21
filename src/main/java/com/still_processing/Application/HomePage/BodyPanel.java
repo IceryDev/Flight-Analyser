@@ -1,7 +1,6 @@
 package com.still_processing.Application.HomePage;
 
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Map;
 import java.awt.Dimension;
@@ -20,7 +19,6 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import static com.still_processing.DefaultSettings.Settings.*;
-import static com.sun.java.accessibility.util.AWTEventMonitor.addWindowListener;
 
 import java.awt.event.*;
 

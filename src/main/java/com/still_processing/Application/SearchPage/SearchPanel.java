@@ -3,13 +3,15 @@ package com.still_processing.Application.SearchPage;
 import com.still_processing.UILib.ButtonBuilder;
 import com.still_processing.UILib.TextPaneBuilder;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.Scrollable;
+import javax.swing.JTextPane;
+import javax.swing.JButton;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import static com.still_processing.DefaultSettings.Settings.BOLD_FONT;
