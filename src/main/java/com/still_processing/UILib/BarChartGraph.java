@@ -10,6 +10,8 @@ import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.RenderingHints;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.AffineTransform;
 import java.awt.FontMetrics;
 import java.awt.Font;
@@ -44,6 +46,9 @@ public class BarChartGraph extends JPanel implements Runnable {
 
     private JLabel title;
 
+    private boolean showToolTip = false;
+    private int toolTipIndex = 0;
+
     /**
      * @author Jessica Chen
      */
@@ -66,6 +71,13 @@ public class BarChartGraph extends JPanel implements Runnable {
             }
         }
 
+        // Add hover event the histogram
+        this.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent event) {
+                hover(event);
+            }
+        });
         this.setPreferredSize(new Dimension(700, 450));
         this.setMinimumSize(new Dimension(300, 400));
         this.setDoubleBuffered(true);
@@ -151,6 +163,11 @@ public class BarChartGraph extends JPanel implements Runnable {
         }
         drawAxis(g2d, max);
         drawAxisTitles(g2d, "Category", "Value");
+
+        if (showToolTip) {
+            drawHoverTooltip(g2d);
+            showToolTip = false;
+        }
         g2d.dispose();
     }
 
@@ -244,5 +261,83 @@ public class BarChartGraph extends JPanel implements Runnable {
         int yTitleY = padding / 3;
         g2d.drawString(yTitle, yTitleX, yTitleY);
         g2d.setTransform(originalTransform);
+    }
+
+    /**
+     * Mouse hover eventlisterner, calles the drawHoverTooltip
+     *
+     * @author Zhou Sun
+     */
+    private void hover(MouseEvent event) {
+        float max = values[0];
+        for (float value : values) {
+            max = Math.max(max, value);
+        }
+        int chartWidth = getWidth() - 2 * padding;
+        int chartHeight = getHeight() - 2 * padding;
+
+        int totalGaps = barGap * (values.length - 1);
+        int barWidth = (chartWidth - totalGaps) / values.length;
+        double maxValue = max + yStep;
+
+        int height = getHeight();
+        int mouseX = event.getX();
+        int mouseY = event.getY();
+        for (int barIndex = 0; barIndex < values.length; barIndex++) {
+            int xPos = padding + barIndex * (barWidth + barGap);
+            int yPos = (int) (chartHeight * values[barIndex] / maxValue);
+            int barProgress = (int) (yPos * renderPercentage);
+            int barTop = (int) (getHeight() - padding - barProgress);
+            if (mouseX > xPos && mouseX < xPos + barWidth && mouseY < height - padding && mouseY > barTop) {
+                showToolTip = true;
+                toolTipIndex = barIndex;
+            }
+        }
+        repaint();
+    }
+
+    /**
+     * Draw the hover tooltip
+     *
+     * @author Zhou Sun
+     */
+    private void drawHoverTooltip(Graphics2D g2d) {
+        if (toolTipIndex < values.length) {
+            float max = values[0];
+            for (float value : values) {
+                max = Math.max(max, value);
+            }
+            int chartWidth = getWidth() - 2 * padding;
+            int chartHeight = getHeight() - 2 * padding;
+
+            int totalGaps = barGap * (values.length - 1);
+            int barWidth = (chartWidth - totalGaps) / values.length;
+            double maxValue = max + yStep;
+
+            int height = getHeight();
+            int toolTipPadding = 10;
+
+            float showValue = values[toolTipIndex];
+            String output = String.format("%.2f", showValue);
+            FontMetrics metrics = getFontMetrics(font.deriveFont(labelFontSize));
+            int toolTipWidth = metrics.stringWidth(output) + 2 * toolTipPadding;
+            int toolTipHeight = metrics.getHeight() + 2 * toolTipPadding;
+            int toolTipx = barWidth * toolTipIndex + padding + barWidth / 2 + barGap * toolTipIndex;
+            int maxHeight = -2 * padding + height;
+            int yValue = (int) (maxHeight * showValue / maxValue);
+            int barHeight = (int) (yValue * renderPercentage);
+            int barTop = height - padding - barHeight;
+            int toolTipY = barTop + barHeight / 2;
+
+            g2d.setFont(font.deriveFont(labelFontSize));
+            g2d.setColor(new Color(0, 0, 0, 99));
+            g2d.fillRoundRect(toolTipx - toolTipPadding,
+                    toolTipY - toolTipPadding - metrics.getHeight(),
+                    toolTipWidth, toolTipHeight, 20, 20);
+
+            g2d.setColor(BACKGROUND);
+            g2d.setStroke(new BasicStroke(5));
+            g2d.drawString(output, toolTipx, toolTipY);
+        }
     }
 }
