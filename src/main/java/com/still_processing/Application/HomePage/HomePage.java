@@ -28,7 +28,7 @@ import static com.still_processing.DefaultSettings.Settings.*;
 public class HomePage extends JPanel implements Scrollable {
 
     public HomePage(ActionListener a) {
-        System.out.println("=== Body Panel ===");
+        System.out.println("=== Home Page ===");
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBackground(BACKGROUND);
