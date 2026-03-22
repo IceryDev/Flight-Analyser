@@ -29,15 +29,12 @@ public class HomePage extends JPanel implements Scrollable {
 
     public HomePage(ActionListener a) {
         System.out.println("=== Home Page ===");
-
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBackground(BACKGROUND);
+        this.add(Box.createRigidArea(new Dimension(0, 50)));
 
         JPanel titlePanel = new JPanel();
         titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.X_AXIS));
-        titlePanel.setSize(new Dimension(200, 200));
-
-        this.add(Box.createRigidArea(new Dimension(0, 50)));
 
         ImagePanel logo = new ImagePanel("/Images/logo.png", 200, 200);
         String title = "Flight Analyser";
@@ -93,7 +90,6 @@ public class HomePage extends JPanel implements Scrollable {
                 .setFontSize(18)
                 .build();
         button3.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
-        button3.setBounds(10, 10, 5, 5);
 
         button1.addActionListener(a);
         button2.addActionListener(a);
