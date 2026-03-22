@@ -12,7 +12,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JPanel;
 
 import com.still_processing.Application.AnalysisPage.AnalysisPanel;
-import com.still_processing.Application.HomePage.BodyPanel;
+import com.still_processing.Application.HomePage.HomePage;
 import com.still_processing.Application.MapPage.MapPanel;
 import com.still_processing.Application.SearchPage.SearchPanel;
 import com.still_processing.UILib.ScrollPaneFactory;
@@ -23,21 +23,23 @@ import static com.still_processing.DefaultSettings.Settings.*;
  */
 
 public class MainWindow extends JFrame implements ActionListener {
-    CardLayout cardLayout = new CardLayout();
-    JPanel cards = new JPanel(cardLayout);
+    private CardLayout cardLayout = new CardLayout();
+    private JPanel cards = new JPanel(cardLayout);
     private AnalysisPanel analyse;
     private MapPanel map;
     private SearchPanel search;
-    private BodyPanel body;
+    private HomePage body;
 
     public MainWindow() {
-        ImageIcon image = new ImageIcon(getClass().getResource("/Images/logo.jpg"));
+        ImageIcon image = new ImageIcon(getClass().getResource("/Images/logo.png"));
         this.setIconImage(image.getImage());
+        cards.setOpaque(false);
 
-        body = new BodyPanel(this);
+        body = new HomePage(this);
         JScrollPane scrollPane = ScrollPaneFactory.createPane();
         scrollPane.setViewportView(body);
         scrollPane.getViewport().setBackground(BACKGROUND);
+        scrollPane.setOpaque(false);
         cards.add(scrollPane, "Main");
 
         search = new SearchPanel(this);
@@ -76,12 +78,14 @@ public class MainWindow extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "Home Page":
+            case "Return Home":
                 cardLayout.show(cards, "Main");
                 break;
             case "Search":
                 cardLayout.show(cards, "Search");
                 break;
             case "Analyse":
+            case "View Graph":
                 cardLayout.show(cards, "Analyse");
                 analyse.startRender();
                 break;

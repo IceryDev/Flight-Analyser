@@ -35,7 +35,7 @@ public class ButtonBuilder {
 
     private boolean hasBorder = false;
 
-    public JButton build(){
+    public JButton build() {
         JButton tmpButton = new JButton();
 
         tmpButton.setText(this.text);
@@ -43,15 +43,19 @@ public class ButtonBuilder {
         tmpButton.setBackground(this.background);
 
         int style = Font.PLAIN;
-        if (this.bold) style |= Font.BOLD;
-        if (this.italic) style |= Font.ITALIC;
+        if (this.bold)
+            style |= Font.BOLD;
+        if (this.italic)
+            style |= Font.ITALIC;
         tmpButton.setFont(this.font.deriveFont(style, this.fontSize));
 
         tmpButton.setSize(this.size[0], this.size[1]);
         tmpButton.setIcon(this.icon);
 
-        if (hasBorder){
+        if (hasBorder) {
             Border b = BorderFactory.createLineBorder(this.borderColor, this.borderWidth);
+        } else {
+            tmpButton.setBorder(null);
         }
 
         return tmpButton;
@@ -64,12 +68,12 @@ public class ButtonBuilder {
     }
 
     public ButtonBuilder setIcon(String path) {
-        this.icon = new ImageIcon(  //Remove the double dot in build
+        this.icon = new ImageIcon( // Remove the double dot in build
                 Objects.requireNonNull(ButtonBuilder.class.getResource(path)));
         return this;
     }
 
-    public ButtonBuilder setFontSize(int fontSize){
+    public ButtonBuilder setFontSize(int fontSize) {
         this.fontSize = fontSize;
         return this;
     }
@@ -99,7 +103,7 @@ public class ButtonBuilder {
         return this;
     }
 
-    public ButtonBuilder setBorderWidth(int width){
+    public ButtonBuilder setBorderWidth(int width) {
         this.borderWidth = width;
         return this;
     }
@@ -109,12 +113,12 @@ public class ButtonBuilder {
         return this;
     }
 
-    public ButtonBuilder setBold(boolean bold){
+    public ButtonBuilder setBold(boolean bold) {
         this.bold = bold;
         return this;
     }
 
-    public ButtonBuilder setItalic(boolean italic){
+    public ButtonBuilder setItalic(boolean italic) {
         this.italic = italic;
         return this;
     }
