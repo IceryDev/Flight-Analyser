@@ -39,7 +39,7 @@ public class TextPaneBuilder {
         textPane.setSelectionColor(HIGHLIGHT);
         textPane.setFont(font.deriveFont((float) fontSize));
         textPane.setOpaque(false);
-        textPane.setSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+        textPane.setSize(new Dimension(0, 0));
 
         return textPane;
     }

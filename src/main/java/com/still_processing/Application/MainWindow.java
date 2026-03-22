@@ -6,9 +6,11 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
+import javax.swing.border.Border;
 import javax.swing.JPanel;
 
 import com.still_processing.Application.AnalysisPage.AnalysisPanel;
@@ -31,13 +33,15 @@ public class MainWindow extends JFrame implements ActionListener {
     private BodyPanel body;
 
     public MainWindow() {
-        ImageIcon image = new ImageIcon(getClass().getResource("/Images/logo.jpg"));
+        ImageIcon image = new ImageIcon(getClass().getResource("/Images/logo.png"));
         this.setIconImage(image.getImage());
+        cards.setOpaque(false);
 
         body = new BodyPanel(this);
         JScrollPane scrollPane = ScrollPaneFactory.createPane();
         scrollPane.setViewportView(body);
         scrollPane.getViewport().setBackground(BACKGROUND);
+        scrollPane.setOpaque(false);
         cards.add(scrollPane, "Main");
 
         search = new SearchPanel(this);
