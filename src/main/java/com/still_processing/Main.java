@@ -26,7 +26,6 @@ public class Main {
 
         try {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             UIManager.getDefaults().put("TableHeader.cellBorder", BorderFactory.createMatteBorder(5, 0, 5, 0, GRAY));
         } catch (Exception e) {
             e.printStackTrace();
