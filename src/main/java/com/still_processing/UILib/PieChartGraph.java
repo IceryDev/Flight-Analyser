@@ -171,7 +171,9 @@ public class PieChartGraph extends JPanel implements Runnable {
             g2d.fill(new Arc2D.Double(chartX, chartY, chartDiameter, chartDiameter, startAngle, drawingSweep,
                     Arc2D.PIE));
             // Percentage label inside slice
-            if (remainingAngle >= sweep) {
+            // Due to incurate rounding in floating point numbers,
+            // add 0.01 to fix
+            if (remainingAngle + 0.01 >= sweep) {
                 double midAngle = Math.toRadians(startAngle + sweep / 2);
                 int labelR = chartDiameter / 4;
                 int labelX = chartX + chartDiameter / 2 + (int) (labelR * Math.cos(midAngle));
