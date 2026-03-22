@@ -59,7 +59,7 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         StyleConstants.setAlignment(center, StyleConstants.ALIGN_CENTER);
         doc.setParagraphAttributes(0, doc.getLength(), center, false);
 
-        FontMetrics metrics = getFontMetrics(BOLD_FONT.deriveFont(48f));
+        FontMetrics metrics = getFontMetrics(BOLD_FONT.deriveFont(36f));
         int textHeight = metrics.getHeight() / 2 + metrics.getMaxAscent();
         int textWidth = metrics.stringWidth(title);
         textPane.setSize(new Dimension(textWidth, textHeight));
