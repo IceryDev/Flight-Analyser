@@ -25,9 +25,9 @@ import static com.still_processing.DefaultSettings.Settings.*;
 /**
  * @author Zhou Sun, Deea Zaharia
  */
-public class BodyPanel extends JPanel implements Scrollable {
+public class HomePage extends JPanel implements Scrollable {
 
-    public BodyPanel(ActionListener a) {
+    public HomePage(ActionListener a) {
         System.out.println("=== Body Panel ===");
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));

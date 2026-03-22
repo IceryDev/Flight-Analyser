@@ -6,15 +6,13 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
-import javax.swing.border.Border;
 import javax.swing.JPanel;
 
 import com.still_processing.Application.AnalysisPage.AnalysisPanel;
-import com.still_processing.Application.HomePage.BodyPanel;
+import com.still_processing.Application.HomePage.HomePage;
 import com.still_processing.Application.MapPage.MapPanel;
 import com.still_processing.Application.SearchPage.SearchPanel;
 import com.still_processing.UILib.ScrollPaneFactory;
@@ -30,14 +28,14 @@ public class MainWindow extends JFrame implements ActionListener {
     private AnalysisPanel analyse;
     private MapPanel map;
     private SearchPanel search;
-    private BodyPanel body;
+    private HomePage body;
 
     public MainWindow() {
         ImageIcon image = new ImageIcon(getClass().getResource("/Images/logo.png"));
         this.setIconImage(image.getImage());
         cards.setOpaque(false);
 
-        body = new BodyPanel(this);
+        body = new HomePage(this);
         JScrollPane scrollPane = ScrollPaneFactory.createPane();
         scrollPane.setViewportView(body);
         scrollPane.getViewport().setBackground(BACKGROUND);
