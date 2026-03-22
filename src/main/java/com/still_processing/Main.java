@@ -19,7 +19,7 @@ public class Main {
         CSVHandler.loadOfflineFlightCSV();
         FlightFetcher.getAirlineCodes();
 
-        System.setProperty("sun.java2d.uiScale", "2.0");
+        System.setProperty("sun.java2d.uiScale", "1.0");
         System.setProperty("sun.java2d.opengl", "true");
         System.setProperty("awt.useSystemAAFontSettings", "on");
         System.setProperty("swing.aatext", "true");
