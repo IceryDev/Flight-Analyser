@@ -11,7 +11,6 @@ import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.DefaultTableCellRenderer;
 
-// import DashboardLib.ScrollPaneFactory;
 import static com.still_processing.DefaultSettings.Settings.*;
 
 public class TableBuilder {

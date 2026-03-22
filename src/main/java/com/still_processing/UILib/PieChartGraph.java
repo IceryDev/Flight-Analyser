@@ -1,22 +1,23 @@
 package com.still_processing.UILib;
 
-import javax.swing.*;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.BorderLayout;
-import java.awt.RenderingHints;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Graphics;
-import java.awt.geom.Arc2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import java.awt.BasicStroke;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.geom.Arc2D;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 import static com.still_processing.DefaultSettings.Settings.*;
-import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 /**
  * This class creates a pie chart that generates gradually.
@@ -46,7 +47,6 @@ public class PieChartGraph extends JPanel implements Runnable {
     private Color color6 = LIGHT_BURGUNDY;
     private Color color7 = BURGUNDY;
 
-
     private Color[] PALETTE = {
             color1,
             color2,
@@ -56,12 +56,13 @@ public class PieChartGraph extends JPanel implements Runnable {
             color6,
             color7
     };
+
     /**
      *
      * @author Jessica Chen
      */
-    public PieChartGraph(HashMap<String,Integer> data) {
-        if(data != null && !data.isEmpty()){
+    public PieChartGraph(HashMap<String, Integer> data) {
+        if (data != null && !data.isEmpty()) {
             this.data = data;
         }
         this.setPreferredSize(new Dimension(760, 600));
@@ -75,6 +76,7 @@ public class PieChartGraph extends JPanel implements Runnable {
 
     /**
      * Build top Bar
+     * 
      * @author Jessica Chen
      */
     private JPanel buildTopBar() {
@@ -86,8 +88,10 @@ public class PieChartGraph extends JPanel implements Runnable {
         bar.add(title);
         return bar;
     }
+
     /**
      * Animation
+     * 
      * @author Zhou Sun
      */
     @Override
@@ -117,6 +121,7 @@ public class PieChartGraph extends JPanel implements Runnable {
 
     /**
      * Update Variables
+     * 
      * @author Jessica Chen
      */
     private void update() {
@@ -124,12 +129,14 @@ public class PieChartGraph extends JPanel implements Runnable {
             animationProgress = Math.min(animationProgress + 1.0 / ANIMATION_DURATION, 1.0);
         }
     }
-    private double sineMotion(double time){
+
+    private double sineMotion(double time) {
         return -(Math.cos(Math.PI * time) - 1.0) / 2.0;
     }
 
     /**
      * Draw method
+     * 
      * @author Jessica Chen
      */
     @Override
@@ -139,20 +146,20 @@ public class PieChartGraph extends JPanel implements Runnable {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-        int panelWidth  = getWidth();
+        int panelWidth = getWidth();
         int panelHeight = getHeight();
 
         int chartDiameter = Math.min(panelWidth - legendWidth - padding * 2, panelHeight - padding * 4);
         chartDiameter = Math.max(chartDiameter, 100);
         int chartY = (panelHeight - chartDiameter) / 2 + TOP_BAR.getHeight() / 2;
         int chartX = padding;
-        double animatedSweep = sineMotion(animationProgress)*360;
-        List<String> keys  = new ArrayList<>(data.keySet());
+        double animatedSweep = sineMotion(animationProgress) * 360;
+        List<String> keys = new ArrayList<>(data.keySet());
         int total = keys.stream().mapToInt(data::get).sum();
-        double startAngle  = 0;
+        double startAngle = 0;
         double remainingAngle = animatedSweep;
         for (int i = 0; i < keys.size(); i++) {
-            if (remainingAngle <= 0){
+            if (remainingAngle <= 0) {
                 break;
             }
             String label = keys.get(i);
@@ -161,9 +168,10 @@ public class PieChartGraph extends JPanel implements Runnable {
             double drawingSweep = Math.min(sweep, remainingAngle);
 
             g2d.setColor(PALETTE[i % PALETTE.length]);
-            g2d.fill(new Arc2D.Double(chartX, chartY, chartDiameter, chartDiameter, startAngle, drawingSweep, Arc2D.PIE));
+            g2d.fill(new Arc2D.Double(chartX, chartY, chartDiameter, chartDiameter, startAngle, drawingSweep,
+                    Arc2D.PIE));
             // Percentage label inside slice
-            if (remainingAngle >= sweep){
+            if (remainingAngle >= sweep) {
                 double midAngle = Math.toRadians(startAngle + sweep / 2);
                 int labelR = chartDiameter / 4;
                 int labelX = chartX + chartDiameter / 2 + (int) (labelR * Math.cos(midAngle));
@@ -177,7 +185,7 @@ public class PieChartGraph extends JPanel implements Runnable {
             startAngle += sweep;
             remainingAngle -= drawingSweep;
         }
-        int legendX  = chartX + chartDiameter + padding + 80;
+        int legendX = chartX + chartDiameter + padding + 80;
         int legendStartY = chartY + 80;
         int swatchSize = 16;
         int rowHeight = 28;
@@ -185,7 +193,7 @@ public class PieChartGraph extends JPanel implements Runnable {
         for (int i = 0; i < keys.size(); i++) {
             String label = keys.get(i);
             int value = data.get(label);
-            int rowY  = legendStartY + i * rowHeight;
+            int rowY = legendStartY + i * rowHeight;
             g2d.setColor(PALETTE[i % PALETTE.length]);
             g2d.fillRoundRect(legendX, rowY, swatchSize, swatchSize, 4, 4);
             g2d.setColor(LABEL_COLOR);
@@ -196,25 +204,27 @@ public class PieChartGraph extends JPanel implements Runnable {
         }
         g2d.dispose();
     }
+
     /**
      * Create Setters
+     * 
      * @author Jessica Chen
      */
-    public void setChartTitle (String chartTitle ){
-        if (chartTitle != null){
+    public void setChartTitle(String chartTitle) {
+        if (chartTitle != null) {
             this.chartTitle = chartTitle;
             this.title.setText(this.chartTitle);
         }
     }
 
-    public void setLegendWidth (int legendWidth ){
-        if (legendWidth > 0){
+    public void setLegendWidth(int legendWidth) {
+        if (legendWidth > 0) {
             this.legendWidth = legendWidth;
         }
     }
 
-    public void setPadding (int padding ){
-        if (padding > 0){
+    public void setPadding(int padding) {
+        if (padding > 0) {
             this.padding = padding;
         }
     }
