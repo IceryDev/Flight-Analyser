@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
@@ -26,8 +27,8 @@ import static com.still_processing.DefaultSettings.Settings.*;
  * @author Deea Zaharia
  */
 
-public class SearchPanel extends JPanel implements Scrollable {
-    public SearchPanel(ActionListener a) {
+public class SearchPanel extends JPanel implements Scrollable, ActionListener {
+    public SearchPanel(ActionListener sceneSwitch) {
 
         System.out.println("=== Search Panel ===");
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -63,15 +64,15 @@ public class SearchPanel extends JPanel implements Scrollable {
 
         this.add(Box.createRigidArea(new Dimension(0, 50)));
 
-        JButton button = new ButtonBuilder()
+        JButton homeButton = new ButtonBuilder()
                 .setSize(25, 25)
                 .setForeground(BACKGROUND)
                 .setBackground(HIGHLIGHT)
-                .setText("Home Page")
+                .setText("Return Home")
                 .setFontSize(18)
                 .build();
-        button.addActionListener(a);
-        button.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
+        homeButton.addActionListener(sceneSwitch);
+        homeButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
 
         JButton graphButton = new ButtonBuilder()
                 .setSize(25, 25)
@@ -81,16 +82,38 @@ public class SearchPanel extends JPanel implements Scrollable {
                 .setFontSize(18)
                 .build();
         graphButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
+        graphButton.addActionListener(sceneSwitch);
+
+        JButton sortButton = new ButtonBuilder()
+                .setSize(25, 25)
+                .setForeground(BACKGROUND)
+                .setBackground(HIGHLIGHT)
+                .setText("Sort By Lateness")
+                .setFontSize(18)
+                .build();
+        sortButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
+        sortButton.addActionListener(this);
 
         JPanel buttonContainer = new JPanel();
         buttonContainer.setOpaque(false);
         buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.X_AXIS));
         buttonContainer.add(Box.createRigidArea(new Dimension(40, 0)));
-        buttonContainer.add(button);
+        buttonContainer.add(homeButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(graphButton);
+        buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
+        buttonContainer.add(sortButton);
         buttonContainer.add(Box.createHorizontalGlue());
         this.add(buttonContainer);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        switch (e.getActionCommand()) {
+            case "Sort By Lateness":
+                System.out.println("Doing some rigorous sorting!!!");
+                break;
+        }
     }
 
     @Override

@@ -27,7 +27,7 @@ import static com.still_processing.DefaultSettings.Settings.*;
  */
 public class HomePage extends JPanel implements Scrollable {
 
-    public HomePage(ActionListener a) {
+    public HomePage(ActionListener sceneSwitch) {
         System.out.println("=== Home Page ===");
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBackground(BACKGROUND);
@@ -64,45 +64,45 @@ public class HomePage extends JPanel implements Scrollable {
 
         this.add(Box.createRigidArea(new Dimension(0, 50)));
 
-        JButton button1 = new ButtonBuilder()
+        JButton analyseButton = new ButtonBuilder()
                 .setSize(25, 25)
                 .setForeground(BACKGROUND)
                 .setBackground(HIGHLIGHT)
                 .setText("Analyse")
                 .setFontSize(18)
                 .build();
-        button1.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
+        analyseButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
 
-        JButton button2 = new ButtonBuilder()
+        JButton mapButton = new ButtonBuilder()
                 .setSize(25, 25)
                 .setForeground(BACKGROUND)
                 .setBackground(HIGHLIGHT)
                 .setText("Map View")
                 .setFontSize(18)
                 .build();
-        button2.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
+        mapButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
 
-        JButton button3 = new ButtonBuilder()
+        JButton searchButton = new ButtonBuilder()
                 .setSize(25, 25)
                 .setForeground(BACKGROUND)
                 .setBackground(HIGHLIGHT)
                 .setText("Search")
                 .setFontSize(18)
                 .build();
-        button3.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
+        searchButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
 
-        button1.addActionListener(a);
-        button2.addActionListener(a);
-        button3.addActionListener(a);
+        analyseButton.addActionListener(sceneSwitch);
+        mapButton.addActionListener(sceneSwitch);
+        searchButton.addActionListener(sceneSwitch);
 
         JPanel buttonContainer = new JPanel();
         buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.X_AXIS));
         buttonContainer.add(Box.createHorizontalGlue());
-        buttonContainer.add(button1);
+        buttonContainer.add(analyseButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(40, 0)));
-        buttonContainer.add(button2);
+        buttonContainer.add(mapButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(40, 0)));
-        buttonContainer.add(button3);
+        buttonContainer.add(searchButton);
         buttonContainer.add(Box.createHorizontalGlue());
         buttonContainer.setOpaque(false);
         this.add(buttonContainer);

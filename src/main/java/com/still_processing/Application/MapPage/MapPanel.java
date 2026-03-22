@@ -26,7 +26,7 @@ import static com.still_processing.DefaultSettings.Settings.*;
  * @author Deea Zaharia
  */
 public class MapPanel extends JPanel implements Scrollable {
-    public MapPanel(ActionListener a) {
+    public MapPanel(ActionListener sceneSwitch) {
 
         System.out.println("=== Map Panel ===");
 
@@ -53,15 +53,15 @@ public class MapPanel extends JPanel implements Scrollable {
         textPane.setSize(new Dimension(textWidth, textHeight));
         textPane.setMaximumSize(new Dimension(textWidth, textHeight));
 
-        JButton button = new ButtonBuilder()
+        JButton homeButton = new ButtonBuilder()
                 .setSize(25, 25)
                 .setForeground(BACKGROUND)
                 .setBackground(HIGHLIGHT)
-                .setText("Home Page")
+                .setText("Return Home")
                 .setFontSize(18)
                 .build();
-        button.addActionListener(a);
-        button.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
+        homeButton.addActionListener(sceneSwitch);
+        homeButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
 
         titlePanel.setOpaque(false);
         titlePanel.add(Box.createRigidArea(new Dimension(20, 0)));
@@ -69,7 +69,7 @@ public class MapPanel extends JPanel implements Scrollable {
         titlePanel.add(Box.createRigidArea(new Dimension(20, 0)));
         titlePanel.add(textPane);
         titlePanel.add(Box.createHorizontalGlue());
-        titlePanel.add(button);
+        titlePanel.add(homeButton);
         titlePanel.add(Box.createRigidArea(new Dimension(20, 0)));
         this.add(titlePanel);
     }

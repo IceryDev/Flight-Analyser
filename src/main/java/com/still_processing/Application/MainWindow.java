@@ -23,8 +23,8 @@ import static com.still_processing.DefaultSettings.Settings.*;
  */
 
 public class MainWindow extends JFrame implements ActionListener {
-    CardLayout cardLayout = new CardLayout();
-    JPanel cards = new JPanel(cardLayout);
+    private CardLayout cardLayout = new CardLayout();
+    private JPanel cards = new JPanel(cardLayout);
     private AnalysisPanel analyse;
     private MapPanel map;
     private SearchPanel search;
@@ -78,12 +78,14 @@ public class MainWindow extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "Home Page":
+            case "Return Home":
                 cardLayout.show(cards, "Main");
                 break;
             case "Search":
                 cardLayout.show(cards, "Search");
                 break;
             case "Analyse":
+            case "View Graph":
                 cardLayout.show(cards, "Analyse");
                 analyse.startRender();
                 break;

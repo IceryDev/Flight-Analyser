@@ -39,7 +39,7 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
     Histogram distanceHistogram;
     CardLayout cardLayout;
 
-    public AnalysisPanel(ActionListener a) {
+    public AnalysisPanel(ActionListener sceneSwitch) {
         System.out.println("=== Analysis Panel ===");
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBackground(BACKGROUND);
@@ -73,15 +73,15 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         dropDown.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         dropDown.addActionListener(this);
 
-        JButton button2 = new ButtonBuilder()
+        JButton homeButton = new ButtonBuilder()
                 .setSize(25, 25)
                 .setForeground(BACKGROUND)
                 .setBackground(HIGHLIGHT)
-                .setText("Home Page")
+                .setText("Return Home")
                 .setFontSize(18)
                 .build();
-        button2.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
-        button2.addActionListener(a);
+        homeButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
+        homeButton.addActionListener(sceneSwitch);
 
         titlePanel.setOpaque(false);
         titlePanel.add(Box.createRigidArea(new Dimension(20, 0)));
@@ -91,7 +91,7 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         titlePanel.add(Box.createHorizontalGlue());
         titlePanel.add(dropDown);
         titlePanel.add(Box.createHorizontalGlue());
-        titlePanel.add(button2);
+        titlePanel.add(homeButton);
         titlePanel.add(Box.createRigidArea(new Dimension(20, 0)));
         this.add(titlePanel);
 
