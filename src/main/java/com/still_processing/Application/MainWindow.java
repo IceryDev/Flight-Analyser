@@ -14,8 +14,13 @@ import javax.swing.JPanel;
 import com.still_processing.Application.AnalysisPage.AnalysisPanel;
 import com.still_processing.Application.HomePage.HomePage;
 import com.still_processing.Application.MapPage.MapPanel;
+import com.still_processing.Application.MapPage.PlaneMarker;
 import com.still_processing.Application.SearchPage.SearchPanel;
+import com.still_processing.DefaultSettings.Settings;
+import com.still_processing.FlightData.FlightInfo;
 import com.still_processing.UILib.ScrollPaneFactory;
+import org.openstreetmap.gui.jmapviewer.Coordinate;
+
 import static com.still_processing.DefaultSettings.Settings.*;
 
 /**
@@ -89,6 +94,7 @@ public class MainWindow extends JFrame implements ActionListener {
                 break;
             case "Map View":
                 cardLayout.show(cards, "Map");
+                map.mvf.test();
                 break;
         }
         cards.repaint();

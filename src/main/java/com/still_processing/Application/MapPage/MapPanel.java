@@ -17,22 +17,23 @@ import org.openstreetmap.gui.jmapviewer.OsmTileLoader;
 import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
 
 import static com.still_processing.DefaultSettings.Settings.*;
-
 /**
  * @author Deea Zaharia
  */
 public class MapPanel extends JPanel {
+
+    public MapViewFull mvf;
     public MapPanel(ActionListener sceneSwitch) {
 
         System.out.println("=== Map Panel ===");
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBackground(BACKGROUND);
-        this.add(Box.createRigidArea(new Dimension(0, 20)));
 
         JPanel titlePanel = new JPanel();
         titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.X_AXIS));
-        ImagePanel logo = new ImagePanel("/Images/logo.png", 70, 70);
+        ImagePanel logo = new ImagePanel("/Images/logo.png", 50, 50);
+
         String title = "Flight Analyser | Map";
         JTextPane textPane = new TextPaneBuilder()
                 .setText(title)
@@ -66,6 +67,7 @@ public class MapPanel extends JPanel {
         titlePanel.add(textPane);
         titlePanel.add(Box.createHorizontalGlue());
         titlePanel.add(homeButton);
+        titlePanel.add(Box.createRigidArea(new Dimension(20, 0)));
         titlePanel.add(Box.createRigidArea(new Dimension(0, 20)));
 
         JPanel mapBorderLayout = new JPanel();
@@ -74,19 +76,11 @@ public class MapPanel extends JPanel {
         mapBorderLayout.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 
         System.setProperty("http.agent", "FlightAnalyser/1.0");
-        MapViewFull mvf = new MapViewFull(true, Database.offlineFlights);
-        mvf.setTileSource(new OsmTileSource.Mapnik());
-        mvf.setTileLoader(new OsmTileLoader(mvf));
-        mvf.setDisplayPosition(new Coordinate(50, 50), 8);
-        mvf.setAlignmentY(Component.TOP_ALIGNMENT);
-        mvf.setMapMarkerVisible(true);
-        mvf.setScrollWrapEnabled(true);
-        SwingUtilities.invokeLater(() -> {
-            mvf.setDisplayPosition(new Coordinate(53.3498, -6.2603), 7);
-            mvf.repaint();
-        });
+        mvf = new MapViewFull(true, Database.offlineFlights, this);
+
         mapBorderLayout.add(mvf);
 
+        this.add(Box.createRigidArea(new Dimension(0, 10)));
         this.add(titlePanel);
         this.add(mapBorderLayout);
     }

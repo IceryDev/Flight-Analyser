@@ -6,7 +6,11 @@ import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
+
 import io.github.cdimascio.dotenv.Dotenv;
+
+import javax.swing.*;
 
 /**
  * Some reuseable default settings
@@ -23,6 +27,8 @@ public class Settings {
     public static final Font MEDIUM_FONT = loadFont("/Orbitron/Orbitron-Medium.ttf");
     public static final Font BLACK_FONT = loadFont("/Orbitron/Orbitron-Black.ttf");
     public static final int FONT_SIZE = 12;
+
+    public static final ImageIcon ICON = new ImageIcon(Objects.requireNonNull(Settings.class.getResource("/Images/logo.png")));
 
     public static final Color TEXT_COLOR = new Color(0x001917);
     public static final Color BACKGROUND = new Color(0xeff2f1);

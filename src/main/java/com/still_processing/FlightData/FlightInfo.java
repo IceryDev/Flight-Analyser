@@ -20,7 +20,7 @@ public class FlightInfo {
     float distance;
     float lateness;
 
-    PlaneInfo plane;
+    public PlaneInfo plane;
     String airline;
 
     FlightInfo(){}
