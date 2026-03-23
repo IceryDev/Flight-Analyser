@@ -23,7 +23,7 @@ public class Statistics {
     public static float median(int[] values) {
         Arrays.sort(values);
         if (values.length % 2 == 0)
-            return (float) ((values[values.length/2-1] + values[(values.length/2)])/2);
+            return ((float) (values[values.length/2-1] + values[(values.length/2)]))/2;
         else
             return values[values.length/2];
     }
