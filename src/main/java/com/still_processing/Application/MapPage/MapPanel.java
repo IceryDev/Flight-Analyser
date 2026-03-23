@@ -1,31 +1,27 @@
 package com.still_processing.Application.MapPage;
 
-import java.awt.Dimension;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JTextPane;
-import javax.swing.Scrollable;
+import javax.swing.*;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+import com.still_processing.FlightData.Database;
 import com.still_processing.UILib.ButtonBuilder;
 import com.still_processing.UILib.ImagePanel;
 import com.still_processing.UILib.TextPaneBuilder;
+import org.openstreetmap.gui.jmapviewer.Coordinate;
+import org.openstreetmap.gui.jmapviewer.OsmTileLoader;
+import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
+
 import static com.still_processing.DefaultSettings.Settings.*;
 
 /**
  * @author Deea Zaharia
  */
-public class MapPanel extends JPanel implements Scrollable {
+public class MapPanel extends JPanel {
     public MapPanel(ActionListener sceneSwitch) {
 
         System.out.println("=== Map Panel ===");
@@ -70,8 +66,29 @@ public class MapPanel extends JPanel implements Scrollable {
         titlePanel.add(textPane);
         titlePanel.add(Box.createHorizontalGlue());
         titlePanel.add(homeButton);
-        titlePanel.add(Box.createRigidArea(new Dimension(20, 0)));
+        titlePanel.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        JPanel mapBorderLayout = new JPanel();
+        mapBorderLayout.setLayout(new BoxLayout(mapBorderLayout, BoxLayout.Y_AXIS));
+        mapBorderLayout.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        mapBorderLayout.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
+
+        System.setProperty("http.agent", "FlightAnalyser/1.0");
+        MapViewFull mvf = new MapViewFull(true, Database.offlineFlights);
+        mvf.setTileSource(new OsmTileSource.Mapnik());
+        mvf.setTileLoader(new OsmTileLoader(mvf));
+        mvf.setDisplayPosition(new Coordinate(50, 50), 8);
+        mvf.setAlignmentY(Component.TOP_ALIGNMENT);
+        mvf.setMapMarkerVisible(true);
+        mvf.setScrollWrapEnabled(true);
+        SwingUtilities.invokeLater(() -> {
+            mvf.setDisplayPosition(new Coordinate(53.3498, -6.2603), 7);
+            mvf.repaint();
+        });
+        mapBorderLayout.add(mvf);
+
         this.add(titlePanel);
+        this.add(mapBorderLayout);
     }
 
     @Override
@@ -79,33 +96,4 @@ public class MapPanel extends JPanel implements Scrollable {
         super.paintComponent(graphics);
     }
 
-    @Override
-    public Dimension getPreferredScrollableViewportSize() {
-
-        return null;
-    }
-
-    @Override
-    public boolean getScrollableTracksViewportWidth() {
-
-        return true;
-    }
-
-    @Override
-    public boolean getScrollableTracksViewportHeight() {
-
-        return false;
-    }
-
-    @Override
-    public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
-
-        return 32;
-    }
-
-    @Override
-    public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
-
-        return 32;
-    }
 }

@@ -55,10 +55,8 @@ public class MainWindow extends JFrame implements ActionListener {
         cards.add(scrollPane, "Analyse");
 
         map = new MapPanel(this);
-        scrollPane = ScrollPaneFactory.createPane();
-        scrollPane.setViewportView(map);
-        scrollPane.getViewport().setBackground(BACKGROUND);
-        cards.add(scrollPane, "Map");
+        map.setBackground(BACKGROUND);
+        cards.add(map, "Map");
 
         this.add(cards, BorderLayout.CENTER);
 
