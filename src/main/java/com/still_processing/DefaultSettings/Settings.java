@@ -34,7 +34,15 @@ public class Settings {
     public static final Color BACKGROUND = new Color(0xeff2f1);
     public static final Color HIGHLIGHT = new Color(0x01796f);
     public static final Color GRAY = new Color(0xaaaaaa);
-    
+    public static final Color LABEL_COLOR = new Color(0x3A3939);
+
+    public static final Color LIGHT_BLUE = new Color(0x4ECDC4);
+    public static final Color LIGHT_GREEN = new Color(0x569C62);
+    public static final Color CYAN = new Color(0x46A3F8);
+    public static final Color DARK_CYAN = new Color(0x16599C);
+    public static final Color LIGHT_BURGUNDY = new Color(0xFFC17676);
+    public static final Color BURGUNDY = new Color(0x431928);
+    public static final String API_KEY = Dotenv.load().get("FLIGHT_API");
     public static final String CLIENT_SECRET = Dotenv.load().get("CLIENT_SECRET"); //For OpenSky API
     public static final String USER_NAME_OPENSKY = Dotenv.load().get("CLIENT_ID"); //For OpenSky API
 

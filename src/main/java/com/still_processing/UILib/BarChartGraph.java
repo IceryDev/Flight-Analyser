@@ -1,6 +1,5 @@
 package com.still_processing.UILib;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import java.awt.Dimension;
@@ -15,13 +14,14 @@ import java.awt.geom.AffineTransform;
 import java.awt.FontMetrics;
 import java.awt.Font;
 
-import javax.swing.SwingUtilities;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-
 import static com.still_processing.DefaultSettings.Settings.*;
 
+/**
+ * The {@code BarChartGraph} class is used to build a bar chart that has
+ * animation.
+ */
 public class BarChartGraph extends JPanel implements Runnable {
     Thread graphThread;
     private final int FPS = 60;
@@ -44,6 +44,9 @@ public class BarChartGraph extends JPanel implements Runnable {
 
     private JLabel title;
 
+    /**
+     * @author Jessica Chen
+     */
     public BarChartGraph(Map<String, Float> data) {
 
         if (data != null && !data.isEmpty()) {
@@ -101,18 +104,21 @@ public class BarChartGraph extends JPanel implements Runnable {
         graphThread.start();
     }
 
-    // Update variables
     private void update() {
         if (renderPercentage < 1) {
             renderPercentage += 0.02;
         }
         if (renderPercentage >= 1) {
             renderPercentage = 1;
-            graphThread = null; //Terminate thread
+            graphThread = null; // Terminate thread
         }
     }
 
-    // actually draw method
+    /**
+     * The draw method for the graph.
+     * 
+     * @author Jessica Chen
+     */
     @Override
     protected void paintComponent(Graphics graphics) {
 
@@ -148,6 +154,11 @@ public class BarChartGraph extends JPanel implements Runnable {
         g2d.dispose();
     }
 
+    /**
+     * To build the top panel
+     * 
+     * @author Jessica Chen
+     */
     private JPanel buildTopBar() {
         JPanel bar = new JPanel(new FlowLayout(FlowLayout.CENTER, 12, 10));
         bar.setBackground(new Color(40, 44, 60));
@@ -158,6 +169,11 @@ public class BarChartGraph extends JPanel implements Runnable {
         return bar;
     }
 
+    /**
+     * To draw the axis
+     * 
+     * @author Jessica Chen
+     */
     private void drawAxis(Graphics2D g2d, double max) {
         if (data == null) {
             return;
@@ -206,6 +222,11 @@ public class BarChartGraph extends JPanel implements Runnable {
 
     }
 
+    /**
+     * To draw the axis titles
+     * 
+     * @author Jessica Chen
+     */
     private void drawAxisTitles(Graphics2D g2d, String xTitle, String yTitle) {
 
         AffineTransform original = g2d.getTransform();
@@ -223,46 +244,5 @@ public class BarChartGraph extends JPanel implements Runnable {
         int yTitleY = padding / 3;
         g2d.drawString(yTitle, yTitleX, yTitleY);
         g2d.setTransform(originalTransform);
-
-    }
-
-    public void setFontColor(Color fontColor) {
-        if (fontColor != null) {
-            this.fontColor = fontColor;
-        }
-    }
-
-    public void setFont(Font font) {
-        if (font != null) {
-            this.font = font;
-        }
-    }
-
-    public void setTitle(String titleString){
-        this.chartTitle = titleString;
-        this.title.setText(this.chartTitle);
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            Map<String, Float> categoricalData = new LinkedHashMap<>();
-            categoricalData.put("Monday", 12.0F);
-            categoricalData.put("Te", 7.5F);
-            categoricalData.put("Wed", 19.0F);
-            categoricalData.put("Thu", 5.0F);
-            categoricalData.put("Fri", 14.5F);
-            categoricalData.put("Sat", 22.0F);
-            categoricalData.put("Sun", 9.0F);
-
-            JFrame catFrame = new JFrame("Bar Chart - Days of Week");
-            catFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            catFrame.setLocationRelativeTo(null);
-
-            BarChartGraph catChart = new BarChartGraph(categoricalData);
-            catFrame.add(catChart);
-            catFrame.pack();
-            catFrame.setVisible(true);
-            catChart.animate();
-        });
     }
 }
