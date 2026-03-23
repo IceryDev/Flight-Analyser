@@ -21,7 +21,7 @@ import static com.still_processing.FlightData.Statistics.*;
 import static com.still_processing.DefaultSettings.Settings.*;
 
 /**
- * @author Deea Zaharia
+ * @author Deea Zaharia (Jagoda Koczwara-Szuba)
  */
 
 public class AnalysisPanel extends JPanel implements Scrollable, ActionListener {
