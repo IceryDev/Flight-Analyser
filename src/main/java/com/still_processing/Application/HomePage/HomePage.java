@@ -52,7 +52,6 @@ public class HomePage extends JPanel implements Scrollable {
         FontMetrics metrics = getFontMetrics(BOLD_FONT.deriveFont(48f));
         int textHeight = metrics.getHeight() / 2 + metrics.getMaxAscent();
         int textWidth = metrics.stringWidth(title);
-        textPane.setSize(new Dimension(textWidth, textHeight));
         textPane.setMaximumSize(new Dimension(textWidth, textHeight));
 
         titlePanel.setOpaque(false);
@@ -107,6 +106,8 @@ public class HomePage extends JPanel implements Scrollable {
         buttonContainer.add(Box.createHorizontalGlue());
         buttonContainer.setOpaque(false);
         this.add(buttonContainer);
+
+        this.add(new ExpandablePanel());
         this.add(new ExpandablePanel());
     }
 
