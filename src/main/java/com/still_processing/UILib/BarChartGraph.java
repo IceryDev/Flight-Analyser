@@ -146,7 +146,7 @@ public class BarChartGraph extends JPanel implements Runnable {
 
         int totalGaps = barGap * (values.length - 1);
         int barWidth = (chartWidth - totalGaps) / values.length;
-        double maxValue = max + yStep;
+        double maxValue = (values.length + 1) * yStep;
 
         for (int i = 0; i < values.length; i++) {
             int xPos = padding + i * (barWidth + barGap);
@@ -338,6 +338,12 @@ public class BarChartGraph extends JPanel implements Runnable {
             g2d.setColor(BACKGROUND);
             g2d.setStroke(new BasicStroke(5));
             g2d.drawString(output, toolTipx, toolTipY);
+        }
+    }
+
+    public void setYStep(int yStep) {
+        if (yStep > 0) {
+            this.yStep = yStep;
         }
     }
 }
