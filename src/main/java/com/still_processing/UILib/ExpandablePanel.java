@@ -8,6 +8,10 @@ import java.awt.event.MouseListener;
 
 import static com.still_processing.DefaultSettings.Settings.*;
 
+/**
+ * @author Deea Zaharia
+ */
+
 
 public class ExpandablePanel extends JPanel implements MouseListener {
     private JPanel defaultDisplay;
