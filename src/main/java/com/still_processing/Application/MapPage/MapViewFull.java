@@ -83,7 +83,7 @@ public class MapViewFull extends JMapViewer {
 
     public void test(){
         for (FlightInfo i : Database.flights){
-            this.addMapMarker(new MapMarkerDot(new Coordinate(i.plane.latitude, i.plane.longitude)));
+            this.addMapMarker(new PlaneMarker(new Coordinate(i.plane.latitude, i.plane.longitude)));
         }
     }
 
