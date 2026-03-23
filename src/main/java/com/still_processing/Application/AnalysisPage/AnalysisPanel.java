@@ -8,14 +8,26 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JPanel;
+import javax.swing.JTextPane;
+import javax.swing.Scrollable;
+import javax.swing.JScrollPane;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import com.still_processing.FlightData.Database;
-import com.still_processing.UILib.*;
+import com.still_processing.UILib.ButtonBuilder;
 import com.still_processing.UILib.DropdownBuilder;
+import com.still_processing.UILib.TableBuilder;
+import com.still_processing.UILib.Histogram;
+import com.still_processing.UILib.ImagePanel;
+import com.still_processing.UILib.TextPaneBuilder;
 
 import static com.still_processing.FlightData.Statistics.*;
 import static com.still_processing.DefaultSettings.Settings.*;
