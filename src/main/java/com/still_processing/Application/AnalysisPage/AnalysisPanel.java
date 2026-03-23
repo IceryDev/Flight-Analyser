@@ -116,7 +116,8 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
                 .setFont(BOLD_FONT)
                 .setColumnWidth(new int[] { 100, 500, 100, 100 })
                 .buildPane();
-        latenessStatsTable.setPreferredSize(new Dimension(Integer.MAX_VALUE, 100));
+        latenessStatsTable.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+        latenessStatsTable.setPreferredSize(new Dimension(Integer.MAX_VALUE, 200));
 
         JPanel latenessDisplay = new JPanel();
         latenessDisplay.setLayout(new BoxLayout(latenessDisplay, BoxLayout.Y_AXIS));
@@ -135,7 +136,8 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
                 .setFont(BOLD_FONT)
                 .setColumnWidth(new int[] { 100, 500, 100, 100 })
                 .buildPane();
-        distanceStatsTable.setPreferredSize(new Dimension(Integer.MAX_VALUE, 100));
+        distanceStatsTable.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+        distanceStatsTable.setPreferredSize(new Dimension(Integer.MAX_VALUE, 200));
 
         JPanel distanceDisplay = new JPanel();
         distanceDisplay.setLayout(new BoxLayout(distanceDisplay, BoxLayout.Y_AXIS));
