@@ -9,6 +9,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import com.still_processing.FlightData.Database;
+import com.still_processing.FlightData.Utils.LiveDataHandler;
 import com.still_processing.UILib.ButtonBuilder;
 import com.still_processing.UILib.ImagePanel;
 import com.still_processing.UILib.TextPaneBuilder;
@@ -22,7 +23,6 @@ import static com.still_processing.DefaultSettings.Settings.*;
  */
 public class MapPanel extends JPanel {
 
-    public MapViewFull mvf;
     public MapPanel(ActionListener sceneSwitch) {
 
         System.out.println("=== Map Panel ===");
@@ -76,9 +76,9 @@ public class MapPanel extends JPanel {
         mapBorderLayout.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 
         System.setProperty("http.agent", "FlightAnalyser/1.0");
-        mvf = new MapViewFull(true, Database.offlineFlights, this);
+        LiveDataHandler.mvf = new MapViewFull(true, Database.offlineFlights, this);
 
-        mapBorderLayout.add(mvf);
+        mapBorderLayout.add(LiveDataHandler.mvf);
 
         this.add(Box.createRigidArea(new Dimension(0, 10)));
         this.add(titlePanel);

@@ -18,6 +18,7 @@ import com.still_processing.Application.MapPage.PlaneMarker;
 import com.still_processing.Application.SearchPage.SearchPanel;
 import com.still_processing.DefaultSettings.Settings;
 import com.still_processing.FlightData.FlightInfo;
+import com.still_processing.FlightData.Utils.LiveDataHandler;
 import com.still_processing.UILib.ScrollPaneFactory;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 
@@ -83,6 +84,7 @@ public class MainWindow extends JFrame implements ActionListener {
             case "Home Page":
             case "Return Home":
                 cardLayout.show(cards, "Main");
+                LiveDataHandler.stopRefresh();
                 break;
             case "Search":
                 cardLayout.show(cards, "Search");
@@ -94,7 +96,7 @@ public class MainWindow extends JFrame implements ActionListener {
                 break;
             case "Map View":
                 cardLayout.show(cards, "Map");
-                map.mvf.test();
+                LiveDataHandler.startRefresh();
                 break;
         }
         cards.repaint();

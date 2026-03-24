@@ -19,11 +19,12 @@ public class PlaneMarker implements MapMarker {
     public double rot;
     public double radius = 30;
 
-    public PlaneMarker(Coordinate coord) {
+    public PlaneMarker(Coordinate coord, double rot) {
         try{
             this.icon = ImageIO.read(Objects.requireNonNull(getClass().getResource(Settings.ICON_PATH)));
         }catch(IOException e){e.printStackTrace();}
         this.coord = coord;
+        this.rot = rot;
     }
 
     @Override
@@ -43,7 +44,6 @@ public class PlaneMarker implements MapMarker {
         } else {
             this.coord.setLat(lat);
         }
-
     }
 
     @Override

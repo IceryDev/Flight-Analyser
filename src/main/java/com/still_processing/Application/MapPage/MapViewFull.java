@@ -5,7 +5,6 @@ import com.still_processing.FlightData.Database;
 import com.still_processing.FlightData.FlightInfo;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
-import org.openstreetmap.gui.jmapviewer.MapMarkerDot;
 import org.openstreetmap.gui.jmapviewer.OsmTileLoader;
 import org.openstreetmap.gui.jmapviewer.interfaces.ICoordinate;
 import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
@@ -81,10 +80,5 @@ public class MapViewFull extends JMapViewer {
         }
     }
 
-    public void test(){
-        for (FlightInfo i : Database.flights){
-            this.addMapMarker(new PlaneMarker(new Coordinate(i.plane.latitude, i.plane.longitude)));
-        }
-    }
 
 }
