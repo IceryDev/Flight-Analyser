@@ -51,14 +51,14 @@ public class LiveDataHandler {
             i.plane.latitude = translation[0];
             i.plane.longitude = translation[1];
             i.plane.heading = translation[2];
-            mvf.addMapMarker(new PlaneMarker(new Coordinate(i.plane.latitude, i.plane.longitude), i.plane.heading));
+            mvf.addMapMarker(new PlaneMarker(new Coordinate(i.plane.latitude, i.plane.longitude), i.plane.heading, mvf));
         }
     }
 
     private static void appendNewMarkers(){
         mvf.removeAllMapMarkers();
         for (FlightInfo i : Database.flights){
-            mvf.addMapMarker(new PlaneMarker(new Coordinate(i.plane.latitude, i.plane.longitude), i.plane.heading));
+            mvf.addMapMarker(new PlaneMarker(new Coordinate(i.plane.latitude, i.plane.longitude), i.plane.heading, mvf));
         }
     }
 

@@ -5,7 +5,6 @@ import org.openstreetmap.gui.jmapviewer.*;
 import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -14,17 +13,21 @@ import java.util.Objects;
 
 public class PlaneMarker implements MapMarker {
 
+    private static final int BASE_ZOOM = 10;
+    private static final double SCALE_COEF = 1.5;
     public BufferedImage icon = null;
     public Coordinate coord;
+    public JMapViewer jmv;
     public double rot;
-    public double radius = 30;
+    public double radius = 10;
 
-    public PlaneMarker(Coordinate coord, double rot) {
+    public PlaneMarker(Coordinate coord, double rot, JMapViewer jmv) {
         try{
-            this.icon = ImageIO.read(Objects.requireNonNull(getClass().getResource(Settings.ICON_PATH)));
+            this.icon = ImageIO.read(Objects.requireNonNull(getClass().getResource(Settings.PLANE_RED)));
         }catch(IOException e){e.printStackTrace();}
         this.coord = coord;
         this.rot = rot;
+        this.jmv = jmv;
     }
 
     @Override
@@ -74,10 +77,12 @@ public class PlaneMarker implements MapMarker {
     @Override
     public void paint(Graphics g, Point position, int radius) {
         if (this.icon == null) return;
-        double size = 2 * this.radius;
+        int zoom = this.jmv.getZoom();
+
+        double size = ((2 * this.radius) + (zoom - BASE_ZOOM) * SCALE_COEF);
         AffineTransform at = new AffineTransform();
         at.translate(position.x, position.y);
-        at.rotate(this.rot);
+        at.rotate(Math.PI - Math.toRadians(this.rot));
         at.translate((double) -size /2, (double) -size /2);
         at.scale((double) size / this.icon.getWidth(), (double) size / this.icon.getHeight());
         Graphics2D g2d = (Graphics2D) g;

@@ -29,6 +29,7 @@ public class Settings {
     public static final int FONT_SIZE = 12;
 
     public static final String ICON_PATH = "/Images/logo.png";
+    public static final String PLANE_RED = "/Images/plane-red.png";
 
     public static final Color TEXT_COLOR = new Color(0x001917);
     public static final Color BACKGROUND = new Color(0xeff2f1);
