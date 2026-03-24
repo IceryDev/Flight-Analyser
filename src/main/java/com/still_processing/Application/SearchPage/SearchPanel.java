@@ -19,6 +19,7 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import com.still_processing.UILib.ButtonBuilder;
+import com.still_processing.UILib.ExpandablePanel;
 import com.still_processing.UILib.ImagePanel;
 import com.still_processing.UILib.TextPaneBuilder;
 import static com.still_processing.DefaultSettings.Settings.*;
@@ -105,6 +106,10 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         buttonContainer.add(sortButton);
         buttonContainer.add(Box.createHorizontalGlue());
         this.add(buttonContainer);
+
+        for (int i = 0; i < 25; i++) {
+            this.add(new ExpandablePanel());
+        }
     }
 
     @Override

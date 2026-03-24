@@ -18,7 +18,6 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import com.still_processing.UILib.ButtonBuilder;
-import com.still_processing.UILib.ExpandablePanel;
 import com.still_processing.UILib.ImagePanel;
 import com.still_processing.UILib.TextPaneBuilder;
 import static com.still_processing.DefaultSettings.Settings.*;
@@ -106,9 +105,6 @@ public class HomePage extends JPanel implements Scrollable {
         buttonContainer.add(Box.createHorizontalGlue());
         buttonContainer.setOpaque(false);
         this.add(buttonContainer);
-
-        this.add(new ExpandablePanel());
-        this.add(new ExpandablePanel());
     }
 
     @Override
