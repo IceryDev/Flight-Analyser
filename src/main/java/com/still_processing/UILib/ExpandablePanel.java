@@ -20,6 +20,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 
+import com.still_processing.FlightData.FlightInfo;
 import static com.still_processing.DefaultSettings.Settings.BOLD_FONT;
 import static com.still_processing.DefaultSettings.Settings.GRAY;
 import static com.still_processing.DefaultSettings.Settings.HIGHLIGHT_90;
@@ -51,17 +52,48 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
         private FontMetrics titleFontMetrics;
         private FontMetrics textFontMetrics;
 
-        private String flightTitleText = "Flight Number";
+        private final String flightTitleText = "Flight Number";
+        private final String latenessTitleText = "Lateness";
+        private final String flightDateTitleText = "Flight Date:";
+        private final String schDepTimeTitleText = "Scheduled Departure Time:";
+        private final String actDepTimeTitleText = "Actual Departure Time:";
+        private final String flightCanceledTitleText = "Flight Canceled:";
+        private final String schArrTimeTitleText = "Scheduled Arrival Time:";
+        private final String actArrTimeTitleText = "Actual Arrival Time:";
+
         private String flightNumberText = "RYR123";
         private String depTime = "10:10";
         private String arrTime = "12:20";
         private String tripDuration = "2h10m";
         private String originIATA = "DUB";
         private String destIATA = "LHR";
-        private String latenessTitleText = "Lateness";
         private String latenessText = "10m";
+        private String flightDateText = "1 January 2022";
+        private String schDepTimeText = "10:00";
+        private String actDepTimeText = "10:10";
+        private String flightCanceledText = "False";
+        private String schArrTimeText = "12:00";
+        private String actArrTimeText = "12:22";
 
-        public ExpandablePanel() {
+        public ExpandablePanel(FlightInfo data) {
+                if (data == null) {
+                        throw new IllegalArgumentException();
+                }
+
+                this.flightNumberText = data.iataCode + data.flightNumber;
+                this.depTime = data.depTime;
+                this.arrTime = data.arrTime;
+                this.tripDuration = "dummy text";
+                this.originIATA = data.origin.iataCode;
+                this.destIATA = data.dest.iataCode;
+                this.latenessText = String.format("%.0fm ", data.lateness);
+                this.flightDateText = data.flightDate;
+                this.schDepTimeText = data.depTime;
+                this.actDepTimeText = data.CRSDepTime;
+                this.flightCanceledText = (data.cancelled) ? "True" : "False";
+                this.schArrTimeText = data.arrTime;
+                this.actArrTimeText = data.CRSArrTime;
+
                 this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
                 this.setBorder(BorderFactory.createEmptyBorder(padding, padding, 0, padding));
 
@@ -182,13 +214,6 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
                 expandedDisplay.setLayout(new BoxLayout(expandedDisplay, BoxLayout.X_AXIS));
                 ImagePanel dummyImage = new ImagePanel("/Images/map-placeholder.png", 200, 200, 0, 0);
 
-                String flightDateTitleText = "Flight Date:";
-                String schDepTimeTitleText = "Scheduled Departure Time:";
-                String actDepTimeTitleText = "Actual Departure Time:";
-                String flightDateText = "1 January 2022";
-                String schDepTimeText = "10:00";
-                String actDepTimeText = "10:10";
-
                 JPanel leftColumnText = new JPanel();
                 leftColumnText.setOpaque(false);
                 leftColumnText.setLayout(new BoxLayout(leftColumnText, BoxLayout.Y_AXIS));
@@ -244,18 +269,11 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
                 leftColumnText.add(actDepTimeTitle);
                 leftColumnText.add(actDepTime);
 
-                String flightCanceledTitleText = "Flight Canceled:";
-                String schArrTimeTitleText = "Scheduled Departure Time:";
-                String actArrTimeTitleText = "Actual Departure Time:";
-                String flightCanceledText = "False";
-                String schArrTimeText = "12:00";
-                String actArrTimeText = "12:22";
-
                 JPanel rightColumnText = new JPanel();
                 rightColumnText.setOpaque(false);
                 rightColumnText.setLayout(new BoxLayout(rightColumnText, BoxLayout.Y_AXIS));
                 JTextPane flightCanceledTitle = new TextPaneBuilder()
-                                .setText(flightDateTitleText)
+                                .setText(flightCanceledTitleText)
                                 .setFont(titleFont)
                                 .build();
                 JTextPane schArrTimeTitle = new TextPaneBuilder()
