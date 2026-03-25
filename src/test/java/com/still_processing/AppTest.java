@@ -1,12 +1,15 @@
 package com.still_processing;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 import com.still_processing.FlightData.Filters.FilterApplier;
+import com.still_processing.FlightData.Filters.FuzzySearch;
 import com.still_processing.FlightData.Filters.impl.DistanceFilter;
 import com.still_processing.FlightData.Filters.impl.OriginAirportNameFilter;
+import com.still_processing.FlightData.Airport;
 import com.still_processing.FlightData.CSVHandler;
 import com.still_processing.FlightData.Database;
 import com.still_processing.FlightData.FlightFetcher;
@@ -47,10 +50,24 @@ public class AppTest extends TestCase {
         CSVHandler.loadOfflineFlightCSV();
         ArrayList<FlightInfo> flightList = Database.offlineFlights;
 
+        ArrayList<String> airportList = new ArrayList<>();
+        for (Airport airport : Database.getAirports().values()) {
+            airportList.add(airport.name);
+        }
+        String searchTerm = "John F. Kennedy";
+        List<String> resultList = FuzzySearch.fuzzySearch(searchTerm, airportList);
+        System.out.println("Searching for airpot: " + searchTerm);
+        for (int i = 0; i < 10; i++) {
+            System.out.println(resultList.get(i));
+        }
+
         FilterApplier filter = new FilterApplier(flightList);
-        List<FlightInfo> fileredList = filter.apply(new OriginAirportNameFilter(),
-                "Charlotte Douglas International Airport");
-        System.out.println("Filter Size: " + fileredList.size());
+        List<FlightInfo> filteredList = filter.apply(new OriginAirportNameFilter(), resultList.get(0));
+        System.out.println("Filter Size: " + filteredList.size());
+        for (int i = 0; i < 25; i++) {
+            FlightInfo flight = filteredList.get(i);
+            System.out.println(flight.iataCode + flight.flightNumber);
+        }
         System.out.println("Flight Entries:" + flightList.size());
     }
 }
