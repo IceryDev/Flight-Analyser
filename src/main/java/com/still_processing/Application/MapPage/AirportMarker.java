@@ -1,6 +1,10 @@
 package com.still_processing.Application.MapPage;
 
-import org.openstreetmap.gui.jmapviewer.*;
+import com.still_processing.DefaultSettings.Settings;
+import org.openstreetmap.gui.jmapviewer.Coordinate;
+import org.openstreetmap.gui.jmapviewer.JMapViewer;
+import org.openstreetmap.gui.jmapviewer.Layer;
+import org.openstreetmap.gui.jmapviewer.Style;
 import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
 
 import javax.imageio.ImageIO;
@@ -10,22 +14,19 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
 
-public class PlaneMarker implements MapMarker {
-
+public class AirportMarker implements MapMarker{
     private static final int BASE_ZOOM = 10;
     private static final double SCALE_COEF = 1.5;
     public BufferedImage icon = null;
     public Coordinate coord;
     public JMapViewer jmv;
-    public double rot;
-    public double radius = 10;
+    public double radius = 15;
 
-    public PlaneMarker(Coordinate coord, double rot, JMapViewer jmv, String imagePath) {
+    public AirportMarker(Coordinate coord, JMapViewer jmv) {
         try{
-            this.icon = ImageIO.read(Objects.requireNonNull(getClass().getResource(imagePath)));
+            this.icon = ImageIO.read(Objects.requireNonNull(getClass().getResource(Settings.MAP_MARKER)));
         }catch(IOException e){e.printStackTrace();}
         this.coord = coord;
-        this.rot = rot;
         this.jmv = jmv;
     }
 
@@ -68,10 +69,8 @@ public class PlaneMarker implements MapMarker {
         return this.radius;
     }
 
-    public void setRadius(double rad) { this.radius = rad; }
-
     @Override
-    public STYLE getMarkerStyle() {
+    public MapMarker.STYLE getMarkerStyle() {
         return null;
     }
 
@@ -83,7 +82,6 @@ public class PlaneMarker implements MapMarker {
         double size = ((2 * this.radius) + (zoom - BASE_ZOOM) * SCALE_COEF);
         AffineTransform at = new AffineTransform();
         at.translate(position.x, position.y);
-        at.rotate(Math.toRadians(this.rot));
         at.translate((double) -size /2, (double) -size /2);
         at.scale((double) size / this.icon.getWidth(), (double) size / this.icon.getHeight());
         Graphics2D g2d = (Graphics2D) g;

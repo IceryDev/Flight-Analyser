@@ -2,6 +2,7 @@ package com.still_processing.FlightData.Utils;
 
 import com.still_processing.Application.MapPage.MapViewFull;
 import com.still_processing.Application.MapPage.PlaneMarker;
+import com.still_processing.DefaultSettings.Settings;
 import com.still_processing.FlightData.Database;
 import com.still_processing.FlightData.FlightInfo;
 import net.sf.geographiclib.Geodesic;
@@ -40,7 +41,7 @@ public class LiveDataHandler {
                     Thread.sleep(REFRESH_PERIOD_S * 1000);
                 }
             } catch (InterruptedException e) {
-                System.out.println("Interrupted!");
+                System.out.println("Refresh Interrupted!");
             }
         });
         refreshThread.start();
@@ -63,7 +64,7 @@ public class LiveDataHandler {
                 i.plane.latitude = translation[0];
                 i.plane.longitude = translation[1];
                 i.plane.heading = translation[2];
-                mvf.addMapMarker(new PlaneMarker(new Coordinate(i.plane.latitude, i.plane.longitude), i.plane.heading, mvf));
+                mvf.addMapMarker(new PlaneMarker(new Coordinate(i.plane.latitude, i.plane.longitude), i.plane.heading, mvf, Settings.PLANE_RED));
             }
         });
     }
@@ -77,7 +78,7 @@ public class LiveDataHandler {
         if (!queueRunning.compareAndSet(false, true)) { return; }
         while (!eventQueue.isEmpty()){
             try {
-                System.out.println("Running : " + eventQueue.peek().toString());
+                //System.out.println("Running : " + eventQueue.peek().toString());
                 eventQueue.take().run();
             } catch (InterruptedException e) {
                 System.err.println("Error: Failed to Run Element in Queue. [LiveDataHandler.java]");

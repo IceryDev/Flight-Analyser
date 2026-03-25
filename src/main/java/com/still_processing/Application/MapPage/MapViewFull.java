@@ -1,13 +1,8 @@
 package com.still_processing.Application.MapPage;
 
-import com.still_processing.DefaultSettings.Settings;
-import com.still_processing.FlightData.Database;
 import com.still_processing.FlightData.FlightInfo;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
-import org.openstreetmap.gui.jmapviewer.JMapViewer;
-import org.openstreetmap.gui.jmapviewer.OsmTileLoader;
 import org.openstreetmap.gui.jmapviewer.interfaces.ICoordinate;
-import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
 
 import javax.swing.*;
 import java.awt.*;

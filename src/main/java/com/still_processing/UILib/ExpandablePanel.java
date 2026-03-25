@@ -1,13 +1,6 @@
 package com.still_processing.UILib;
 
-import java.awt.BasicStroke;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
@@ -20,6 +13,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 
+import com.still_processing.Application.MapPage.ConfinedMapView;
 import com.still_processing.FlightData.FlightInfo;
 import static com.still_processing.DefaultSettings.Settings.BOLD_FONT;
 import static com.still_processing.DefaultSettings.Settings.GRAY;
@@ -238,7 +232,15 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
 
         expandedDisplay.setOpaque(false);
         expandedDisplay.setLayout(new BoxLayout(expandedDisplay, BoxLayout.X_AXIS));
-        ImagePanel dummyImage = new ImagePanel("/Images/map-placeholder.png", 200, 200, 0, 0);
+        JPanel mapFrame = new JPanel();
+        mapFrame.setLayout(new BoxLayout(mapFrame, BoxLayout.Y_AXIS));
+        mapFrame.setPreferredSize(new Dimension(360, 180));
+        mapFrame.setMinimumSize(new Dimension(360, 180));
+        mapFrame.setMaximumSize(new Dimension(360, 180));
+
+        //mapFrame.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        ConfinedMapView cmv = new ConfinedMapView(data);
+        mapFrame.add(cmv);
 
         JPanel leftColumnText = new JPanel();
         leftColumnText.setOpaque(false);
@@ -377,7 +379,7 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
         expandedDisplay.add(Box.createHorizontalGlue());
         expandedDisplay.add(rightColumnText);
         expandedDisplay.add(Box.createHorizontalGlue());
-        expandedDisplay.add(dummyImage);
+        expandedDisplay.add(mapFrame);
         expandedDisplay.add(Box.createRigidArea(new Dimension(20, 0)));
         this.add(expandedDisplay);
 
