@@ -5,23 +5,24 @@ package com.still_processing.FlightData;
  */
 
 public class FlightInfo {
-    String flightDate;
-    String iataCode;
-    String flightNumber;
-    String originAirport;
-    Airport origin;
-    Airport dest;
-    String CRSDepTime;
-    String depTime;
-    String CRSArrTime;
-    String arrTime;
-    boolean cancelled;
-    boolean diverted;
-    float distance;
-    float lateness;
+    public String flightDate;
+    public String iataCode;
+    public String flightNumber;
+    public String originAirport;
+    public Airport origin;
+    public Airport dest;
+    public String CRSDepTime;
+    public String depTime;
+    public String CRSArrTime;
+    public String arrTime;
+    public boolean cancelled;
+    public boolean diverted;
+    public float distance;
+    public float lateness;
 
     public PlaneInfo plane;
-    String airline;
+    public String airline;
 
-    FlightInfo(){}
+    FlightInfo() {
+    }
 }
