@@ -7,6 +7,7 @@ import com.still_processing.DefaultSettings.Settings;
 import com.still_processing.FlightData.Requests.AuthenticatedRequest;
 import com.still_processing.FlightData.Requests.RateLimitException;
 import com.still_processing.FlightData.Requests.RequestFailedException;
+import com.still_processing.FlightData.Utils.LiveDataHandler;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -195,12 +196,16 @@ public class FlightFetcher {
                 processed.removeIf(info ->
                         info.iataCode == null || info.iataCode.isBlank() || info.origin == null || info.dest == null
                 );
-                Database.flights.addAll(processed);
+                LiveDataHandler.addToQueue(() -> Database.flights.addAll(processed));
                 Thread.sleep(1000);
                 // End of batch
             }
 
         }
+    }
+
+    private static void addNewFlights(ArrayList<FlightInfo> processed){
+
     }
 
     /**

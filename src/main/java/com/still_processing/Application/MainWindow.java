@@ -14,8 +14,14 @@ import javax.swing.JPanel;
 import com.still_processing.Application.AnalysisPage.AnalysisPanel;
 import com.still_processing.Application.HomePage.HomePage;
 import com.still_processing.Application.MapPage.MapPanel;
+import com.still_processing.Application.MapPage.PlaneMarker;
 import com.still_processing.Application.SearchPage.SearchPanel;
+import com.still_processing.DefaultSettings.Settings;
+import com.still_processing.FlightData.FlightInfo;
+import com.still_processing.FlightData.Utils.LiveDataHandler;
 import com.still_processing.UILib.ScrollPaneFactory;
+import org.openstreetmap.gui.jmapviewer.Coordinate;
+
 import static com.still_processing.DefaultSettings.Settings.*;
 
 /**
@@ -59,10 +65,8 @@ public class MainWindow extends JFrame implements ActionListener {
         cards.add(scrollPaneAnalyse, "Analyse");
 
         map = new MapPanel(this);
-        scrollPaneMap = ScrollPaneFactory.createPane();
-        scrollPaneMap.setViewportView(map);
-        scrollPaneMap.getViewport().setBackground(BACKGROUND);
-        cards.add(scrollPaneMap, "Map");
+        map.setBackground(BACKGROUND);
+        cards.add(map, "Map");
 
         this.add(cards, BorderLayout.CENTER);
 
@@ -84,6 +88,7 @@ public class MainWindow extends JFrame implements ActionListener {
             case "Home Page":
             case "Return Home":
                 cardLayout.show(cards, "Main");
+                LiveDataHandler.stopRefresh();
                 break;
             case "Search":
                 cardLayout.show(cards, "Search");
@@ -96,6 +101,7 @@ public class MainWindow extends JFrame implements ActionListener {
                 break;
             case "Map View":
                 cardLayout.show(cards, "Map");
+                LiveDataHandler.startRefresh();
                 break;
         }
         cards.repaint();
