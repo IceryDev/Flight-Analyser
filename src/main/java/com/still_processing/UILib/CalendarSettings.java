@@ -41,6 +41,7 @@ public class CalendarSettings extends DatePicker {
         dateTextField.setVisible(false);
         dateTextField.setPreferredSize(new Dimension(0, 0));
         dateTextField.setMaximumSize(new Dimension(0, 0));
+
         JButton toggleButton = this.getComponentToggleCalendarButton();
         toggleButton.setBackground(HIGHLIGHT);
         toggleButton.setForeground(BACKGROUND);

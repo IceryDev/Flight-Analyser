@@ -86,24 +86,35 @@ public class HomePage extends JPanel implements Scrollable {
 
         JLabel startLabel = new JLabel("Departure");
         startLabel.setFont(REGULAR_FONT.deriveFont(Font.PLAIN, 18));
+        startLabel.setForeground(BACKGROUND);
+        startLabel.setBorder(BorderFactory.createEmptyBorder(2,10,2,20));
 
         JLabel endLabel = new JLabel("Arrival");
         endLabel.setFont(REGULAR_FONT.deriveFont(Font.PLAIN, 18));
+        endLabel.setForeground(BACKGROUND);
+        endLabel.setBorder(BorderFactory.createEmptyBorder(2,10,2,20));
+
+        JPanel startGroup = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 5));
+        startGroup.setBackground(HIGHLIGHT);
+        startGroup.setBorder(BorderFactory.createEmptyBorder(0, 6, 0, 6));
+        startGroup.add(startLabel);
+        startGroup.add(startPicker);
+
+        JPanel endGroup = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 5));
+        endGroup.setBackground(HIGHLIGHT);
+        endGroup.setBorder(BorderFactory.createEmptyBorder(0, 6, 0, 6));
+        endGroup.add(endLabel);
+        endGroup.add(endPicker);
 
         JPanel dateContainer = new JPanel();
         dateContainer.setLayout(new BoxLayout(dateContainer, BoxLayout.X_AXIS));
         dateContainer.setOpaque(false);
-
-        dateContainer.add(Box.createRigidArea(new Dimension( Toolkit.getDefaultToolkit().getScreenSize().width /20, 0)));
+        dateContainer.add(Box.createRigidArea(new Dimension( Toolkit.getDefaultToolkit().getScreenSize().width /10, 0)));
         dateContainer.add(Box.createHorizontalGlue());
-        dateContainer.add(startLabel);
-        dateContainer.add(Box.createHorizontalGlue());
-        dateContainer.add(startPicker);
-
+        dateContainer.add(startGroup);
         dateContainer.add(Box.createRigidArea(new Dimension(40, 0)));
-        dateContainer.add(endLabel);
-        dateContainer.add(endPicker);
-        dateContainer.add(Box.createRigidArea(new Dimension(Toolkit.getDefaultToolkit().getScreenSize().width /20, 0)));
+        dateContainer.add(endGroup);
+        dateContainer.add(Box.createRigidArea(new Dimension(Toolkit.getDefaultToolkit().getScreenSize().width /10, 0)));
         dateContainer.add(Box.createHorizontalGlue());
         this.add(dateContainer);
 
@@ -139,11 +150,6 @@ public class HomePage extends JPanel implements Scrollable {
         analyseButton.addActionListener(sceneSwitch);
         mapButton.addActionListener(sceneSwitch);
         searchButton.addActionListener(sceneSwitch);
-
-        Dimension buttonSize = analyseButton.getPreferredSize();
-        startLabel.setPreferredSize(buttonSize);
-        endLabel.setPreferredSize(buttonSize);
-
 
         JPanel buttonContainer = new JPanel();
         buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.X_AXIS));
