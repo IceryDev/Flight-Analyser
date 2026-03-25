@@ -32,6 +32,8 @@ import static com.still_processing.DefaultSettings.Settings.*;
  */
 
 public class SearchPanel extends JPanel implements Scrollable, ActionListener {
+    private JPanel flightEntries = new JPanel();
+
     public SearchPanel(ActionListener sceneSwitch) {
 
         System.out.println("=== Search Panel ===");
@@ -98,6 +100,20 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         sortButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         sortButton.addActionListener(this);
 
+        JButton clearButton = new ButtonBuilder()
+                .setSize(25, 25)
+                .setForeground(BACKGROUND)
+                .setBackground(HIGHLIGHT)
+                .setText("Clear")
+                .setFontSize(18)
+                .build();
+        clearButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
+        clearButton.addActionListener(e -> {
+            flightEntries.removeAll();
+        });
+
+        // next & previous (25-50)
+
         JPanel buttonContainer = new JPanel();
         buttonContainer.setOpaque(false);
         buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.X_AXIS));
@@ -107,13 +123,23 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         buttonContainer.add(graphButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(sortButton);
+        buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
+        buttonContainer.add(clearButton);
         buttonContainer.add(Box.createHorizontalGlue());
         this.add(buttonContainer);
 
+        flightEntries = new JPanel();
+        flightEntries.setLayout(new BoxLayout(flightEntries, BoxLayout.Y_AXIS));
+
         ArrayList<FlightInfo> flightData = Database.offlineFlights;
-        for (int i = 0; i < 100; i++) {
-            this.add(new ExpandablePanel(flightData.get(i)));
+
+        for (int i = 0; i < 20; i++) {
+            flightEntries.add(new ExpandablePanel(flightData.get(i)));
         }
+
+        this.add(flightEntries);
+
+        // refreshEntries
     }
 
     @Override
