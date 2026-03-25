@@ -1,20 +1,23 @@
 package com.still_processing.Application.MapPage;
 
-import com.still_processing.DefaultSettings.Settings;
-import com.still_processing.FlightData.FlightInfo;
-import net.sf.geographiclib.Geodesic;
-import net.sf.geographiclib.GeodesicData;
-import net.sf.geographiclib.GeodesicLine;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.SwingUtilities;
+
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.MapPolygonImpl;
 import org.openstreetmap.gui.jmapviewer.interfaces.MapPolygon;
 
-import javax.swing.SwingUtilities;
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
+import com.still_processing.DefaultSettings.Settings;
+import com.still_processing.FlightData.FlightInfo;
+
+import net.sf.geographiclib.Geodesic;
+import net.sf.geographiclib.GeodesicData;
+import net.sf.geographiclib.GeodesicLine;
 
 /**
  * The limited map view available on the entry list.
@@ -25,7 +28,8 @@ public class ConfinedMapView extends MapView {
 
     private final FlightInfo renderFlight;
     private boolean boundsSet = false;
-    public ConfinedMapView(FlightInfo render){
+
+    public ConfinedMapView(FlightInfo render) {
         super();
         this.setZoomControlsVisible(false);
         this.renderFlight = render;
@@ -38,7 +42,8 @@ public class ConfinedMapView extends MapView {
         double maxLat = Math.max(renderFlight.origin.latitude, renderFlight.dest.latitude) + padding;
 
         double dist = maxLat - minLat;
-        minLat = maxLat - (((double) 5 /3)*dist); // 5/3 is the scaling coefficient, as the whole map does not actually render
+        minLat = maxLat - (((double) 5 / 3) * dist); // 5/3 is the scaling coefficient, as the whole map does not
+                                                     // actually render
 
         this.addMapMarker(new InvisibleMarker(new Coordinate(maxLat, maxLon)));
         this.addMapMarker(new InvisibleMarker(new Coordinate(minLat, minLon)));
@@ -66,7 +71,9 @@ public class ConfinedMapView extends MapView {
 
     @Override
     public void moveMap(int x, int y) {
-        if (!boundsSet) { super.moveMap(x, y); }
+        if (!boundsSet) {
+            super.moveMap(x, y);
+        }
     }
 
     /**
@@ -75,32 +82,32 @@ public class ConfinedMapView extends MapView {
      *
      * @author Ulaş İçer
      */
-    private void drawTrajectory(){
+    private void drawTrajectory() {
         GeodesicData dist = Geodesic.WGS84.Inverse(
                 renderFlight.origin.latitude,
                 renderFlight.origin.longitude,
                 renderFlight.dest.latitude,
-                renderFlight.dest.longitude
-        );
+                renderFlight.dest.longitude);
 
         GeodesicLine line = Geodesic.WGS84.InverseLine(
                 renderFlight.origin.latitude,
                 renderFlight.origin.longitude,
                 renderFlight.dest.latitude,
-                renderFlight.dest.longitude
-        );
+                renderFlight.dest.longitude);
 
         int sampleSize = 50;
         ArrayList<Coordinate> samples = new ArrayList<>();
-        for (int i = 0; i < sampleSize; i++){
-            double d = dist.s12 * ((double) i /sampleSize);
+        for (int i = 0; i < sampleSize; i++) {
+            double d = dist.s12 * ((double) i / sampleSize);
             GeodesicData nextPoint = line.Position(d);
             samples.add(new Coordinate(nextPoint.lat2, nextPoint.lon2));
         }
 
         MapPolygon arc = new MapPolygonImpl(samples) {
             @Override
-            public boolean isVisible() { return true; }
+            public boolean isVisible() {
+                return true;
+            }
 
             @Override
             public void paint(Graphics g, List<Point> points) {
@@ -108,10 +115,10 @@ public class ConfinedMapView extends MapView {
                 g.setColor(this.getColor());
 
                 boolean colorSwitch = false;
-                for(int i = 0; i < points.size() - 1; i++) {
+                for (int i = 0; i < points.size() - 1; i++) {
                     for (int j = 0; (j < 2 && i < points.size() - 1); j++, i++) {
                         Point p = points.get(i);
-                        Point p2 = points.get(i+1);
+                        Point p2 = points.get(i + 1);
 
                         g.setColor((colorSwitch) ? this.getColor() : transparent);
                         g.drawLine(p.x, p.y, p2.x, p2.y);
@@ -122,7 +129,7 @@ public class ConfinedMapView extends MapView {
         };
         this.addMapPolygon(arc);
 
-        GeodesicData mid = line.Position(dist.s12/2);
+        GeodesicData mid = line.Position(dist.s12 / 2);
         PlaneMarker pm = new PlaneMarker(
                 new Coordinate(mid.lat2, mid.lon2),
                 mid.azi2,

@@ -1,6 +1,13 @@
 package com.still_processing.UILib;
 
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
@@ -17,12 +24,7 @@ import com.still_processing.Application.MapPage.ConfinedMapView;
 import com.still_processing.Application.MapPage.MapContainer;
 import com.still_processing.FlightData.FlightInfo;
 import com.still_processing.FlightData.Utils.MapHandler;
-
-import static com.still_processing.DefaultSettings.Settings.BOLD_FONT;
-import static com.still_processing.DefaultSettings.Settings.GRAY;
-import static com.still_processing.DefaultSettings.Settings.HIGHLIGHT_90;
-import static com.still_processing.DefaultSettings.Settings.REGULAR_FONT;
-import static com.still_processing.DefaultSettings.Settings.TEXT_COLOR;
+import static com.still_processing.DefaultSettings.Settings.*;
 
 /**
  * @author Deea Zaharia
@@ -247,7 +249,7 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
         mapFrame.setMaximumSize(new Dimension(360, 180));
         this.mapContainer = mapFrame;
 
-        //mapFrame.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        // mapFrame.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JPanel leftColumnText = new JPanel();
         leftColumnText.setOpaque(false);
@@ -398,10 +400,9 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
     public void mouseClicked(MouseEvent e) {
         isExpanded = !isExpanded;
         this.mapContainer.parentExpanded = !this.mapContainer.parentExpanded;
-        if (!isExpanded){
+        if (!isExpanded) {
             MapHandler.cacheInfoMap(this.map, this.mapContainer);
-        }
-        else{
+        } else {
             this.map = MapHandler.getInfoMap(this.fInfo);
             this.mapContainer.add(this.map);
         }
