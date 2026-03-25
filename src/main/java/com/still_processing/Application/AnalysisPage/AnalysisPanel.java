@@ -1,5 +1,12 @@
 package com.still_processing.Application.AnalysisPage;
 
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
@@ -16,20 +23,26 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.Scrollable;
+import javax.swing.JScrollPane;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import com.still_processing.FlightData.Database;
+import com.still_processing.FlightData.Graphs.PropertyType;
+import com.still_processing.UILib.BarChartGraph;
 import com.still_processing.UILib.ButtonBuilder;
 import com.still_processing.UILib.DropdownBuilder;
+import com.still_processing.UILib.TableBuilder;
 import com.still_processing.UILib.Histogram;
 import com.still_processing.UILib.ImagePanel;
 import com.still_processing.UILib.TextPaneBuilder;
+
+import static com.still_processing.FlightData.Statistics.*;
 import static com.still_processing.DefaultSettings.Settings.*;
 
 /**
- * @author Deea Zaharia
+ * @author Deea Zaharia (Jagoda Koczwara-Szuba)
  */
 
 public class AnalysisPanel extends JPanel implements Scrollable, ActionListener {
@@ -38,6 +51,7 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
     Histogram latenessHistogram;
     Histogram distanceHistogram;
     CardLayout cardLayout;
+    BarChartGraph barChart;
 
     public AnalysisPanel(ActionListener sceneSwitch) {
         System.out.println("=== Analysis Panel ===");
@@ -65,7 +79,7 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         textPane.setSize(new Dimension(textWidth, textHeight));
         textPane.setMaximumSize(new Dimension(textWidth, textHeight));
 
-        String[] graphOptions = { "--Select Option--", "poisson", "lateness", "distance" };
+        String[] graphOptions = { "--Select Option--", "poisson", "lateness", "distance", "Top 10 Airports" };
         JComboBox<String> dropDown = new DropdownBuilder(graphOptions)
                 .setFontSize(18)
                 .build();
@@ -111,19 +125,74 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         histogram = new Histogram(data, 5, 3);
         histogram.setPreferredSize(new Dimension(0, graphHeight));
 
+        String[] columnNames = {"Mean", "Median", "Variance", "SD"};
+
         float[] latenessData = Database.getLateness(Database.offlineFlights);
         latenessHistogram = new Histogram(latenessData, 240, 1000);
         latenessHistogram.setPreferredSize(new Dimension(0, graphHeight));
+
+        Object[][] latenessStats = {{arithmeticMean(latenessData), median(latenessData), variance(latenessData), standardDeviation(latenessData)}};
+
+        JScrollPane latenessStatsTable = new TableBuilder(latenessStats, columnNames)
+                .setFontSize(24)
+                .setFont(BOLD_FONT)
+                .setColumnWidth(new int[] { 100, 500, 100, 100 })
+                .buildPane();
+        latenessStatsTable.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+        latenessStatsTable.setPreferredSize(new Dimension(Integer.MAX_VALUE, 200));
+
+        JPanel latenessDisplay = new JPanel();
+        latenessDisplay.setLayout(new BoxLayout(latenessDisplay, BoxLayout.Y_AXIS));
+        latenessDisplay.setSize(new Dimension(700, 900));
+        latenessDisplay.add(latenessStatsTable);
+        latenessDisplay.add(latenessHistogram);
 
         float[] distance = Database.getDistance(Database.offlineFlights);
         distanceHistogram = new Histogram(distance, 250, 200);
         distanceHistogram.setPreferredSize(new Dimension(0, graphHeight));
 
+        Object[][] distanceStats = {{arithmeticMean(distance), median(distance), variance(distance), standardDeviation(distance)}};
+
+        JScrollPane distanceStatsTable = new TableBuilder(distanceStats, columnNames)
+                .setFontSize(24)
+                .setFont(BOLD_FONT)
+                .setColumnWidth(new int[] { 100, 500, 100, 100 })
+                .buildPane();
+        distanceStatsTable.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+        distanceStatsTable.setPreferredSize(new Dimension(Integer.MAX_VALUE, 200));
+
+        JPanel distanceDisplay = new JPanel();
+        distanceDisplay.setLayout(new BoxLayout(distanceDisplay, BoxLayout.Y_AXIS));
+        distanceDisplay.setSize(new Dimension(700, 900));
+        distanceDisplay.add(distanceStatsTable);
+        distanceDisplay.add(distanceHistogram);
+        HashMap<String, Integer> fligthOrigins = Database.getCategoricalFreq(Database.offlineFlights,
+                PropertyType.ORIGIN);
+
+        Map<String, Float> floatOriginMap = fligthOrigins.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> e.getValue().floatValue()));
+        List<Map.Entry<String, Float>> top10Entries = floatOriginMap.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())) // Sort by value descending
+                .limit(10)
+                .collect(Collectors.toList());
+        Map<String, Float> sortedTop10Airports = new LinkedHashMap<>();
+        for (Map.Entry<String, Float> entry : top10Entries) {
+            sortedTop10Airports.put(entry.getKey(), entry.getValue());
+        }
+
+        barChart = new BarChartGraph(sortedTop10Airports);
+        barChart.setPreferredSize(new Dimension(0, graphHeight));
+        barChart.setYStep(50);
+
         cardLayout = new CardLayout();
         graphDisplay = new JPanel(cardLayout);
         graphDisplay.add(histogram, "poisson");
-        graphDisplay.add(latenessHistogram, "lateness");
-        graphDisplay.add(distanceHistogram, "distance");
+        graphDisplay.add(latenessDisplay, "lateness");
+        graphDisplay.add(distanceDisplay, "distance");
+        graphDisplay.add(barChart, "Top 10 Airports");
         this.add(graphDisplay);
     }
 
@@ -136,28 +205,25 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
     @Override
     public void actionPerformed(ActionEvent e) {
         JComboBox<String> dropDown = (JComboBox<String>) e.getSource();
-        System.out.println(dropDown.getSelectedItem());
         dropDown.getParent().repaint();
-
         switch ((String) dropDown.getSelectedItem()) {
             case "--Select Option--":
                 break;
             case "poisson":
-                System.out.println("Poisson");
-
                 cardLayout.show(graphDisplay, "poisson");
                 histogram.animate();
                 break;
             case "lateness":
-                System.out.println("Late");
-
                 cardLayout.show(graphDisplay, "lateness");
                 latenessHistogram.animate();
                 break;
             case "distance":
-                System.out.println("Distance");
                 cardLayout.show(graphDisplay, "distance");
                 distanceHistogram.animate();
+                break;
+            case "Top 10 Airports":
+                cardLayout.show(graphDisplay, "Top 10 Airports");
+                barChart.animate();
                 break;
         }
     }
