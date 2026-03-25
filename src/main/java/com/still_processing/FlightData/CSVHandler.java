@@ -1,6 +1,5 @@
 package com.still_processing.FlightData;
 
-
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,28 +22,30 @@ public class CSVHandler {
      * whose keys are the IATA codes, and the values are Airport objects.
      *
      * @author
-     * IceryDev (Ulaş İçer)
+     *         IceryDev (Ulaş İçer)
      */
-    public static void loadAirportCSV (){
+    public static void loadAirportCSV() {
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(Objects.requireNonNull(
-                        CSVHandler.class.getResourceAsStream(AIRPORT_FILE_PATH))))){
+                        CSVHandler.class.getResourceAsStream(AIRPORT_FILE_PATH))))) {
 
             String[] headerArgs = reader.readLine()
-                                        .replaceAll("\"", "")
-                                        .split(CSV_DELIMITER);
+                    .replaceAll("\"", "")
+                    .split(CSV_DELIMITER);
             String line;
-            while ((line = reader.readLine()) != null){
+            while ((line = reader.readLine()) != null) {
                 // Split commas between {"}, {,}, {any digit}, and {-} to get individual data.
                 String[] args = line.split(CSV_SPLIT_REGEX);
                 String tempIcao = "";
 
                 Airport tmp = new Airport();
-                for (int i = 0; i < Math.min(args.length, 19); i++){
+                for (int i = 0; i < Math.min(args.length, 19); i++) {
                     args[i] = args[i].replaceAll("\"", "");
-                    if (args[i] == null || args[i].isEmpty()) { continue; }
+                    if (args[i] == null || args[i].isEmpty()) {
+                        continue;
+                    }
 
-                    switch (headerArgs[i]){
+                    switch (headerArgs[i]) {
                         case "name":
                             tmp.name = args[i];
                             break;
@@ -80,27 +81,27 @@ public class CSVHandler {
                 }
             }
             Database.airports.remove(null);
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * Takes the offline flights .csv file, extracts all data, and stores it in an {@code ArrayList}
+     * Takes the offline flights .csv file, extracts all data, and stores it in an
+     * {@code ArrayList}
      * of {@code FlightInfo} objects.
      *
      * @author
-     * IceryDev (Ulaş İçer)
+     *         IceryDev (Ulaş İçer)
      */
-    public static void loadOfflineFlightCSV (){
+    public static void loadOfflineFlightCSV() {
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(Objects.requireNonNull(
-                        CSVHandler.class.getResourceAsStream(OFFLINE_FLIGHT_FILE_PATH))))){
+                        CSVHandler.class.getResourceAsStream(OFFLINE_FLIGHT_FILE_PATH))))) {
 
             String[] tempArray = reader.readLine()
-                                       .replaceAll("\"", "")
-                                       .split(CSV_DELIMITER);
+                    .replaceAll("\"", "")
+                    .split(CSV_DELIMITER);
 
             ArrayList<String> headerArgs = new ArrayList<>(Arrays.asList(tempArray));
 
@@ -108,7 +109,7 @@ public class CSVHandler {
             headerArgs.add(9, "DEST_CITY_NAME");
 
             String line;
-            while ((line = reader.readLine()) != null){
+            while ((line = reader.readLine()) != null) {
 
                 String[] args = line.split(CSV_DELIMITER);
                 Airport originTmp = new Airport();
@@ -116,14 +117,13 @@ public class CSVHandler {
                 FlightInfo tmp = new FlightInfo();
                 for (int i = 0; i < Math.min(args.length, headerArgs.size()); i++) {
                     args[i] = args[i].trim();
-                    if (args[i].startsWith("\"")){
+                    if (args[i].startsWith("\"")) {
                         continue;
-                    }
-                    else if(args[i].endsWith("\"")){
-                        args[i] = args[i-1] + ", " + args[i];
+                    } else if (args[i].endsWith("\"")) {
+                        args[i] = args[i - 1] + ", " + args[i];
                     }
 
-                    switch(headerArgs.get(i)){
+                    switch (headerArgs.get(i)) {
                         case "FL_DATE":
                             tmp.flightDate = args[i];
                             break;
@@ -179,15 +179,16 @@ public class CSVHandler {
                     }
                 }
 
-                tmp.lateness = (tmp.cancelled) ? 0 :
-                        formattedTimeToMinutes(tmp.depTime) - formattedTimeToMinutes(tmp.CRSDepTime);
+                tmp.lateness = (tmp.cancelled) ? 0
+                        : formattedTimeToMinutes(tmp.depTime) - formattedTimeToMinutes(tmp.CRSDepTime);
 
-                tmp.origin = originTmp;
-                tmp.dest = destTmp;
+                tmp.origin = Database.airports.get(originTmp.iataCode);
+                tmp.dest = Database.airports.get(destTmp.iataCode);
+                // tmp.origin = originTmp;
+                // tmp.dest = destTmp;
                 Database.offlineFlights.add(tmp);
             }
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -195,41 +196,47 @@ public class CSVHandler {
     /**
      * Returns how many minutes from start of the day has elapsed until the
      * given time string of format "00:00"
+     * 
      * @param time Formatted time string as above.
      * @return Equivalent value in minutes from the start of the day.
      */
-    private static int formattedTimeToMinutes(String time){
-        if (time.length() < 4) { return 0; }
+    private static int formattedTimeToMinutes(String time) {
+        if (time.length() < 4) {
+            return 0;
+        }
 
-        int mins = Integer.parseInt(time.substring(time.length()-2));
-        int hrs = Integer.parseInt(time.substring(0, time.length()-3));
+        int mins = Integer.parseInt(time.substring(time.length() - 2));
+        int hrs = Integer.parseInt(time.substring(0, time.length() - 3));
 
-        return mins + (hrs*MIN_IN_HRS);
+        return mins + (hrs * MIN_IN_HRS);
     }
 
     /**
      * Takes in a non-formatted time string as "1234" and formats it as "12:34"
      * Warning! Assumes the time is a valid time of the day.
+     * 
      * @param time The non-formatted string.
      * @return Formatted string.
      */
-    private static String formatTimeString(String time){
-        if (time.isEmpty() || !time.replaceAll("\\d", "").isEmpty()) { return "00:00"; }
+    private static String formatTimeString(String time) {
+        if (time.isEmpty() || !time.replaceAll("\\d", "").isEmpty()) {
+            return "00:00";
+        }
 
-        if (time.length() != 4){
+        if (time.length() != 4) {
             time = "0".repeat(4 - time.length()) + time;
         }
-        time = String.format("%02d:%02d", Integer.parseInt(time.substring(0, time.length()-2)),
-                Integer.parseInt(time.substring(time.length()-2)));
+        time = String.format("%02d:%02d", Integer.parseInt(time.substring(0, time.length() - 2)),
+                Integer.parseInt(time.substring(time.length() - 2)));
         return time;
     }
 
     // For testing
-    public static void main(String[] args){
-//        loadOfflineFlightCSV();
-//
-//        for (FlightInfo a : Database.offlineFlights){
-//            System.out.println(a.lateness);
-//        }
+    public static void main(String[] args) {
+        // loadOfflineFlightCSV();
+        //
+        // for (FlightInfo a : Database.offlineFlights){
+        // System.out.println(a.lateness);
+        // }
     }
 }
