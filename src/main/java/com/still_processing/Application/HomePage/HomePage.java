@@ -1,29 +1,34 @@
 package com.still_processing.Application.HomePage;
 
-import java.awt.Dimension;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.ActionListener;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JTextPane;
-import javax.swing.Scrollable;
+import javax.swing.*;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
 import com.still_processing.UILib.ButtonBuilder;
+import com.still_processing.UILib.CalendarSettings;
 import com.still_processing.UILib.ImagePanel;
 import com.still_processing.UILib.TextPaneBuilder;
 import static com.still_processing.DefaultSettings.Settings.*;
 
+import com.still_processing.UILib.CalendarSettings.*;
+
 /**
  * @author Zhou Sun, Deea Zaharia
+ */
+
+/**
+ * Added the calendar
+ * @author Jessica Chen
  */
 public class HomePage extends JPanel implements Scrollable {
 
@@ -64,6 +69,46 @@ public class HomePage extends JPanel implements Scrollable {
 
         this.add(Box.createRigidArea(new Dimension(0, 50)));
 
+        CalendarSettings startPicker = new CalendarSettings();
+        CalendarSettings endPicker = new CalendarSettings();
+
+        startPicker.setDate(LocalDate.now());
+        endPicker.setDate(LocalDate.now());
+        startPicker.addDateChangeListener(event -> {
+            LocalDate start = startPicker.getDate();
+            if(start != null){
+                endPicker.getSettings().setDateRangeLimits(start, null);
+                if(endPicker.getDate() != null && endPicker.getDate().isBefore(start)){
+                    endPicker.setDate(start);
+                }
+            }
+        });
+
+        JLabel startLabel = new JLabel("Departure");
+        startLabel.setFont(REGULAR_FONT.deriveFont(Font.PLAIN, 18));
+
+        JLabel endLabel = new JLabel("Arrival");
+        endLabel.setFont(REGULAR_FONT.deriveFont(Font.PLAIN, 18));
+
+        JPanel dateContainer = new JPanel();
+        dateContainer.setLayout(new BoxLayout(dateContainer, BoxLayout.X_AXIS));
+        dateContainer.setOpaque(false);
+
+        dateContainer.add(Box.createRigidArea(new Dimension( Toolkit.getDefaultToolkit().getScreenSize().width /20, 0)));
+        dateContainer.add(Box.createHorizontalGlue());
+        dateContainer.add(startLabel);
+        dateContainer.add(Box.createHorizontalGlue());
+        dateContainer.add(startPicker);
+
+        dateContainer.add(Box.createRigidArea(new Dimension(40, 0)));
+        dateContainer.add(endLabel);
+        dateContainer.add(endPicker);
+        dateContainer.add(Box.createRigidArea(new Dimension(Toolkit.getDefaultToolkit().getScreenSize().width /20, 0)));
+        dateContainer.add(Box.createHorizontalGlue());
+        this.add(dateContainer);
+
+        this.add(Box.createRigidArea(new Dimension(0, 20)));
+
         JButton analyseButton = new ButtonBuilder()
                 .setSize(25, 25)
                 .setForeground(BACKGROUND)
@@ -94,6 +139,11 @@ public class HomePage extends JPanel implements Scrollable {
         analyseButton.addActionListener(sceneSwitch);
         mapButton.addActionListener(sceneSwitch);
         searchButton.addActionListener(sceneSwitch);
+
+        Dimension buttonSize = analyseButton.getPreferredSize();
+        startLabel.setPreferredSize(buttonSize);
+        endLabel.setPreferredSize(buttonSize);
+
 
         JPanel buttonContainer = new JPanel();
         buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.X_AXIS));
