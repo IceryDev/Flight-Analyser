@@ -1,4 +1,4 @@
-package com.still_processing.Application.Filters;
+package com.still_processing.FlightData.Filters;
 
 public interface SimpleFilter<T, K> {
 

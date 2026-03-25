@@ -1,15 +1,14 @@
-package com.still_processing.Application.Filters.impl;
-
-import com.still_processing.Application.Filters.SimpleFilter;
-import com.still_processing.FlightData.FlightInfo;
+package com.still_processing.FlightData.Filters.impl;
 
 import java.util.List;
+
+import com.still_processing.FlightData.FlightInfo;
+import com.still_processing.FlightData.Filters.SimpleFilter;
 
 /**
  * @author Marco Fontana
  */
 public final class LatenessFilter implements SimpleFilter<List<FlightInfo>, Float> {
-
 
     /**
      * Filters a list of FlightInfo objects based on the flight lateness.

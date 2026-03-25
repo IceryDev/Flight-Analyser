@@ -1,22 +1,23 @@
-package com.still_processing.Application.Filters.impl;
-
-import com.still_processing.Application.Filters.SimpleFilter;
-import com.still_processing.FlightData.FlightInfo;
+package com.still_processing.FlightData.Filters.impl;
 
 import java.util.List;
+
+import com.still_processing.FlightData.FlightInfo;
+import com.still_processing.FlightData.Filters.SimpleFilter;
 
 /**
  * @author Marco Fontana
  */
 public final class DepartureTimeFilter implements SimpleFilter<List<FlightInfo>, String> {
 
-
     /**
      * Filters a list of FlightInfo objects based on a range of departure times.
      *
      * @param items
-     * @param departureTimeRange departureTimeRange[0] is the start time, departureTimeRange[1] is the end time
-     * @return A list of FlightInfo objects that fall within the specified departure time range.
+     * @param departureTimeRange departureTimeRange[0] is the start time,
+     *                           departureTimeRange[1] is the end time
+     * @return A list of FlightInfo objects that fall within the specified departure
+     *         time range.
      *
      */
     @Override

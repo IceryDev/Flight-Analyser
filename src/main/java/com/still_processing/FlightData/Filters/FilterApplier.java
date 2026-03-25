@@ -1,4 +1,4 @@
-package com.still_processing.Application.Filters;
+package com.still_processing.FlightData.Filters;
 
 import com.still_processing.FlightData.FlightInfo;
 
@@ -26,7 +26,7 @@ public final class FilterApplier {
      *
      * @param simpleFilter
      * @param params
-     * @param <K> Parameter type accepted by the filter
+     * @param <K>          Parameter type accepted by the filter
      * @return Updated filtered flights
      */
     @SafeVarargs

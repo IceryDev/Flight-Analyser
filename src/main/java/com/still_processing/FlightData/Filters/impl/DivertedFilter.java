@@ -1,9 +1,9 @@
-package com.still_processing.Application.Filters.impl;
-
-import com.still_processing.Application.Filters.SimpleFilter;
-import com.still_processing.FlightData.FlightInfo;
+package com.still_processing.FlightData.Filters.impl;
 
 import java.util.List;
+
+import com.still_processing.FlightData.FlightInfo;
+import com.still_processing.FlightData.Filters.SimpleFilter;
 
 /**
  * @author Marco Fontana
@@ -14,8 +14,10 @@ public final class DivertedFilter implements SimpleFilter<List<FlightInfo>, Bool
      * Filters a list of FlightInfo objects based on the diversion status.
      *
      * @param items
-     * @param isDiverted isDiverted[0] is the diversion status to filter by (true for diverted flights, false for non-diverted flights)
-     * @return A list of FlightInfo objects that match the specified diversion status.
+     * @param isDiverted isDiverted[0] is the diversion status to filter by (true
+     *                   for diverted flights, false for non-diverted flights)
+     * @return A list of FlightInfo objects that match the specified diversion
+     *         status.
      */
     @Override
     public List<FlightInfo> filter(List<FlightInfo> items, Boolean... isDiverted) {
