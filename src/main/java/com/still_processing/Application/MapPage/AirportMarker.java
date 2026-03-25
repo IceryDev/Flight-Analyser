@@ -8,12 +8,23 @@ import org.openstreetmap.gui.jmapviewer.Style;
 import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Graphics2D;
+import java.awt.Color;
+import java.awt.Stroke;
+import java.awt.Font;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * The {@code AirportMarker} class is used in the generation of the map markers for airports
+ * in {@link ConfinedMapView} objects.
+ *
+ * @author Ulaş İçer
+ */
 public class AirportMarker implements MapMarker{
     private static final int BASE_ZOOM = 10;
     private static final double SCALE_COEF = 1.5;
@@ -74,6 +85,14 @@ public class AirportMarker implements MapMarker{
         return null;
     }
 
+    /**
+     * Overrides the paint method to render images instead of dots.
+     * @param g The Graphics object to perform the task with.
+     * @param position Lat/Lon position of the marker.
+     * @param radius Marker size.
+     *
+     * @author Ulaş İçer
+     */
     @Override
     public void paint(Graphics g, Point position, int radius) {
         if (this.icon == null) return;

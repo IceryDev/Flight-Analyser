@@ -4,12 +4,22 @@ import org.openstreetmap.gui.jmapviewer.*;
 import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Point;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Font;
+import java.awt.Stroke;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * Displays markers for the planes, both for live and historical data.
+ *
+ * @author Ulaş İçer
+ */
 public class PlaneMarker implements MapMarker {
 
     private static final int BASE_ZOOM = 10;

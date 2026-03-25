@@ -9,11 +9,18 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.MapPolygonImpl;
 import org.openstreetmap.gui.jmapviewer.interfaces.MapPolygon;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.SwingUtilities;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The limited map view available on the entry list.
+ *
+ * @author Ulaş İçer
+ */
 public class ConfinedMapView extends MapView {
 
     private final FlightInfo renderFlight;
@@ -62,6 +69,12 @@ public class ConfinedMapView extends MapView {
         if (!boundsSet) { super.moveMap(x, y); }
     }
 
+    /**
+     * Draws the great arc line from origin airport to destination using the
+     * Java Geographic Lib library.
+     *
+     * @author Ulaş İçer
+     */
     private void drawTrajectory(){
         GeodesicData dist = Geodesic.WGS84.Inverse(
                 renderFlight.origin.latitude,

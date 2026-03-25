@@ -14,7 +14,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextPane;
 
 import com.still_processing.Application.MapPage.ConfinedMapView;
+import com.still_processing.Application.MapPage.MapContainer;
 import com.still_processing.FlightData.FlightInfo;
+import com.still_processing.FlightData.Utils.MapHandler;
+
 import static com.still_processing.DefaultSettings.Settings.BOLD_FONT;
 import static com.still_processing.DefaultSettings.Settings.GRAY;
 import static com.still_processing.DefaultSettings.Settings.HIGHLIGHT_90;
@@ -69,10 +72,15 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
     private String schArrTimeText = "12:00";
     private String actArrTimeText = "12:22";
 
+    private FlightInfo fInfo;
+    private MapContainer mapContainer;
+    private ConfinedMapView map;
+
     public ExpandablePanel(FlightInfo data) {
         if (data == null) {
             throw new IllegalArgumentException();
         }
+        this.fInfo = data;
 
         this.flightNumberText = data.iataCode + data.flightNumber;
         this.depTime = data.depTime;
@@ -232,15 +240,14 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
 
         expandedDisplay.setOpaque(false);
         expandedDisplay.setLayout(new BoxLayout(expandedDisplay, BoxLayout.X_AXIS));
-        JPanel mapFrame = new JPanel();
+        MapContainer mapFrame = new MapContainer();
         mapFrame.setLayout(new BoxLayout(mapFrame, BoxLayout.Y_AXIS));
         mapFrame.setPreferredSize(new Dimension(360, 180));
         mapFrame.setMinimumSize(new Dimension(360, 180));
         mapFrame.setMaximumSize(new Dimension(360, 180));
+        this.mapContainer = mapFrame;
 
         //mapFrame.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        ConfinedMapView cmv = new ConfinedMapView(data);
-        mapFrame.add(cmv);
 
         JPanel leftColumnText = new JPanel();
         leftColumnText.setOpaque(false);
@@ -390,6 +397,14 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         isExpanded = !isExpanded;
+        this.mapContainer.parentExpanded = !this.mapContainer.parentExpanded;
+        if (!isExpanded){
+            MapHandler.cacheInfoMap(this.map, this.mapContainer);
+        }
+        else{
+            this.map = MapHandler.getInfoMap(this.fInfo);
+            this.mapContainer.add(this.map);
+        }
         repaint();
     }
 
@@ -548,5 +563,9 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
             g2d.setStroke(new BasicStroke(2));
             g2d.drawLine(0, height / 2, width - height - 10, height / 2);
         }
+    }
+
+    public boolean isExpanded() {
+        return this.isExpanded;
     }
 }

@@ -4,10 +4,17 @@ import com.still_processing.FlightData.FlightInfo;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.interfaces.ICoordinate;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import java.awt.Dimension;
+import java.awt.Point;
 import java.util.ArrayList;
 
+/**
+ * A full map view for live flights.
+ *
+ * @author Ulaş İçer
+ */
 public class MapViewFull extends MapView {
 
     private static final double MAX_LAT =  85.0;
@@ -47,6 +54,12 @@ public class MapViewFull extends MapView {
         confineLatitude(getZoom());
     }
 
+    /**
+     * Prohibits panning out of the map
+     * @param zoom Current zoom level.
+     *
+     * @author Ulaş İçer
+     */
     public void confineLatitude(int zoom){
         ICoordinate topLeft     = this.getPosition(new Point(0, 0));
         ICoordinate bottomRight = this.getPosition(new Point(getWidth(), getHeight()));

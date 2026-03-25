@@ -13,13 +13,10 @@ import com.still_processing.FlightData.Utils.LiveDataHandler;
 import com.still_processing.UILib.ButtonBuilder;
 import com.still_processing.UILib.ImagePanel;
 import com.still_processing.UILib.TextPaneBuilder;
-import org.openstreetmap.gui.jmapviewer.Coordinate;
-import org.openstreetmap.gui.jmapviewer.OsmTileLoader;
-import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
 
 import static com.still_processing.DefaultSettings.Settings.*;
 /**
- * @author Deea Zaharia
+ * @author Deea Zaharia, Ulaş İçer
  */
 public class MapPanel extends JPanel {
 
