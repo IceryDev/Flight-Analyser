@@ -82,7 +82,7 @@ public class PlaneMarker implements MapMarker {
         double size = ((2 * this.radius) + (zoom - BASE_ZOOM) * SCALE_COEF);
         AffineTransform at = new AffineTransform();
         at.translate(position.x, position.y);
-        at.rotate(Math.PI - Math.toRadians(this.rot));
+        at.rotate(Math.toRadians(this.rot));
         at.translate((double) -size /2, (double) -size /2);
         at.scale((double) size / this.icon.getWidth(), (double) size / this.icon.getHeight());
         Graphics2D g2d = (Graphics2D) g;

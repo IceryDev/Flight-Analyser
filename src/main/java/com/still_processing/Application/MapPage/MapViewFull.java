@@ -13,7 +13,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 
-public class MapViewFull extends JMapViewer {
+public class MapViewFull extends MapView {
 
     private static final double MAX_LAT =  85.0;
     private static final double MIN_LAT = -85.0;
@@ -22,12 +22,7 @@ public class MapViewFull extends JMapViewer {
 
     // mode true/false -> live/historical
     public MapViewFull(boolean mode, ArrayList<FlightInfo> flights, JPanel parent){
-        this.setTileSource(new OsmTileSource.Mapnik());
-        this.setTileLoader(new OsmTileLoader(this));
-        this.setAlignmentY(Component.TOP_ALIGNMENT);
-        this.setMapMarkerVisible(true);
-        this.setScrollWrapEnabled(true);
-
+        super();
         if (mode) {
             SwingUtilities.invokeLater(() -> {
                 this.setDisplayPosition(new Coordinate(53.3498, -6.2603), 7);

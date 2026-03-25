@@ -196,13 +196,16 @@ public class FlightFetcher {
                 processed.removeIf(info ->
                         info.iataCode == null || info.iataCode.isBlank() || info.origin == null || info.dest == null
                 );
-                Database.flights.addAll(processed);
-                LiveDataHandler.setBatchRefresh();
+                LiveDataHandler.addToQueue(() -> Database.flights.addAll(processed));
                 Thread.sleep(1000);
                 // End of batch
             }
 
         }
+    }
+
+    private static void addNewFlights(ArrayList<FlightInfo> processed){
+
     }
 
     /**
