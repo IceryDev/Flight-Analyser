@@ -256,6 +256,15 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         sortButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         sortButton.addActionListener(this);
 
+        JButton pageButton = new ButtonBuilder()
+                .setSize(25, 25)
+                .setForeground(BACKGROUND)
+                .setBackground(HIGHLIGHT)
+                .setText(String.format("%d", (int)((float)counter/25)+1))
+                .setFontSize(18)
+                .build();
+        pageButton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 40));
+
         JButton previousButton = new ButtonBuilder()
                 .setSize(25, 25)
                 .setForeground(BACKGROUND)
@@ -267,6 +276,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         previousButton.addActionListener(e -> {
             counter -= (counter >= 25) ? 25 : counter;
             refreshEntries();
+            pageButton.setText(String.format("%d", (int)((float)counter/25)+1));
         });
 
         JButton nextButton = new ButtonBuilder()
@@ -280,6 +290,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         nextButton.addActionListener(e -> {
             counter += (counter <= flightData.size()+25) ? 25 : flightData.size()-counter;
             refreshEntries();
+            pageButton.setText(String.format("%d", (int)((float)counter/25)+1));
         });
 
         JPanel buttonContainer = new JPanel();
@@ -291,11 +302,13 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         buttonContainer.add(graphButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(sortButton);
-        buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
+        buttonContainer.add(Box.createHorizontalGlue());
         buttonContainer.add(previousButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
+        buttonContainer.add(pageButton);
+        buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(nextButton);
-        buttonContainer.add(Box.createHorizontalGlue());
+        buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         this.add(buttonContainer);
 
         flightEntries = new JPanel();
