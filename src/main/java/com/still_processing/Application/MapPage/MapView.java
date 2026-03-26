@@ -4,8 +4,13 @@ import org.openstreetmap.gui.jmapviewer.JMapViewer;
 import org.openstreetmap.gui.jmapviewer.OsmTileLoader;
 import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
 
-import java.awt.*;
+import java.awt.Component;
 
+/**
+ * General super class of any map within the program.
+ *
+ * @author Ulaş İçer
+ */
 public class MapView extends JMapViewer {
 
     public MapView(){

@@ -20,15 +20,14 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 
+import com.still_processing.Application.MapPage.ConfinedMapView;
+import com.still_processing.Application.MapPage.MapContainer;
 import com.still_processing.FlightData.FlightInfo;
-import static com.still_processing.DefaultSettings.Settings.BOLD_FONT;
-import static com.still_processing.DefaultSettings.Settings.GRAY;
-import static com.still_processing.DefaultSettings.Settings.HIGHLIGHT_90;
-import static com.still_processing.DefaultSettings.Settings.REGULAR_FONT;
-import static com.still_processing.DefaultSettings.Settings.TEXT_COLOR;
+import com.still_processing.FlightData.Utils.MapHandler;
+import static com.still_processing.DefaultSettings.Settings.*;
 
 /**
- * @author Deea Zaharia
+ * @author Deea Zaharia, Zhou Sun
  */
 public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
     private final int FPS = 60;
@@ -52,14 +51,16 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
     private FontMetrics titleFontMetrics;
     private FontMetrics textFontMetrics;
 
-    private final String flightTitleText = "Flight Number";
-    private final String latenessTitleText = "Lateness";
-    private final String flightDateTitleText = "Flight Date:";
-    private final String schDepTimeTitleText = "Scheduled Departure Time:";
-    private final String actDepTimeTitleText = "Actual Departure Time:";
-    private final String flightCanceledTitleText = "Flight Canceled:";
-    private final String schArrTimeTitleText = "Scheduled Arrival Time:";
-    private final String actArrTimeTitleText = "Actual Arrival Time:";
+    private final String FLIGHT_TITLE_TEXT = "Flight Number:";
+    private final String ORIGIN_NAME_TITLE = "Origin Airport:";
+    private final String DEST_NAME_TITLE = "Destination Airport:";
+    private final String LATENESS_TITLE_TEXT = "Lateness";
+    private final String FLIGHT_DATE_TITLE_TEXT = "Flight Date:";
+    private final String SCH_DEPT_TIME_TITLE_TEXT = "Scheduled Departure Time:";
+    private final String ACT_DEPT_TIME_TITLE_TEXT = "Actual Departure Time:";
+    private final String FLIGHT_CANCELLED_TITLE_TEXT = "Flight Canceled:";
+    private final String SCH_ARR_TITLE_TEXT = "Scheduled Arrival Time:";
+    private final String ACT_ARR_TITLE_TEXT = "Actual Arrival Time:";
 
     private String flightNumberText = "RYR123";
     private String depTime = "10:10";
@@ -75,10 +76,18 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
     private String schArrTimeText = "12:00";
     private String actArrTimeText = "12:22";
 
+    private String originName;
+    private String destName;
+
+    private FlightInfo fInfo;
+    private MapContainer mapContainer;
+    private ConfinedMapView map;
+
     public ExpandablePanel(FlightInfo data) {
         if (data == null) {
             throw new IllegalArgumentException();
         }
+        this.fInfo = data;
 
         this.flightNumberText = data.iataCode + data.flightNumber;
         this.depTime = data.depTime;
@@ -106,6 +115,8 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
         this.flightCanceledText = (data.cancelled) ? "True" : "False";
         this.schArrTimeText = data.arrTime;
         this.actArrTimeText = data.CRSArrTime;
+        this.originName = data.origin.name;
+        this.destName = data.dest.name;
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBorder(BorderFactory.createEmptyBorder(padding, padding, 0, padding));
@@ -124,7 +135,7 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
         flightNumberContainer.setOpaque(false);
         flightNumberContainer.setLayout(new BoxLayout(flightNumberContainer, BoxLayout.Y_AXIS));
         JTextPane flightNumberTitle = new TextPaneBuilder()
-                .setText(flightTitleText)
+                .setText(FLIGHT_TITLE_TEXT)
                 .setFont(titleFont)
                 .build();
         JTextPane flightNumber = new TextPaneBuilder()
@@ -133,7 +144,7 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
                 .build();
         flightNumberTitle.setMaximumSize(
                 new Dimension(titleFontMetrics.stringWidth(
-                        flightTitleText),
+                        FLIGHT_TITLE_TEXT),
                         titleHeight));
         flightNumber.setMaximumSize(new Dimension(
                 titleFontMetrics.stringWidth(flightNumberText),
@@ -204,7 +215,7 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
         latenessContainer.setOpaque(false);
         latenessContainer.setLayout(new BoxLayout(latenessContainer, BoxLayout.Y_AXIS));
         JTextPane latenessTitle = new TextPaneBuilder()
-                .setText(latenessTitleText)
+                .setText(LATENESS_TITLE_TEXT)
                 .setFont(titleFont)
                 .setFontSize(12)
                 .build();
@@ -214,7 +225,7 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
                 .build();
         latenessTitle.setMaximumSize(
                 new Dimension(titleFontMetrics.stringWidth(
-                        latenessTitleText),
+                        LATENESS_TITLE_TEXT),
                         titleHeight));
         lateness.setMaximumSize(new Dimension(titleFontMetrics.stringWidth(latenessText),
                 titleHeight));
@@ -238,25 +249,40 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
 
         expandedDisplay.setOpaque(false);
         expandedDisplay.setLayout(new BoxLayout(expandedDisplay, BoxLayout.X_AXIS));
-        ImagePanel dummyImage = new ImagePanel("/Images/map-placeholder.png", 200, 200, 0, 0);
+        MapContainer mapFrame = new MapContainer();
+        mapFrame.setLayout(new BoxLayout(mapFrame, BoxLayout.Y_AXIS));
+        mapFrame.setPreferredSize(new Dimension(360, 180));
+        mapFrame.setMinimumSize(new Dimension(360, 180));
+        mapFrame.setMaximumSize(new Dimension(360, 180));
+        this.mapContainer = mapFrame;
+
+        // mapFrame.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JPanel leftColumnText = new JPanel();
         leftColumnText.setOpaque(false);
         leftColumnText.setLayout(new BoxLayout(leftColumnText, BoxLayout.Y_AXIS));
         JTextPane flightDateTitle = new TextPaneBuilder()
-                .setText(flightDateTitleText)
+                .setText(FLIGHT_DATE_TITLE_TEXT)
                 .setFont(titleFont)
                 .build();
         JTextPane schDepTimeTitle = new TextPaneBuilder()
-                .setText(schDepTimeTitleText)
+                .setText(SCH_DEPT_TIME_TITLE_TEXT)
                 .setFont(titleFont)
                 .build();
         JTextPane actDepTimeTitle = new TextPaneBuilder()
-                .setText(actDepTimeTitleText)
+                .setText(ACT_DEPT_TIME_TITLE_TEXT)
+                .setFont(titleFont)
+                .build();
+        JTextPane originNameTitle = new TextPaneBuilder()
+                .setText(ORIGIN_NAME_TITLE)
                 .setFont(titleFont)
                 .build();
         JTextPane flightDate = new TextPaneBuilder()
                 .setText(flightDateText)
+                .setFont(textFont)
+                .build();
+        JTextPane originNameText = new TextPaneBuilder()
+                .setText(this.originName)
                 .setFont(textFont)
                 .build();
         JTextPane schDepTime = new TextPaneBuilder()
@@ -270,54 +296,64 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
 
         flightDateTitle
                 .setMaximumSize(new Dimension(titleFontMetrics
-                        .stringWidth(flightDateTitleText)
+                        .stringWidth(FLIGHT_DATE_TITLE_TEXT)
                         + 10,
                         titleHeight));
         schDepTimeTitle.setMaximumSize(
                 new Dimension(titleFontMetrics.stringWidth(
-                        schDepTimeTitleText),
+                        SCH_DEPT_TIME_TITLE_TEXT),
                         titleHeight));
         actDepTimeTitle.setMaximumSize(
                 new Dimension(titleFontMetrics.stringWidth(
-                        actDepTimeTitleText),
+                        ACT_DEPT_TIME_TITLE_TEXT),
                         titleHeight));
         flightDate.setMaximumSize(new Dimension(textFontMetrics.stringWidth(flightDateText),
                 textHeight));
         schDepTime.setMaximumSize(new Dimension(textFontMetrics.stringWidth(schDepTimeText),
                 textHeight));
         actDepTime.setMaximumSize(new Dimension(
-                textFontMetrics.stringWidth(actDepTimeTitleText),
+                textFontMetrics.stringWidth(ACT_DEPT_TIME_TITLE_TEXT),
                 textHeight));
 
         flightDateTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
         schDepTimeTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
         actDepTimeTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
+        originNameTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
         flightDate.setAlignmentX(Component.LEFT_ALIGNMENT);
         schDepTime.setAlignmentX(Component.LEFT_ALIGNMENT);
         actDepTime.setAlignmentX(Component.LEFT_ALIGNMENT);
+        originNameText.setAlignmentX(Component.LEFT_ALIGNMENT);
 
+        leftColumnText.add(originNameTitle);
+        leftColumnText.add(originNameText);
+        leftColumnText.add(Box.createRigidArea(new Dimension(0, 10)));
         leftColumnText.add(flightDateTitle);
         leftColumnText.add(flightDate);
-        leftColumnText.add(Box.createRigidArea(new Dimension(0, 20)));
+        leftColumnText.add(Box.createRigidArea(new Dimension(0, 10)));
         leftColumnText.add(schDepTimeTitle);
         leftColumnText.add(schDepTime);
-        leftColumnText.add(Box.createRigidArea(new Dimension(0, 20)));
+        leftColumnText.add(Box.createRigidArea(new Dimension(0, 10)));
         leftColumnText.add(actDepTimeTitle);
         leftColumnText.add(actDepTime);
+        leftColumnText.add(Box.createRigidArea(new Dimension(0, 10)));
 
         JPanel rightColumnText = new JPanel();
         rightColumnText.setOpaque(false);
         rightColumnText.setLayout(new BoxLayout(rightColumnText, BoxLayout.Y_AXIS));
+        JTextPane destNameTitle = new TextPaneBuilder()
+                .setText(DEST_NAME_TITLE)
+                .setFont(titleFont)
+                .build();
         JTextPane flightCanceledTitle = new TextPaneBuilder()
-                .setText(flightCanceledTitleText)
+                .setText(FLIGHT_CANCELLED_TITLE_TEXT)
                 .setFont(titleFont)
                 .build();
         JTextPane schArrTimeTitle = new TextPaneBuilder()
-                .setText(schArrTimeTitleText)
+                .setText(SCH_ARR_TITLE_TEXT)
                 .setFont(titleFont)
                 .build();
         JTextPane actArrTimeTitle = new TextPaneBuilder()
-                .setText(actArrTimeTitleText)
+                .setText(ACT_ARR_TITLE_TEXT)
                 .setFont(titleFont)
                 .build();
         JTextPane flightCanceled = new TextPaneBuilder()
@@ -332,19 +368,23 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
                 .setText(actArrTimeText)
                 .setFont(textFont)
                 .build();
+        JTextPane destNameText = new TextPaneBuilder()
+                .setText(this.destName)
+                .setFont(textFont)
+                .build();
 
         flightCanceledTitle
                 .setMaximumSize(new Dimension(
-                        titleFontMetrics.stringWidth(flightCanceledTitleText)
+                        titleFontMetrics.stringWidth(FLIGHT_CANCELLED_TITLE_TEXT)
                                 + 10,
                         titleHeight));
         schArrTimeTitle.setMaximumSize(
                 new Dimension(titleFontMetrics.stringWidth(
-                        schArrTimeTitleText),
+                        SCH_ARR_TITLE_TEXT),
                         titleHeight));
         actArrTimeTitle.setMaximumSize(
                 new Dimension(titleFontMetrics.stringWidth(
-                        actArrTimeTitleText),
+                        ACT_ARR_TITLE_TEXT),
                         titleHeight));
         flightCanceled.setMaximumSize(
                 new Dimension(textFontMetrics.stringWidth(
@@ -353,31 +393,37 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
         schArrTime.setMaximumSize(new Dimension(textFontMetrics.stringWidth(schArrTimeText),
                 textHeight));
         actArrTime.setMaximumSize(new Dimension(
-                textFontMetrics.stringWidth(actArrTimeTitleText),
+                textFontMetrics.stringWidth(ACT_ARR_TITLE_TEXT),
                 textHeight));
 
         flightCanceledTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
         schArrTimeTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
         actArrTimeTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
+        destNameTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
         flightCanceled.setAlignmentX(Component.LEFT_ALIGNMENT);
         schArrTime.setAlignmentX(Component.LEFT_ALIGNMENT);
         actArrTime.setAlignmentX(Component.LEFT_ALIGNMENT);
+        destNameText.setAlignmentX(Component.LEFT_ALIGNMENT);
 
+        rightColumnText.add(destNameTitle);
+        rightColumnText.add(destNameText);
+        rightColumnText.add(Box.createRigidArea(new Dimension(0, 10)));
         rightColumnText.add(flightCanceledTitle);
         rightColumnText.add(flightCanceled);
-        rightColumnText.add(Box.createRigidArea(new Dimension(0, 20)));
+        rightColumnText.add(Box.createRigidArea(new Dimension(0, 10)));
         rightColumnText.add(schArrTimeTitle);
         rightColumnText.add(schArrTime);
-        rightColumnText.add(Box.createRigidArea(new Dimension(0, 20)));
+        rightColumnText.add(Box.createRigidArea(new Dimension(0, 10)));
         rightColumnText.add(actArrTimeTitle);
         rightColumnText.add(actArrTime);
+        rightColumnText.add(Box.createRigidArea(new Dimension(0, 10)));
 
         expandedDisplay.add(Box.createRigidArea(new Dimension(20, 0)));
         expandedDisplay.add(leftColumnText);
         expandedDisplay.add(Box.createHorizontalGlue());
         expandedDisplay.add(rightColumnText);
         expandedDisplay.add(Box.createHorizontalGlue());
-        expandedDisplay.add(dummyImage);
+        expandedDisplay.add(mapFrame);
         expandedDisplay.add(Box.createRigidArea(new Dimension(20, 0)));
         this.add(expandedDisplay);
 
@@ -388,6 +434,13 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
         isExpanded = !isExpanded;
+        this.mapContainer.parentExpanded = !this.mapContainer.parentExpanded;
+        if (!isExpanded) {
+            MapHandler.cacheInfoMap(this.map, this.mapContainer);
+        } else {
+            this.map = MapHandler.getInfoMap(this.fInfo);
+            this.mapContainer.add(this.map);
+        }
         repaint();
     }
 
@@ -546,5 +599,9 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
             g2d.setStroke(new BasicStroke(2));
             g2d.drawLine(0, height / 2, width - height - 10, height / 2);
         }
+    }
+
+    public boolean isExpanded() {
+        return this.isExpanded;
     }
 }

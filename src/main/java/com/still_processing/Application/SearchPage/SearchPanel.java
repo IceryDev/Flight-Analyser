@@ -267,6 +267,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         for (int i = 0; i < 25; i++) {
             this.add(new ExpandablePanel(flightData.get(i)));
         }
+        this.add(Box.createRigidArea(new Dimension(0, 20)));
     }
 
     @Override
