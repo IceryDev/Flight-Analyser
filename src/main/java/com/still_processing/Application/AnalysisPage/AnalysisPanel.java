@@ -30,13 +30,7 @@ import javax.swing.text.StyledDocument;
 
 import com.still_processing.FlightData.Database;
 import com.still_processing.FlightData.Graphs.PropertyType;
-import com.still_processing.UILib.BarChartGraph;
-import com.still_processing.UILib.ButtonBuilder;
-import com.still_processing.UILib.DropdownBuilder;
-import com.still_processing.UILib.TableBuilder;
-import com.still_processing.UILib.Histogram;
-import com.still_processing.UILib.ImagePanel;
-import com.still_processing.UILib.TextPaneBuilder;
+import com.still_processing.UILib.*;
 
 import static com.still_processing.FlightData.Statistics.*;
 import static com.still_processing.DefaultSettings.Settings.*;
@@ -50,6 +44,7 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
     Histogram histogram;
     Histogram latenessHistogram;
     Histogram distanceHistogram;
+    ScatterPlot latenessVsDistance;
     CardLayout cardLayout;
     BarChartGraph barChart;
 
@@ -79,7 +74,7 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         textPane.setSize(new Dimension(textWidth, textHeight));
         textPane.setMaximumSize(new Dimension(textWidth, textHeight));
 
-        String[] graphOptions = { "--Select Option--", "poisson", "lateness", "distance", "Top 10 Airports" };
+        String[] graphOptions = { "--Select Option--", "poisson", "lateness", "distance", "Top 10 Airports", "ScatterPlot" };
         JComboBox<String> dropDown = new DropdownBuilder(graphOptions)
                 .setFontSize(18)
                 .build();
@@ -189,12 +184,17 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         barChart.setPreferredSize(new Dimension(0, graphHeight));
         barChart.setYStep(50);
 
+        latenessVsDistance = new ScatterPlot(
+                Database.getScatterPlot(Database.offlineFlights, PropertyType.LATENESS, PropertyType.DISTANCE),
+                "Test");
+
         cardLayout = new CardLayout();
         graphDisplay = new JPanel(cardLayout);
         graphDisplay.add(histogram, "poisson");
         graphDisplay.add(latenessDisplay, "lateness");
         graphDisplay.add(distanceDisplay, "distance");
         graphDisplay.add(barChart, "Top 10 Airports");
+        graphDisplay.add(latenessVsDistance, "ScatterPlot");
         this.add(graphDisplay);
     }
 
@@ -226,6 +226,9 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
             case "Top 10 Airports":
                 cardLayout.show(graphDisplay, "Top 10 Airports");
                 barChart.animate();
+                break;
+            case "ScatterPlot":
+                cardLayout.show(graphDisplay, "ScatterPlot");
                 break;
         }
     }
