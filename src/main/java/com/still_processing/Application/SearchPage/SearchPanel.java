@@ -111,7 +111,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         this.add(buttonContainer);
 
         ArrayList<FlightInfo> flightData = Database.offlineFlights;
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 25; i++) {
             this.add(new ExpandablePanel(flightData.get(i)));
         }
     }

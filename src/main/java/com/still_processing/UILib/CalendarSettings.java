@@ -2,6 +2,7 @@ package com.still_processing.UILib;
 
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
+import com.github.lgooddatepicker.components.DatePickerSettings.DateArea;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 import static com.still_processing.DefaultSettings.Settings.*;
+
 /**
  * @author Jessica Chen
  */
@@ -19,9 +21,7 @@ public class CalendarSettings extends DatePicker {
         super(createSettings());
         this.setDate(LocalDate.now());
         styleComponents();
-        this.addDateChangeListener(event ->
-                updateButtonLabel(this.getComponentToggleCalendarButton(), this.getDate())
-        );
+        this.addDateChangeListener(event -> updateButtonLabel(this.getComponentToggleCalendarButton(), this.getDate()));
     }
 
     private static DatePickerSettings createSettings() {
@@ -29,10 +29,11 @@ public class CalendarSettings extends DatePicker {
         settings.setFormatForDatesBeforeCommonEra("dd/MM/yyyy");
         settings.setFirstDayOfWeek(DayOfWeek.MONDAY);
         settings.setAllowEmptyDates(false);
-        settings.setFontTodayLabel(REGULAR_FONT);
-        settings.setFontCalendarWeekdayLabels(REGULAR_FONT);
-        settings.setFontMonthAndYearMenuLabels(REGULAR_FONT);
-        settings.setFontCalendarDateLabels(REGULAR_FONT);
+        settings.setFontTodayLabel(REGULAR_FONT.deriveFont(12f));
+        settings.setFontCalendarWeekdayLabels(REGULAR_FONT.deriveFont(12f));
+        settings.setFontMonthAndYearMenuLabels(REGULAR_FONT.deriveFont(12f));
+        settings.setFontCalendarDateLabels(REGULAR_FONT.deriveFont(12f));
+        settings.setColor(DatePickerSettings.DateArea.CalendarDefaultBackgroundHighlightedDates, HIGHLIGHT_20);
         return settings;
     }
 
@@ -43,13 +44,18 @@ public class CalendarSettings extends DatePicker {
         dateTextField.setMaximumSize(new Dimension(0, 0));
 
         JButton toggleButton = this.getComponentToggleCalendarButton();
-        toggleButton.setBackground(HIGHLIGHT);
-        toggleButton.setForeground(BACKGROUND);
-        toggleButton.setFont(REGULAR_FONT.deriveFont(Font.PLAIN, 18));
+        setOpaque(false);
+        toggleButton.setForeground(HIGHLIGHT);
+        toggleButton.setFont(REGULAR_FONT.deriveFont(Font.PLAIN, 12));
         toggleButton.setOpaque(true);
         toggleButton.setBorderPainted(false);
         toggleButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         toggleButton.setFocusPainted(false);
+
+        for (Component c : this.getComponents()) {
+            if (c != null)
+                c.setBackground(new Color(0, 0, 0, 0));
+        }
 
         updateButtonLabel(toggleButton, this.getDate());
     }

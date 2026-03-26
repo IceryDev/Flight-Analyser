@@ -6,11 +6,7 @@ import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Objects;
-
 import io.github.cdimascio.dotenv.Dotenv;
-
-import javax.swing.*;
 
 /**
  * Some reuseable default settings
@@ -34,10 +30,12 @@ public class Settings {
     public static final Color TEXT_COLOR = new Color(0x001917);
     public static final Color BACKGROUND = new Color(0xeff2f1);
     public static final Color HIGHLIGHT = new Color(0x01796f);
+    public static final Color HIGHLIGHT_20 = new Color(1, 121, 111, 20);
     public static final Color HIGHLIGHT_90 = new Color(1, 121, 111, 90);
     public static final Color GRAY = new Color(0xaaaaaa);
     public static final Color LABEL_COLOR = new Color(0x3A3939);
 
+    public static final Color LIME = new Color(0xd2e0de);
     public static final Color LIGHT_BLUE = new Color(0x4ECDC4);
     public static final Color LIGHT_GREEN = new Color(0x569C62);
     public static final Color CYAN = new Color(0x46A3F8);
