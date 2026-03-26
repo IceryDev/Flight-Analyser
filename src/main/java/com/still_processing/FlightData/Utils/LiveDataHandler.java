@@ -71,6 +71,7 @@ public class LiveDataHandler {
      * @author Ulaş İçer
      */
     public static void stopRefresh(){
+        if (refreshThread == null) { return; }
         refreshRunning = false;
         refreshThread.interrupt();
         refreshThread = null;
