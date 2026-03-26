@@ -45,7 +45,7 @@ import com.still_processing.UILib.InputFieldBuilder;
 import com.still_processing.UILib.TextPaneBuilder;
 
 /**
- * @author Deea Zaharia
+ * @author Deea Zaharia, Jagoda Koczwara-Szuba
  */
 
 public class SearchPanel extends JPanel implements Scrollable, ActionListener {
@@ -278,7 +278,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
                 .build();
         nextButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         nextButton.addActionListener(e -> {
-            counter += 25;
+            counter += (counter <= flightData.size()+25) ? 25 : flightData.size()-counter;
             refreshEntries();
         });
 
