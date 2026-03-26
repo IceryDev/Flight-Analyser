@@ -1,56 +1,70 @@
 package com.still_processing.Application;
 
-import java.awt.*;
+import static com.still_processing.DefaultSettings.Settings.BACKGROUND;
+
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.format.DateTimeFormatter;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.ImageIcon;
 
 import com.still_processing.Application.AnalysisPage.AnalysisPanel;
-import com.still_processing.Application.HomePage.BodyPanel;
+import com.still_processing.Application.HomePage.HomePage;
 import com.still_processing.Application.MapPage.MapPanel;
 import com.still_processing.Application.SearchPage.SearchPanel;
+import com.still_processing.FlightData.Utils.LiveDataHandler;
 import com.still_processing.UILib.ScrollPaneFactory;
-import static com.still_processing.DefaultSettings.Settings.*;
 
 /**
  * @author Deea Zaharia, Jagoda Koczwara-Szuba, Zhou Sun
  */
 
 public class MainWindow extends JFrame implements ActionListener {
-    CardLayout cardLayout = new CardLayout();
-    Panel cards = new Panel(cardLayout);
+    private CardLayout cardLayout = new CardLayout();
+    private JPanel cards = new JPanel(cardLayout);
+    private AnalysisPanel analyse;
+    private MapPanel map;
+    private SearchPanel search;
+    private HomePage body;
+    private JScrollPane scrollPaneHome;
+    private JScrollPane scrollPaneSearch;
+    private JScrollPane scrollPaneAnalyse;
+    private JScrollPane scrollPaneMap;
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     public MainWindow() {
-        ImageIcon image = new ImageIcon(getClass().getResource("/Images/logo.jpg"));
+        ImageIcon image = new ImageIcon(getClass().getResource("/Images/logo.png"));
         this.setIconImage(image.getImage());
+        cards.setOpaque(false);
 
-        JPanel body = new BodyPanel(this);
-        JScrollPane scrollPane = ScrollPaneFactory.createPane();
-        scrollPane.setViewportView(body);
-        scrollPane.getViewport().setBackground(BACKGROUND);
-        cards.add(scrollPane, "Main");
+        body = new HomePage(this);
+        scrollPaneHome = ScrollPaneFactory.createPane();
+        scrollPaneHome.setViewportView(body);
+        scrollPaneHome.getViewport().setBackground(BACKGROUND);
+        scrollPaneHome.setOpaque(false);
+        cards.add(scrollPaneHome, "Main");
 
-        JPanel search = new SearchPanel(this);
-        scrollPane = ScrollPaneFactory.createPane();
-        scrollPane.setViewportView(search);
-        scrollPane.getViewport().setBackground(BACKGROUND);
-        cards.add(scrollPane, "Search");
+        search = new SearchPanel(this);
+        scrollPaneSearch = ScrollPaneFactory.createPane();
+        scrollPaneSearch.setViewportView(search);
+        scrollPaneSearch.getViewport().setBackground(BACKGROUND);
+        cards.add(scrollPaneSearch, "Search");
 
-        JPanel analyse = new AnalysisPanel(this);
-        scrollPane = ScrollPaneFactory.createPane();
-        scrollPane.setViewportView(analyse);
-        scrollPane.getViewport().setBackground(BACKGROUND);
-        cards.add(scrollPane, "Analyse");
+        analyse = new AnalysisPanel(this);
+        scrollPaneAnalyse = ScrollPaneFactory.createPane();
+        scrollPaneAnalyse.setViewportView(analyse);
+        scrollPaneAnalyse.getViewport().setBackground(BACKGROUND);
+        cards.add(scrollPaneAnalyse, "Analyse");
 
-        JPanel map = new MapPanel(this);
-        scrollPane = ScrollPaneFactory.createPane();
-        scrollPane.setViewportView(map);
-        scrollPane.getViewport().setBackground(BACKGROUND);
-        cards.add(scrollPane, "Map");
+        map = new MapPanel(this);
+        map.setBackground(BACKGROUND);
+        cards.add(map, "Map");
 
         this.add(cards, BorderLayout.CENTER);
 
@@ -70,17 +84,29 @@ public class MainWindow extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "Home Page":
+            case "Return Home":
                 cardLayout.show(cards, "Main");
+                LiveDataHandler.stopRefresh();
                 break;
             case "Search":
                 cardLayout.show(cards, "Search");
+                scrollPaneSearch.getVerticalScrollBar().setValue(0);
+                System.out.println("Origin Airport: " + body.getOriginAirport());
+                System.out.println("Dest Airport: " + body.getDestAirport());
+                System.out.println("Start Date: " + body.getStartDate().format(formatter));
+                System.out.println("End Date: " + body.getEndDate().format(formatter));
                 break;
             case "Analyse":
+            case "View Graph":
                 cardLayout.show(cards, "Analyse");
+                analyse.startRender();
                 break;
             case "Map View":
                 cardLayout.show(cards, "Map");
+                LiveDataHandler.startRefresh();
                 break;
         }
+        cards.repaint();
+        revalidate();
     }
 }

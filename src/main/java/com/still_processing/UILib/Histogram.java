@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -48,9 +49,7 @@ public class Histogram extends JPanel implements Runnable, Graph {
     private int padding = 200;
     private String xLengendText = "X axis";
     private String yLengendText = "Y axis";
-    private int toolTipWidth = 40;
-    private int toolTipHeight = 20;
-    private int toolTipPadding = 20;
+    private int toolTipPadding = 10;
     private float toolTipFontSize = 12;
 
     /**
@@ -137,6 +136,7 @@ public class Histogram extends JPanel implements Runnable, Graph {
      */
     @Override
     public void animate() {
+        renderPercentage = 0;
         graphThread = new Thread(this);
         graphThread.start();
     }
@@ -208,6 +208,9 @@ public class Histogram extends JPanel implements Runnable, Graph {
             g2d.setStroke(new BasicStroke(fontWeight));
             g2d.setColor(fontColor);
 
+            FontMetrics metrics = getFontMetrics(labelFont.deriveFont(labelFontSize));
+            g2d.setFont(labelFont.deriveFont(labelFontSize));
+
             // X Legend Line
             g2d.setFont(legendFont.deriveFont(legendFontSize));
             g2d.drawString(xLengendText, getWidth() / 2, height - padding / 2);
@@ -215,11 +218,9 @@ public class Histogram extends JPanel implements Runnable, Graph {
 
             for (int dataIndex = 0; dataIndex <= barValues.length; dataIndex++) {
                 int xPos = barWidth * dataIndex + padding;
-
                 g2d.drawLine(xPos, height - padding, xPos, height - padding + 10);
-                g2d.setFont(labelFont.deriveFont(labelFontSize));
                 String label = String.format("%d", dataIndex * xStep);
-                g2d.drawString(label, xPos, height - padding + 36);
+                g2d.drawString(label, xPos, height - padding + metrics.getHeight() + 10);
             }
 
             // Y Legend Line
@@ -234,11 +235,8 @@ public class Histogram extends JPanel implements Runnable, Graph {
             g2d.drawLine(padding, height - padding, padding, height - padding - yIntervalHeight * maxYIndex);
             for (int yLegendIndex = 0; yLegendIndex <= maxYIndex; yLegendIndex++) {
                 int yPos = height - padding - yIntervalHeight * yLegendIndex;
-
-                g2d.setFont(labelFont.deriveFont(labelFontSize));
-                String label = String.format("%02d", yStep * yLegendIndex);
-                g2d.drawString(label, padding - 60, yPos);
-
+                String label = String.format("%d", yStep * yLegendIndex);
+                g2d.drawString(label, padding - metrics.stringWidth(label) - 20, yPos);
                 g2d.setStroke(new BasicStroke(fontWeight));
                 g2d.drawLine(padding, yPos, padding - 10, yPos);
             }
@@ -291,11 +289,14 @@ public class Histogram extends JPanel implements Runnable, Graph {
             int toolTipY = barTop + barHeight / 2;
             int showValue = barValues[toolTipIndex];
             String output = String.format("%d", showValue);
+            FontMetrics metrics = getFontMetrics(labelFont.deriveFont(labelFontSize));
+            int toolTipWidth = metrics.stringWidth(output) + 2 * toolTipPadding;
+            int toolTipHeight = metrics.getHeight() + 2 * toolTipPadding;
 
             g2d.setFont(labelFont.deriveFont(toolTipFontSize));
             g2d.setColor(new Color(0, 0, 0, 99));
-            g2d.fillRoundRect(toolTipx - toolTipPadding, toolTipY - 20 - toolTipPadding,
-                    toolTipWidth + 2 * toolTipPadding, toolTipHeight + 2 * toolTipPadding, 20, 20);
+            g2d.fillRoundRect(toolTipx - toolTipPadding, toolTipY - toolTipPadding - metrics.getHeight(),
+                    toolTipWidth, toolTipHeight, 20, 20);
 
             g2d.setColor(BACKGROUND);
             g2d.setStroke(new BasicStroke(5));
@@ -371,16 +372,6 @@ public class Histogram extends JPanel implements Runnable, Graph {
     public void setYLengendText(String yLengendText) {
         if (yLengendText != null)
             this.yLengendText = yLengendText;
-    }
-
-    public void setToolTipWidth(int toolTipWidth) {
-        if (toolTipWidth > 0)
-            this.toolTipWidth = toolTipWidth;
-    }
-
-    public void setToolTipHeight(int toolTipHeight) {
-        if (toolTipHeight > 0)
-            this.toolTipHeight = toolTipHeight;
     }
 
     public void setToolTipPadding(int toolTipPadding) {

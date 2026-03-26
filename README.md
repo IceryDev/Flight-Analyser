@@ -12,11 +12,13 @@
 
 
 ### Setup .env File:
-- This project uses the AeroDataBox API, which requires an API key for requests.
-- Head to the link [AeroDataBox](https://rapidapi.com/aedbx-aedbx/api/aerodatabox/playground/apiendpoint_97755564-247f-411f-bef2-ad26a453e389) and get your API key. (It's free)
+- This project uses the OpenSky API, which requires a client ID and a client secret for requests.
+- Head to the link [OpenSky](https://opensky-network.org/) and sign up/register.
+- Click on "Reset Credential" to download the JSON file containing your client ID and client secret.
 - Setup the .env file directly in the root folder of this project as follows:
 
 ```
 # .env
-FLIGHT_API=YOUR_API_KEY
+CLIENT_ID=YOUR_CLIENT_ID
+CLIENT_SECRET=YOUR_CLIENT_SECRET
 ```
