@@ -125,13 +125,14 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         histogram = new Histogram(data, 5, 3);
         histogram.setPreferredSize(new Dimension(0, graphHeight));
 
-        String[] columnNames = {"Mean", "Median", "Variance", "SD"};
+        String[] columnNames = { "Mean", "Median", "Variance", "SD" };
 
         float[] latenessData = Database.getLateness(Database.offlineFlights);
         latenessHistogram = new Histogram(latenessData, 240, 1000);
         latenessHistogram.setPreferredSize(new Dimension(0, graphHeight));
 
-        Object[][] latenessStats = {{arithmeticMean(latenessData), median(latenessData), variance(latenessData), standardDeviation(latenessData)}};
+        Object[][] latenessStats = { { arithmeticMean(latenessData), median(latenessData), variance(latenessData),
+                standardDeviation(latenessData) } };
 
         JScrollPane latenessStatsTable = new TableBuilder(latenessStats, columnNames)
                 .setFontSize(24)
@@ -151,7 +152,8 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         distanceHistogram = new Histogram(distance, 250, 200);
         distanceHistogram.setPreferredSize(new Dimension(0, graphHeight));
 
-        Object[][] distanceStats = {{arithmeticMean(distance), median(distance), variance(distance), standardDeviation(distance)}};
+        Object[][] distanceStats = {
+                { arithmeticMean(distance), median(distance), variance(distance), standardDeviation(distance) } };
 
         JScrollPane distanceStatsTable = new TableBuilder(distanceStats, columnNames)
                 .setFontSize(24)
@@ -248,7 +250,7 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
     @Override
     public boolean getScrollableTracksViewportHeight() {
 
-        return false;
+        return true;
     }
 
     @Override

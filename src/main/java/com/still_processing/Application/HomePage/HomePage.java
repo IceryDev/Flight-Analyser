@@ -52,7 +52,6 @@ public class HomePage extends JPanel implements Scrollable {
     private LocalDate endDate = LocalDate.now();
     private String originAirport;
     private String destAirport;
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public HomePage(ActionListener sceneSwitch) {
         System.out.println("=== Home Page ===");
@@ -222,7 +221,7 @@ public class HomePage extends JPanel implements Scrollable {
         inputFieldContainer.add(Box.createHorizontalGlue());
         this.add(inputFieldContainer);
 
-        this.add(Box.createRigidArea(new Dimension(0, 20)));
+        this.add(Box.createRigidArea(new Dimension(0, 80)));
 
         JButton analyseButton = new ButtonBuilder()
                 .setSize(25, 25)
