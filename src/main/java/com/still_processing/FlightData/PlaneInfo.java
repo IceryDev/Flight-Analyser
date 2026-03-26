@@ -1,17 +1,17 @@
 package com.still_processing.FlightData;
 
-class PlaneInfo {
+public class PlaneInfo {
 
     String icao24;
     String callSign;
     String country;
     long lastContact;
-    double longitude;
-    double latitude;
+    public double longitude;
+    public double latitude;
     double altitude;
     boolean onGround;
-    double velocity;
-    double heading;
+    public double velocity;
+    public double heading;
     double verticalRate;
     double geoAltitude;
     String squawk;

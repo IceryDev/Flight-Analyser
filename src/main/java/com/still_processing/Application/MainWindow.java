@@ -14,8 +14,14 @@ import javax.swing.JPanel;
 import com.still_processing.Application.AnalysisPage.AnalysisPanel;
 import com.still_processing.Application.HomePage.HomePage;
 import com.still_processing.Application.MapPage.MapPanel;
+import com.still_processing.Application.MapPage.PlaneMarker;
 import com.still_processing.Application.SearchPage.SearchPanel;
+import com.still_processing.DefaultSettings.Settings;
+import com.still_processing.FlightData.FlightInfo;
+import com.still_processing.FlightData.Utils.LiveDataHandler;
 import com.still_processing.UILib.ScrollPaneFactory;
+import org.openstreetmap.gui.jmapviewer.Coordinate;
+
 import static com.still_processing.DefaultSettings.Settings.*;
 
 /**
@@ -29,6 +35,10 @@ public class MainWindow extends JFrame implements ActionListener {
     private MapPanel map;
     private SearchPanel search;
     private HomePage body;
+    private JScrollPane scrollPaneHome;
+    private JScrollPane scrollPaneSearch;
+    private JScrollPane scrollPaneAnalyse;
+    private JScrollPane scrollPaneMap;
 
     public MainWindow() {
         ImageIcon image = new ImageIcon(getClass().getResource("/Images/logo.png"));
@@ -36,29 +46,27 @@ public class MainWindow extends JFrame implements ActionListener {
         cards.setOpaque(false);
 
         body = new HomePage(this);
-        JScrollPane scrollPane = ScrollPaneFactory.createPane();
-        scrollPane.setViewportView(body);
-        scrollPane.getViewport().setBackground(BACKGROUND);
-        scrollPane.setOpaque(false);
-        cards.add(scrollPane, "Main");
+        scrollPaneHome = ScrollPaneFactory.createPane();
+        scrollPaneHome.setViewportView(body);
+        scrollPaneHome.getViewport().setBackground(BACKGROUND);
+        scrollPaneHome.setOpaque(false);
+        cards.add(scrollPaneHome, "Main");
 
         search = new SearchPanel(this);
-        scrollPane = ScrollPaneFactory.createPane();
-        scrollPane.setViewportView(search);
-        scrollPane.getViewport().setBackground(BACKGROUND);
-        cards.add(scrollPane, "Search");
+        scrollPaneSearch = ScrollPaneFactory.createPane();
+        scrollPaneSearch.setViewportView(search);
+        scrollPaneSearch.getViewport().setBackground(BACKGROUND);
+        cards.add(scrollPaneSearch, "Search");
 
         analyse = new AnalysisPanel(this);
-        scrollPane = ScrollPaneFactory.createPane();
-        scrollPane.setViewportView(analyse);
-        scrollPane.getViewport().setBackground(BACKGROUND);
-        cards.add(scrollPane, "Analyse");
+        scrollPaneAnalyse = ScrollPaneFactory.createPane();
+        scrollPaneAnalyse.setViewportView(analyse);
+        scrollPaneAnalyse.getViewport().setBackground(BACKGROUND);
+        cards.add(scrollPaneAnalyse, "Analyse");
 
         map = new MapPanel(this);
-        scrollPane = ScrollPaneFactory.createPane();
-        scrollPane.setViewportView(map);
-        scrollPane.getViewport().setBackground(BACKGROUND);
-        cards.add(scrollPane, "Map");
+        map.setBackground(BACKGROUND);
+        cards.add(map, "Map");
 
         this.add(cards, BorderLayout.CENTER);
 
@@ -80,9 +88,11 @@ public class MainWindow extends JFrame implements ActionListener {
             case "Home Page":
             case "Return Home":
                 cardLayout.show(cards, "Main");
+                LiveDataHandler.stopRefresh();
                 break;
             case "Search":
                 cardLayout.show(cards, "Search");
+                scrollPaneSearch.getVerticalScrollBar().setValue(0);
                 break;
             case "Analyse":
             case "View Graph":
@@ -91,8 +101,10 @@ public class MainWindow extends JFrame implements ActionListener {
                 break;
             case "Map View":
                 cardLayout.show(cards, "Map");
+                LiveDataHandler.startRefresh();
                 break;
         }
         cards.repaint();
+        revalidate();
     }
 }

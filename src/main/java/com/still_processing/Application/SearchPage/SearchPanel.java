@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -18,7 +19,10 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+import com.still_processing.FlightData.Database;
+import com.still_processing.FlightData.FlightInfo;
 import com.still_processing.UILib.ButtonBuilder;
+import com.still_processing.UILib.ExpandablePanel;
 import com.still_processing.UILib.ImagePanel;
 import com.still_processing.UILib.TextPaneBuilder;
 import static com.still_processing.DefaultSettings.Settings.*;
@@ -97,7 +101,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         JPanel buttonContainer = new JPanel();
         buttonContainer.setOpaque(false);
         buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.X_AXIS));
-        buttonContainer.add(Box.createRigidArea(new Dimension(40, 0)));
+        buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(homeButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(graphButton);
@@ -105,6 +109,12 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         buttonContainer.add(sortButton);
         buttonContainer.add(Box.createHorizontalGlue());
         this.add(buttonContainer);
+
+        ArrayList<FlightInfo> flightData = Database.offlineFlights;
+        for (int i = 0; i < 20; i++) {
+            this.add(new ExpandablePanel(flightData.get(i)));
+        }
+        this.add(Box.createRigidArea(new Dimension(0, 20)));
     }
 
     @Override

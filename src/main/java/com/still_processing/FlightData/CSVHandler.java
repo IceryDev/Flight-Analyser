@@ -134,23 +134,10 @@ public class CSVHandler {
                             tmp.flightNumber = args[i];
                             break;
                         case "ORIGIN":
-                            tmp.originAirport = args[i];
                             originTmp.iataCode = args[i];
-                            break;
-                        case "ORIGIN_CITY_NAME":
-                            originTmp.municipality = args[i];
-                            break;
-                        case "ORIGIN_STATE_ABR":
-                            originTmp.region = args[i];
                             break;
                         case "DEST":
                             destTmp.iataCode = args[i];
-                            break;
-                        case "DEST_CITY_NAME":
-                            destTmp.municipality = args[i];
-                            break;
-                        case "DEST_STATE_ABR":
-                            destTmp.region = args[i];
                             break;
                         case "CRS_DEP_TIME":
                             tmp.CRSDepTime = formatTimeString(args[i]);
@@ -184,8 +171,6 @@ public class CSVHandler {
 
                 tmp.origin = Database.airports.get(originTmp.iataCode);
                 tmp.dest = Database.airports.get(destTmp.iataCode);
-                // tmp.origin = originTmp;
-                // tmp.dest = destTmp;
                 Database.offlineFlights.add(tmp);
             }
         } catch (IOException e) {
