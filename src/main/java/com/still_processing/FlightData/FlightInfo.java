@@ -8,7 +8,10 @@ public class FlightInfo {
     public String flightDate;
     public String iataCode;
     public String flightNumber;
+
+    @Deprecated
     public String originAirport;
+
     public Airport origin;
     public Airport dest;
     public String CRSDepTime;

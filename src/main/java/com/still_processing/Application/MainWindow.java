@@ -1,22 +1,25 @@
 package com.still_processing.Application;
 
+import static com.still_processing.DefaultSettings.Settings.BACKGROUND;
+
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.format.DateTimeFormatter;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JScrollPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import com.still_processing.Application.AnalysisPage.AnalysisPanel;
 import com.still_processing.Application.HomePage.HomePage;
 import com.still_processing.Application.MapPage.MapPanel;
 import com.still_processing.Application.SearchPage.SearchPanel;
+import com.still_processing.FlightData.Utils.LiveDataHandler;
 import com.still_processing.UILib.ScrollPaneFactory;
-import static com.still_processing.DefaultSettings.Settings.*;
 
 /**
  * @author Deea Zaharia, Jagoda Koczwara-Szuba, Zhou Sun
@@ -33,6 +36,7 @@ public class MainWindow extends JFrame implements ActionListener {
     private JScrollPane scrollPaneSearch;
     private JScrollPane scrollPaneAnalyse;
     private JScrollPane scrollPaneMap;
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     public MainWindow() {
         ImageIcon image = new ImageIcon(getClass().getResource("/Images/logo.png"));
@@ -59,10 +63,8 @@ public class MainWindow extends JFrame implements ActionListener {
         cards.add(scrollPaneAnalyse, "Analyse");
 
         map = new MapPanel(this);
-        scrollPaneMap = ScrollPaneFactory.createPane();
-        scrollPaneMap.setViewportView(map);
-        scrollPaneMap.getViewport().setBackground(BACKGROUND);
-        cards.add(scrollPaneMap, "Map");
+        map.setBackground(BACKGROUND);
+        cards.add(map, "Map");
 
         this.add(cards, BorderLayout.CENTER);
 
@@ -84,10 +86,15 @@ public class MainWindow extends JFrame implements ActionListener {
             case "Home Page":
             case "Return Home":
                 cardLayout.show(cards, "Main");
+                LiveDataHandler.stopRefresh();
                 break;
             case "Search":
                 cardLayout.show(cards, "Search");
                 scrollPaneSearch.getVerticalScrollBar().setValue(0);
+                System.out.println("Origin Airport: " + body.getOriginAirport());
+                System.out.println("Dest Airport: " + body.getDestAirport());
+                System.out.println("Start Date: " + body.getStartDate().format(formatter));
+                System.out.println("End Date: " + body.getEndDate().format(formatter));
                 break;
             case "Analyse":
             case "View Graph":
@@ -96,6 +103,7 @@ public class MainWindow extends JFrame implements ActionListener {
                 break;
             case "Map View":
                 cardLayout.show(cards, "Map");
+                LiveDataHandler.startRefresh();
                 break;
         }
         cards.repaint();
