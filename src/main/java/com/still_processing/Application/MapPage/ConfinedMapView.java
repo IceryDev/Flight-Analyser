@@ -112,7 +112,6 @@ public class ConfinedMapView extends MapView {
             @Override
             public void paint(Graphics g, List<Point> points) {
                 Color transparent = new Color(0, 0, 0, 0);
-                g.setColor(this.getColor());
 
                 boolean colorSwitch = false;
                 for (int i = 0; i < points.size() - 1; i++) {
@@ -120,7 +119,7 @@ public class ConfinedMapView extends MapView {
                         Point p = points.get(i);
                         Point p2 = points.get(i + 1);
 
-                        g.setColor((colorSwitch) ? this.getColor() : transparent);
+                        g.setColor((colorSwitch) ? Settings.HIGHLIGHT : transparent);
                         g.drawLine(p.x, p.y, p2.x, p2.y);
                         colorSwitch = !colorSwitch;
                     }
