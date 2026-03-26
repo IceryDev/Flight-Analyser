@@ -7,6 +7,8 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -33,6 +35,8 @@ import static com.still_processing.DefaultSettings.Settings.*;
 
 public class SearchPanel extends JPanel implements Scrollable, ActionListener {
     private JPanel flightEntries = new JPanel();
+    private ArrayList<FlightInfo> flightData = Database.offlineFlights;
+    private int counter = 0;
 
     public SearchPanel(ActionListener sceneSwitch) {
 
@@ -100,19 +104,31 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         sortButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         sortButton.addActionListener(this);
 
-        JButton clearButton = new ButtonBuilder()
+        JButton previousButton = new ButtonBuilder()
                 .setSize(25, 25)
                 .setForeground(BACKGROUND)
                 .setBackground(HIGHLIGHT)
-                .setText("Clear")
+                .setText("Previous")
                 .setFontSize(18)
                 .build();
-        clearButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
-        clearButton.addActionListener(e -> {
-            flightEntries.removeAll();
+        previousButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
+        previousButton.addActionListener(e -> {
+            counter -= (counter >= 25 ) ? 25 : counter;
+            refreshEntries();
         });
 
-        // next & previous (25-50)
+        JButton nextButton = new ButtonBuilder()
+                .setSize(25, 25)
+                .setForeground(BACKGROUND)
+                .setBackground(HIGHLIGHT)
+                .setText("Next")
+                .setFontSize(18)
+                .build();
+        nextButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
+        nextButton.addActionListener(e -> {
+            counter += 25;
+            refreshEntries();
+        });
 
         JPanel buttonContainer = new JPanel();
         buttonContainer.setOpaque(false);
@@ -124,22 +140,34 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(sortButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
-        buttonContainer.add(clearButton);
+        buttonContainer.add(previousButton);
+        buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
+        buttonContainer.add(nextButton);
         buttonContainer.add(Box.createHorizontalGlue());
         this.add(buttonContainer);
 
         flightEntries = new JPanel();
         flightEntries.setLayout(new BoxLayout(flightEntries, BoxLayout.Y_AXIS));
 
-        ArrayList<FlightInfo> flightData = Database.offlineFlights;
-
-        for (int i = 0; i < 20; i++) {
-            flightEntries.add(new ExpandablePanel(flightData.get(i)));
-        }
+        updateFlightData(Database.offlineFlights);
 
         this.add(flightEntries);
 
-        // refreshEntries
+        refreshEntries();
+    }
+
+    public void updateFlightData(ArrayList<FlightInfo> flightData) {
+        if (flightData != null) {
+            this.flightData = flightData;
+        }
+    }
+
+    public void refreshEntries() {
+        flightEntries.removeAll();
+        for (int i = counter; i < (counter+25); i++) {
+            if (counter+i > flightData.size()) break;
+            flightEntries.add(new ExpandablePanel(flightData.get(i)));
+        }
     }
 
     @Override
