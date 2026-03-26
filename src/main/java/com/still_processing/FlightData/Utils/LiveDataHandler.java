@@ -4,12 +4,13 @@ import com.still_processing.Application.MapPage.MapViewFull;
 import com.still_processing.Application.MapPage.PlaneMarker;
 import com.still_processing.DefaultSettings.Settings;
 import com.still_processing.FlightData.Database;
+import com.still_processing.FlightData.FlightFetcher;
 import com.still_processing.FlightData.FlightInfo;
 import net.sf.geographiclib.Geodesic;
 import net.sf.geographiclib.GeodesicData;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -23,6 +24,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class LiveDataHandler {
 
     private static final int REFRESH_PERIOD_S = 10;
+    private static final int REQUEST_AFTER_ITERATION = 10000;
+    private static final SwingWorker<Void, Void> requestWorker = new SwingWorker<Void, Void>() {
+        @Override
+        protected Void doInBackground() throws Exception {
+            FlightFetcher.fetchLiveFlightInfo(100);
+            return null;
+        }
+    };
+    private static int iterationNo = 0;
     private static Thread refreshThread;
     private static boolean refreshRunning = false;
     private static AtomicBoolean queueRunning = new AtomicBoolean(false);
@@ -54,9 +64,14 @@ public class LiveDataHandler {
             try {
                 refreshRunning = true;
                 while (refreshRunning){
+                    if (Database.flights.isEmpty() || iterationNo >= REQUEST_AFTER_ITERATION){
+                        requestWorker.execute();
+                        iterationNo = 0;
+                    }
                     eventQueue.add(LiveDataHandler::update);
                     runQueue();
                     Thread.sleep(REFRESH_PERIOD_S * 1000);
+                    iterationNo++;
                 }
             } catch (InterruptedException e) {
                 System.out.println("Refresh Interrupted!");

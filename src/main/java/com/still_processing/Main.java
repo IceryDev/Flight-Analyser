@@ -19,13 +19,6 @@ public class Main {
         CSVHandler.loadAirportCSV();
         CSVHandler.loadOfflineFlightCSV();
         FlightFetcher.getAirlineCodes();
-        new SwingWorker<Void, Void>() {
-            @Override
-            protected Void doInBackground() throws Exception {
-                FlightFetcher.fetchLiveFlightInfo(100);
-                return null;
-            }
-        }.execute();
 
         System.setProperty("sun.java2d.uiScale", "1.0");
         System.setProperty("sun.java2d.opengl", "true");

@@ -45,6 +45,8 @@ public class FlightFetcher {
 
     private static AuthenticatedRequest aRequest;
 
+    public static boolean fetchActive = false;
+
     /**
      * Periodically populates {@link Database#flights} with live info with information fetched
      * from two consecutive APIs.
@@ -66,7 +68,8 @@ public class FlightFetcher {
      * @author Ulaş İçer
      */
     public static void fetchLiveFlightInfo(int limit) throws RequestFailedException, InterruptedException {
-
+        if (fetchActive) { return; }
+        fetchActive = true;
         int retryCount = 0;
 
         ArrayList<FlightInfo> result = new ArrayList<>();
@@ -96,6 +99,7 @@ public class FlightFetcher {
             catch (CompletionException e) {
                 if(e.getCause() instanceof RateLimitException rle){
                     if (retryCount >= MAX_RETRY){
+                        fetchActive = false;
                         throw new RequestFailedException(
                                 "RequestFailedException: Http request failed after " + MAX_RETRY + " trials.",
                                 MAX_RETRY,
@@ -106,6 +110,7 @@ public class FlightFetcher {
                     Thread.sleep(rle.getDelay());
                 }
                 else if (e.getCause() instanceof RequestFailedException rfe){
+                    fetchActive = false;
                     throw new RequestFailedException(
                             "RequestFailedException: Http request failed to get from hexDb database.",
                             MAX_RETRY,
@@ -119,6 +124,7 @@ public class FlightFetcher {
             catch (JsonProcessingException e){
                 System.err.println("Error: An error occurred while parsing JSON structure.");
             }
+            fetchActive = false;
         }
     }
 
@@ -202,10 +208,6 @@ public class FlightFetcher {
             }
 
         }
-    }
-
-    private static void addNewFlights(ArrayList<FlightInfo> processed){
-
     }
 
     /**
