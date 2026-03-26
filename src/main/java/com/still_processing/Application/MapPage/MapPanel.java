@@ -1,9 +1,16 @@
 package com.still_processing.Application.MapPage;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JTextPane;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
@@ -13,13 +20,12 @@ import com.still_processing.FlightData.Utils.LiveDataHandler;
 import com.still_processing.UILib.ButtonBuilder;
 import com.still_processing.UILib.ImagePanel;
 import com.still_processing.UILib.TextPaneBuilder;
-import org.openstreetmap.gui.jmapviewer.Coordinate;
-import org.openstreetmap.gui.jmapviewer.OsmTileLoader;
-import org.openstreetmap.gui.jmapviewer.tilesources.OsmTileSource;
+import static com.still_processing.DefaultSettings.Settings.BACKGROUND;
+import static com.still_processing.DefaultSettings.Settings.BOLD_FONT;
+import static com.still_processing.DefaultSettings.Settings.HIGHLIGHT;
 
-import static com.still_processing.DefaultSettings.Settings.*;
 /**
- * @author Deea Zaharia
+ * @author Deea Zaharia, Ulaş İçer
  */
 public class MapPanel extends JPanel {
 
