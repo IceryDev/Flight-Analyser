@@ -34,7 +34,7 @@ public final class FilterApplier {
         if (simpleFilter == null) {
             throw new IllegalArgumentException("Filter cannot be null.");
         }
-        filteredFlights = simpleFilter.filter(filteredFlights, params);
-        return filteredFlights;
+        // filteredFlights = simpleFilter.filter(filteredFlights, params);
+        return simpleFilter.filter(filteredFlights, params);
     }
 }
