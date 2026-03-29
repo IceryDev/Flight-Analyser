@@ -1,10 +1,12 @@
 package com.still_processing;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import com.still_processing.FlightData.Filters.Filter;
 import com.still_processing.FlightData.Filters.FilterApplier;
 import com.still_processing.FlightData.Filters.FuzzySearch;
 import com.still_processing.FlightData.Filters.impl.DistanceFilter;
@@ -69,5 +71,15 @@ public class AppTest extends TestCase {
             System.out.println(flight.iataCode + flight.flightNumber);
         }
         System.out.println("Flight Entries:" + flightList.size());
+
+        LocalDate now = LocalDate.parse("2022-01-02");
+        LocalDate then = LocalDate.parse("2022-01-04");
+        Filter filterTest = new Filter(flightList);
+        filteredList = filterTest.byDateRange(now, then);
+        for (int i = 0; i < 25; i++) {
+            FlightInfo flight = filteredList.get(i);
+            System.out.println(flight.iataCode + flight.flightNumber + ":" + flight.flightDate);
+        }
+
     }
 }
