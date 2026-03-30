@@ -8,6 +8,8 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -18,6 +20,13 @@ import com.still_processing.Application.AnalysisPage.AnalysisPanel;
 import com.still_processing.Application.HomePage.HomePage;
 import com.still_processing.Application.MapPage.MapPanel;
 import com.still_processing.Application.SearchPage.SearchPanel;
+import com.still_processing.FlightData.Airport;
+import com.still_processing.FlightData.Database;
+import com.still_processing.FlightData.FlightInfo;
+import com.still_processing.FlightData.Filters.FilterApplier;
+import com.still_processing.FlightData.Filters.FuzzySearch;
+import com.still_processing.FlightData.Filters.impl.OriginAirportNameFilter;
+import com.still_processing.FlightData.Filters.impl.DestinationAirportNameFilter;
 import com.still_processing.FlightData.Utils.LiveDataHandler;
 import com.still_processing.UILib.ScrollPaneFactory;
 
@@ -90,11 +99,15 @@ public class MainWindow extends JFrame implements ActionListener {
                 break;
             case "Search":
                 cardLayout.show(cards, "Search");
+                search.setOriginAirport(body.getOriginAirport());
+                search.setDestAirport(body.getDestAirport());
+                search.setStartDate(body.getStartDate());
+                search.setEndDate(body.getEndDate());
+
+                search.updateSearch();
+                search.updateSearchBar();
+                search.refreshEntries();
                 scrollPaneSearch.getVerticalScrollBar().setValue(0);
-                System.out.println("Origin Airport: " + body.getOriginAirport());
-                System.out.println("Dest Airport: " + body.getDestAirport());
-                System.out.println("Start Date: " + body.getStartDate().format(formatter));
-                System.out.println("End Date: " + body.getEndDate().format(formatter));
                 break;
             case "Analyse":
             case "View Graph":

@@ -1,5 +1,6 @@
 package com.still_processing.FlightData.Filters.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.still_processing.FlightData.FlightInfo;
@@ -21,7 +22,10 @@ public final class DestinationAirportNameFilter implements SimpleFilter<List<Fli
      */
     @Override
     public List<FlightInfo> filter(List<FlightInfo> items, String... destinationAirportName) {
-        items.removeIf(flight -> !flight.dest.name.equals(destinationAirportName[0]));
-        return items;
+        List<FlightInfo> result = new ArrayList<>();
+        System.out.println("Items: " + items.size());
+        result.addAll(items);
+        result.removeIf(flight -> !flight.dest.name.equals(destinationAirportName[0]));
+        return result;
     }
 }

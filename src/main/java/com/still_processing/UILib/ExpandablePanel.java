@@ -427,12 +427,15 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
         expandedDisplay.add(Box.createRigidArea(new Dimension(20, 0)));
         this.add(expandedDisplay);
 
-        expandableThread = new Thread(this);
-        expandableThread.start();
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        if (expandableThread == null) {
+            expandableThread = new Thread(this);
+            expandableThread.start();
+        }
+
         isExpanded = !isExpanded;
         this.mapContainer.parentExpanded = !this.mapContainer.parentExpanded;
         if (!isExpanded) {
@@ -441,7 +444,7 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
             this.map = MapHandler.getInfoMap(this.fInfo);
             this.mapContainer.add(this.map);
         }
-        repaint();
+        // repaint();
     }
 
     @Override
@@ -481,21 +484,28 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
             renderHeight = (renderHeight > maxHeight) ? maxHeight : renderHeight;
             toggleArrowAngle += (toggleArrowAngle < 180) ? 10 : 0;
             toggleArrowAngle = (toggleArrowAngle > 180) ? 90 : toggleArrowAngle;
+
+            if (renderHeight == maxHeight && toggleArrowAngle == 180) {
+                expandableThread = null;
+            }
         } else {
             renderHeight -= (renderHeight > 0) ? 20 : 0;
             renderHeight = (renderHeight < 0) ? 0 : renderHeight;
             toggleArrowAngle -= (toggleArrowAngle > 0) ? 10 : 0;
             toggleArrowAngle = (toggleArrowAngle < 0) ? 0 : toggleArrowAngle;
+
+            if (renderHeight == 0 && toggleArrowAngle == 0) {
+                expandableThread = null;
+            }
         }
-        expandedDisplay.setPreferredSize(new Dimension(Integer.MAX_VALUE, renderHeight));
-        toggleButton.repaint();
-        toggleButton.revalidate();
-        revalidate();
     }
 
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
+        expandedDisplay.setPreferredSize(new Dimension(Integer.MAX_VALUE, renderHeight));
+        toggleButton.repaint();
+
         Graphics2D g2d = (Graphics2D) graphics;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
@@ -504,6 +514,9 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
         g2d.fillRoundRect(padding, padding, getWidth() - 2 * padding, getHeight() - padding,
                 borderRadius,
                 borderRadius);
+
+        toggleButton.revalidate();
+        revalidate();
     }
 
     @Override
