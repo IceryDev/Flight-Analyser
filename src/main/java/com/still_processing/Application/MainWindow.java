@@ -20,13 +20,6 @@ import com.still_processing.Application.AnalysisPage.AnalysisPanel;
 import com.still_processing.Application.HomePage.HomePage;
 import com.still_processing.Application.MapPage.MapPanel;
 import com.still_processing.Application.SearchPage.SearchPanel;
-import com.still_processing.FlightData.Airport;
-import com.still_processing.FlightData.Database;
-import com.still_processing.FlightData.FlightInfo;
-import com.still_processing.FlightData.Filters.FilterApplier;
-import com.still_processing.FlightData.Filters.FuzzySearch;
-import com.still_processing.FlightData.Filters.impl.OriginAirportNameFilter;
-import com.still_processing.FlightData.Filters.impl.DestinationAirportNameFilter;
 import com.still_processing.FlightData.Utils.LiveDataHandler;
 import com.still_processing.UILib.ScrollPaneFactory;
 
@@ -44,8 +37,6 @@ public class MainWindow extends JFrame implements ActionListener {
     private JScrollPane scrollPaneHome;
     private JScrollPane scrollPaneSearch;
     private JScrollPane scrollPaneAnalyse;
-    private JScrollPane scrollPaneMap;
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     public MainWindow() {
         ImageIcon image = new ImageIcon(getClass().getResource("/Images/logo.png"));
