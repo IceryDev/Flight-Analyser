@@ -108,6 +108,8 @@ public class LiveDataHandler {
         if (mvf.getSelectedInfo() != null && !mvf.inDatabase) snapshot.add(mvf.getSelectedInfo());
         SwingUtilities.invokeLater(() -> {
             mvf.removeAllMapMarkers();
+            mvf.clearSelectedMarker();
+            markers.clear();
             for (FlightInfo i : snapshot){
                 double[] translation = getNewCoordinate(
                         new Coordinate(i.plane.latitude, i.plane.longitude),
@@ -118,7 +120,10 @@ public class LiveDataHandler {
                 PlaneMarker tmp = new PlaneMarker(
                         new Coordinate(i.plane.latitude, i.plane.longitude), i.plane.heading, mvf,
                         Settings.PLANE_RED, Settings.PLANE_BLACK);
-                if (i.selected) tmp.selected = true;
+                if (i.selected) {
+                    tmp.selected = true;
+                    mvf.setLastSelected(tmp);
+                }
                 mvf.addMapMarker(tmp);
                 markers.put(tmp, i);
             }

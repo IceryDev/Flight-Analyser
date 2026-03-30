@@ -1,5 +1,6 @@
 package com.still_processing.Application.MapPage;
 
+import com.still_processing.DefaultSettings.Settings;
 import com.still_processing.FlightData.FlightInfo;
 import com.still_processing.FlightData.Utils.LiveDataHandler;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
@@ -38,6 +39,7 @@ public class MapViewFull extends MapView implements MouseListener {
                 this.setDisplayPosition(new Coordinate(53.3498, -6.2603), 7);
                 this.repaint();
             });
+            this.addMouseListener(this);
         }
     }
 
@@ -91,6 +93,14 @@ public class MapViewFull extends MapView implements MouseListener {
         }
     }
 
+    public void clearSelectedMarker(){
+        this.lastSelected = null;
+    }
+
+    public void setLastSelected(PlaneMarker lastSelected) {
+        this.lastSelected = lastSelected;
+    }
+
     public FlightInfo getSelectedInfo() {
         return selectedInfo;
     }
@@ -106,13 +116,38 @@ public class MapViewFull extends MapView implements MouseListener {
         for (MapMarker marker : new ArrayList<>(this.getMapMarkerList())){
             Point markerP = this.getMapPosition(marker.getLat(), marker.getLon(), false);
 
-            if (marker instanceof PlaneMarker pm && markerP != null && clicked.distance(markerP) <= marker.getRadius()){
+            if (marker instanceof PlaneMarker pm && markerP != null && clicked.distance(markerP) <= marker.getRadius() * 2){
 
-                if (this.lastSelected != null) this.lastSelected.selected = false;
+                if (this.lastSelected != null) {
+                    FlightInfo tmp = LiveDataHandler.markers.get(this.lastSelected);
+                    tmp.selected = false;
 
-                pm.selected = true;
-                this.lastSelected = pm;
+                    LiveDataHandler.markers.remove(this.lastSelected);
+                    this.removeMapMarker(this.lastSelected);
+                    PlaneMarker newPM = new PlaneMarker(
+                            new Coordinate(tmp.plane.latitude, tmp.plane.longitude),
+                            tmp.plane.heading,
+                            this,
+                            Settings.PLANE_RED, Settings.PLANE_BLACK);
+                    this.addMapMarker(newPM);
+                    LiveDataHandler.markers.put(newPM, tmp);
+                }
+
                 this.selectedInfo = LiveDataHandler.markers.get(pm);
+                this.selectedInfo.selected = true;
+
+                LiveDataHandler.markers.remove(pm);
+                this.removeMapMarker(pm);
+                PlaneMarker newPM = new PlaneMarker(
+                        new Coordinate(this.selectedInfo.plane.latitude, this.selectedInfo.plane.longitude),
+                        this.selectedInfo.plane.heading,
+                        this,
+                        Settings.PLANE_RED, Settings.PLANE_BLACK);
+                newPM.selected = true;
+                this.addMapMarker(newPM);
+                LiveDataHandler.markers.put(newPM, this.selectedInfo);
+                this.lastSelected = newPM;
+
                 this.inDatabase = true;
 
             }
