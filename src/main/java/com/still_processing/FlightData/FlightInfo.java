@@ -25,6 +25,7 @@ public class FlightInfo {
 
     public PlaneInfo plane;
     public String airline;
+    public boolean selected = false;
 
     FlightInfo() {
     }

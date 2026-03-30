@@ -29,14 +29,18 @@ public class PlaneMarker implements MapMarker {
     private static final int BASE_ZOOM = 10;
     private static final double SCALE_COEF = 1.5;
     public BufferedImage icon = null;
+    public BufferedImage selectedIcon = null;
     public Coordinate coord;
     public JMapViewer jmv;
     public double rot;
     public double radius = 10;
 
-    public PlaneMarker(Coordinate coord, double rot, JMapViewer jmv, String imagePath) {
+    public boolean selected = false;
+
+    public PlaneMarker(Coordinate coord, double rot, JMapViewer jmv, String imagePath, String selectedPath) {
         try {
             this.icon = ImageIO.read(Objects.requireNonNull(getClass().getResource(imagePath)));
+            this.selectedIcon = ImageIO.read(Objects.requireNonNull(getClass().getResource(selectedPath)));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -106,7 +110,8 @@ public class PlaneMarker implements MapMarker {
         at.translate((double) -size / 2, (double) -size / 2);
         at.scale((double) size / this.icon.getWidth(), (double) size / this.icon.getHeight());
         Graphics2D g2d = (Graphics2D) g;
-        g2d.drawImage(this.icon, at, null);
+        if (this.selected) g2d.drawImage(this.selectedIcon, at, null);
+        else g2d.drawImage(this.icon, at, null);
     }
 
     @Override

@@ -13,6 +13,7 @@ import org.openstreetmap.gui.jmapviewer.Coordinate;
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -25,13 +26,7 @@ public class LiveDataHandler {
 
     private static final int REFRESH_PERIOD_S = 10;
     private static final int REQUEST_AFTER_ITERATION = 10000;
-    private static final SwingWorker<Void, Void> requestWorker = new SwingWorker<Void, Void>() {
-        @Override
-        protected Void doInBackground() throws Exception {
-            FlightFetcher.fetchLiveFlightInfo(100);
-            return null;
-        }
-    };
+
     private static int iterationNo = 0;
     private static Thread refreshThread;
     private static boolean refreshRunning = false;
@@ -40,6 +35,16 @@ public class LiveDataHandler {
     private static LinkedBlockingQueue<Runnable> eventQueue = new LinkedBlockingQueue<>();
 
     public static MapViewFull mvf;
+
+    private static final SwingWorker<Void, Void> requestWorker = new SwingWorker<Void, Void>() {
+        @Override
+        protected Void doInBackground() throws Exception {
+            FlightFetcher.fetchLiveFlightInfo(100);
+            return null;
+        }
+    };
+
+    public static ConcurrentHashMap<PlaneMarker, FlightInfo> markers = new ConcurrentHashMap<>();
 
     /**
      * Returns the next location projection based on current plane velocity, position, and rotation.
@@ -65,7 +70,7 @@ public class LiveDataHandler {
                 refreshRunning = true;
                 while (refreshRunning){
                     if (Database.flights.isEmpty() || iterationNo >= REQUEST_AFTER_ITERATION){
-                        requestWorker.execute();
+                        eventQueue.add(LiveDataHandler::fullRefresh);
                         iterationNo = 0;
                     }
                     eventQueue.add(LiveDataHandler::update);
@@ -100,6 +105,7 @@ public class LiveDataHandler {
      */
     private static void update() {
         List<FlightInfo> snapshot = new ArrayList<>(Database.flights);
+        if (mvf.getSelectedInfo() != null && !mvf.inDatabase) snapshot.add(mvf.getSelectedInfo());
         SwingUtilities.invokeLater(() -> {
             mvf.removeAllMapMarkers();
             for (FlightInfo i : snapshot){
@@ -109,7 +115,12 @@ public class LiveDataHandler {
                 i.plane.latitude = translation[0];
                 i.plane.longitude = translation[1];
                 i.plane.heading = translation[2];
-                mvf.addMapMarker(new PlaneMarker(new Coordinate(i.plane.latitude, i.plane.longitude), i.plane.heading, mvf, Settings.PLANE_RED));
+                PlaneMarker tmp = new PlaneMarker(
+                        new Coordinate(i.plane.latitude, i.plane.longitude), i.plane.heading, mvf,
+                        Settings.PLANE_RED, Settings.PLANE_BLACK);
+                if (i.selected) tmp.selected = true;
+                mvf.addMapMarker(tmp);
+                markers.put(tmp, i);
             }
         });
     }
@@ -141,5 +152,17 @@ public class LiveDataHandler {
             }
         }
         queueRunning.set(false);
+    }
+
+    private static void fullRefresh(){
+        Database.flights.clear();
+        markers.clear();
+        mvf.removeAllMapMarkers();
+        mvf.inDatabase = false;
+        stopRefresh();
+        eventQueue.clear();
+
+        requestWorker.execute();
+        startRefresh();
     }
 }

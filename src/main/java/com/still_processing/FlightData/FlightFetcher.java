@@ -248,6 +248,15 @@ public class FlightFetcher {
 
             tmp.plane.icao24 = flight.get(0).asText();
             tmp.plane.callSign = flight.get(1).asText().trim();
+            if (LiveDataHandler.mvf != null){
+                FlightInfo selected = LiveDataHandler.mvf.getSelectedInfo();
+                if (selected.plane.callSign.equals(tmp.plane.callSign)){
+                    selected.plane.icao24 = tmp.plane.icao24;
+                    selected.plane.callSign = tmp.plane.callSign;
+                    LiveDataHandler.mvf.inDatabase = true;
+                    tmp = selected;
+                }
+            }
             if (tmp.plane.callSign.length() > 3){
                 String airlineIcao = tmp.plane.callSign.trim().substring(0, 3);
                 if(Database.airlineIcaoToIata.containsKey(airlineIcao)){

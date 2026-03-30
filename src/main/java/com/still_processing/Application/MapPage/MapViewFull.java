@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 /**
@@ -15,11 +17,14 @@ import java.util.ArrayList;
  *
  * @author Ulaş İçer
  */
-public class MapViewFull extends MapView {
+public class MapViewFull extends MapView implements MouseListener {
 
     private static final double MAX_LAT =  85.0;
     private static final double MIN_LAT = -85.0;
     private final int MAX_ZOOM = 3;
+
+    private FlightInfo selectedInfo;
+    public boolean inDatabase = true;
 
 
     // mode true/false -> live/historical
@@ -83,5 +88,36 @@ public class MapViewFull extends MapView {
         }
     }
 
+    public FlightInfo getSelectedInfo() {
+        return selectedInfo;
+    }
 
+    public void setSelectedInfo(FlightInfo selectedInfo) {
+        this.selectedInfo = selectedInfo;
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
 }

@@ -132,7 +132,7 @@ public class ConfinedMapView extends MapView {
         PlaneMarker pm = new PlaneMarker(
                 new Coordinate(mid.lat2, mid.lon2),
                 mid.azi2,
-                this, Settings.PLANE_BLACK);
+                this, Settings.PLANE_BLACK, Settings.PLANE_RED);
         pm.setRadius(15);
         this.addMapMarker(pm);
     }
