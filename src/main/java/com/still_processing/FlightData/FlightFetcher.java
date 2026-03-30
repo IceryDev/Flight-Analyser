@@ -250,7 +250,7 @@ public class FlightFetcher {
             tmp.plane.callSign = flight.get(1).asText().trim();
             if (LiveDataHandler.mvf != null){
                 FlightInfo selected = LiveDataHandler.mvf.getSelectedInfo();
-                if (selected.plane.callSign.equals(tmp.plane.callSign)){
+                if (selected != null && selected.plane.callSign.equals(tmp.plane.callSign)){
                     selected.plane.icao24 = tmp.plane.icao24;
                     selected.plane.callSign = tmp.plane.callSign;
                     LiveDataHandler.mvf.inDatabase = true;

@@ -1,8 +1,10 @@
 package com.still_processing.Application.MapPage;
 
 import com.still_processing.FlightData.FlightInfo;
+import com.still_processing.FlightData.Utils.LiveDataHandler;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.interfaces.ICoordinate;
+import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -24,6 +26,7 @@ public class MapViewFull extends MapView implements MouseListener {
     private final int MAX_ZOOM = 3;
 
     private FlightInfo selectedInfo;
+    private PlaneMarker lastSelected;
     public boolean inDatabase = true;
 
 
@@ -98,7 +101,22 @@ public class MapViewFull extends MapView implements MouseListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        Point clicked = e.getPoint();
 
+        for (MapMarker marker : new ArrayList<>(this.getMapMarkerList())){
+            Point markerP = this.getMapPosition(marker.getLat(), marker.getLon(), false);
+
+            if (marker instanceof PlaneMarker pm && markerP != null && clicked.distance(markerP) <= marker.getRadius()){
+
+                if (this.lastSelected != null) this.lastSelected.selected = false;
+
+                pm.selected = true;
+                this.lastSelected = pm;
+                this.selectedInfo = LiveDataHandler.markers.get(pm);
+                this.inDatabase = true;
+
+            }
+        }
     }
 
     @Override

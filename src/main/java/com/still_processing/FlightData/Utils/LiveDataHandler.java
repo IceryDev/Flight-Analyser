@@ -159,10 +159,9 @@ public class LiveDataHandler {
         markers.clear();
         mvf.removeAllMapMarkers();
         mvf.inDatabase = false;
-        stopRefresh();
         eventQueue.clear();
 
         requestWorker.execute();
-        startRefresh();
+        //runQueue();
     }
 }
