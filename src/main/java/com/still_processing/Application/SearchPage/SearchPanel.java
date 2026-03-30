@@ -1,12 +1,5 @@
 package com.still_processing.Application.SearchPage;
 
-import static com.still_processing.DefaultSettings.Settings.BACKGROUND;
-import static com.still_processing.DefaultSettings.Settings.BOLD_FONT;
-import static com.still_processing.DefaultSettings.Settings.HIGHLIGHT;
-import static com.still_processing.DefaultSettings.Settings.HIGHLIGHT_20;
-import static com.still_processing.DefaultSettings.Settings.LIME;
-import static com.still_processing.DefaultSettings.Settings.REGULAR_FONT;
-
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -17,8 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -43,6 +34,8 @@ import com.still_processing.UILib.ExpandablePanel;
 import com.still_processing.UILib.ImagePanel;
 import com.still_processing.UILib.InputFieldBuilder;
 import com.still_processing.UILib.TextPaneBuilder;
+
+import static com.still_processing.DefaultSettings.Settings.*;
 
 /**
  * @author Deea Zaharia, Jagoda Koczwara-Szuba
@@ -256,41 +249,72 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         sortButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         sortButton.addActionListener(this);
 
-        JButton pageButton = new ButtonBuilder()
-                .setSize(25, 25)
-                .setForeground(BACKGROUND)
-                .setBackground(HIGHLIGHT)
-                .setText(String.format("%d", (int)((float)counter/25)+1))
-                .setFontSize(18)
+        FontMetrics pageFont = getFontMetrics(BOLD_FONT.deriveFont(22f));
+        int pageTextHeight = pageFont.getHeight() / 2 + pageFont.getMaxAscent();
+        String pageText = String.format("%d", (int)((float)counter/25)+1);
+
+        JTextPane pageDisplay = new TextPaneBuilder()
+                .setText(pageText)
+                .setForeground(TEXT_COLOR)
+                .setFont(BOLD_FONT)
+                .setFontSize(22)
                 .build();
-        pageButton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 40));
+        pageDisplay.setMaximumSize(new Dimension(pageFont.stringWidth(pageText), pageTextHeight));
 
         JButton previousButton = new ButtonBuilder()
                 .setSize(25, 25)
                 .setForeground(BACKGROUND)
                 .setBackground(HIGHLIGHT)
-                .setText("Previous")
+                .setText("<")
                 .setFontSize(18)
                 .build();
-        previousButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
+        previousButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         previousButton.addActionListener(e -> {
             counter -= (counter >= 25) ? 25 : counter;
             refreshEntries();
-            pageButton.setText(String.format("%d", (int)((float)counter/25)+1));
+            pageDisplay.setText(String.format("%d", (int)((float)counter/25)+1));
+        });
+
+        JButton previousPreviousButton = new ButtonBuilder()
+                .setSize(25, 25)
+                .setForeground(BACKGROUND)
+                .setBackground(HIGHLIGHT)
+                .setText("<<")
+                .setFontSize(18)
+                .build();
+        previousPreviousButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        previousPreviousButton.addActionListener(e -> {
+            counter -= (counter >= 250) ? 250 : counter;
+            refreshEntries();
+            pageDisplay.setText(String.format("%d", (int)((float)counter/25)+1));
         });
 
         JButton nextButton = new ButtonBuilder()
                 .setSize(25, 25)
                 .setForeground(BACKGROUND)
                 .setBackground(HIGHLIGHT)
-                .setText("Next")
+                .setText(">")
                 .setFontSize(18)
                 .build();
-        nextButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
+        nextButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         nextButton.addActionListener(e -> {
             counter += (counter <= flightData.size()+25) ? 25 : flightData.size()-counter;
             refreshEntries();
-            pageButton.setText(String.format("%d", (int)((float)counter/25)+1));
+            pageDisplay.setText(String.format("%d", (int)((float)counter/25)+1));
+        });
+
+        JButton nextNextButton = new ButtonBuilder()
+                .setSize(25, 25)
+                .setForeground(BACKGROUND)
+                .setBackground(HIGHLIGHT)
+                .setText(">>")
+                .setFontSize(18)
+                .build();
+        nextNextButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        nextNextButton.addActionListener(e -> {
+            counter += (counter <= flightData.size()+250) ? 250 : flightData.size()-counter;
+            refreshEntries();
+            pageDisplay.setText(String.format("%d", (int)((float)counter/25)+1));
         });
 
         JPanel buttonContainer = new JPanel();
@@ -303,11 +327,15 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(sortButton);
         buttonContainer.add(Box.createHorizontalGlue());
+        buttonContainer.add(previousPreviousButton);
+        buttonContainer.add(Box.createRigidArea(new Dimension(10, 0)));
         buttonContainer.add(previousButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
-        buttonContainer.add(pageButton);
+        buttonContainer.add(pageDisplay);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(nextButton);
+        buttonContainer.add(Box.createRigidArea(new Dimension(10, 0)));
+        buttonContainer.add(nextNextButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         this.add(buttonContainer);
 
