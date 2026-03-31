@@ -208,8 +208,8 @@ public class Histogram extends JPanel implements Runnable, Graph {
         }
         if (barValues == null || barValues.length == 0) {
             try {
-                BufferedImage image = ImageIO.read(getClass().getResource("/Images/flight-not-found.png"));
-                g2d.drawImage(image, getWidth()/2 - 550, getHeight()/2 - 300, 1100, 600, null);
+                BufferedImage image = ImageIO.read(getClass().getResource("/Images/error-message.png"));
+                g2d.drawImage(image, getWidth()/2 - 300, getHeight()/2 - 300, 600, 600, null);
             } catch (Exception e) {
                 e.printStackTrace();
             }
