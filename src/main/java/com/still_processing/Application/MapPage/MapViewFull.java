@@ -9,8 +9,7 @@ import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import java.awt.Dimension;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -34,6 +33,7 @@ public class MapViewFull extends MapView implements MouseListener {
     // mode true/false -> live/historical
     public MapViewFull(boolean mode){
         super();
+        this.setZoomControlsVisible(false);
         if (mode) {
             SwingUtilities.invokeLater(() -> {
                 this.setDisplayPosition(new Coordinate(53.3498, -6.2603), 7);
@@ -118,6 +118,7 @@ public class MapViewFull extends MapView implements MouseListener {
 
             if (marker instanceof PlaneMarker pm && markerP != null && clicked.distance(markerP) <= marker.getRadius() * 2){
 
+                boolean isSame = (this.lastSelected == pm);
                 if (this.lastSelected != null) {
                     FlightInfo tmp = LiveDataHandler.markers.get(this.lastSelected);
                     tmp.selected = false;
@@ -131,6 +132,12 @@ public class MapViewFull extends MapView implements MouseListener {
                             Settings.PLANE_RED, Settings.PLANE_CYAN);
                     this.addMapMarker(newPM);
                     LiveDataHandler.markers.put(newPM, tmp);
+                }
+
+                if (isSame) {
+                    this.lastSelected = null;
+                    LiveDataHandler.sidebarOverlay.setVisible(false); //Change this to animation
+                    return;
                 }
 
                 this.selectedInfo = LiveDataHandler.markers.get(pm);
@@ -147,9 +154,11 @@ public class MapViewFull extends MapView implements MouseListener {
                 this.addMapMarker(newPM);
                 LiveDataHandler.markers.put(newPM, this.selectedInfo);
                 this.lastSelected = newPM;
+                LiveDataHandler.sidebar.setFlightToDisplay(this.selectedInfo);
+                LiveDataHandler.sidebarOverlay.setVisible(true); //Change this to animation
 
                 this.inDatabase = true;
-
+                break;
             }
         }
     }

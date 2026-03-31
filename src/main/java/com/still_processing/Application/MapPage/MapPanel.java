@@ -1,20 +1,16 @@
 package com.still_processing.Application.MapPage;
 
-import java.awt.Dimension;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JTextPane;
+import javax.swing.*;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+import com.still_processing.DefaultSettings.Settings;
 import com.still_processing.FlightData.Database;
 import com.still_processing.FlightData.Utils.LiveDataHandler;
 import com.still_processing.UILib.ButtonBuilder;
@@ -28,6 +24,8 @@ import static com.still_processing.DefaultSettings.Settings.HIGHLIGHT;
  * @author Deea Zaharia, Ulaş İçer
  */
 public class MapPanel extends JPanel {
+
+    private static final int MARGIN = 10;
 
     public MapPanel(ActionListener sceneSwitch) {
 
@@ -85,6 +83,36 @@ public class MapPanel extends JPanel {
         LiveDataHandler.mvf = new MapViewFull(true);
 
         mapBorderLayout.add(LiveDataHandler.mvf);
+
+        MapSideOverlay mso = new MapSideOverlay();
+        JPanel glassPane = Settings.getGlassPane();
+        glassPane.setLayout(null);
+        glassPane.setOpaque(false);
+
+        glassPane.add(mso);
+        LiveDataHandler.sidebarOverlay = glassPane;
+        LiveDataHandler.sidebar = mso;
+
+        mapBorderLayout.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                repositionSidebar();
+            }
+
+            @Override
+            public void componentMoved(ComponentEvent e) {
+                repositionSidebar(); // fires if layout shifts too
+            }
+
+            private void repositionSidebar() {
+                Point p = SwingUtilities.convertPoint(mapBorderLayout, 0, 0, glassPane);
+                int w = mapBorderLayout.getWidth() - 2 * MARGIN;
+                int h = mapBorderLayout.getHeight() - 2 * MARGIN;;
+                int sidebarWidth = w / 4;
+                mso.setBounds(p.x + MARGIN, p.y + MARGIN, sidebarWidth, h);
+                glassPane.repaint();
+            }
+        });
 
         this.add(Box.createRigidArea(new Dimension(0, 10)));
         this.add(titlePanel);

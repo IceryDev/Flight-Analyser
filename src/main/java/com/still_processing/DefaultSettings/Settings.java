@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import io.github.cdimascio.dotenv.Dotenv;
 
+import javax.swing.*;
+
 /**
  * Some reuseable default settings
  * 
@@ -47,9 +49,10 @@ public class Settings {
     public static final Color LIGHT_BURGUNDY = new Color(0xFFC17676);
     public static final Color BURGUNDY = new Color(0x431928);
 
-    public static final String API_KEY = Dotenv.load().get("FLIGHT_API");
     public static final String CLIENT_SECRET = Dotenv.load().get("CLIENT_SECRET"); // For OpenSky API
     public static final String USER_NAME_OPENSKY = Dotenv.load().get("CLIENT_ID"); // For OpenSky API
+
+    private static JPanel glassPane;
 
     /**
      * Loads the font from the resouces folder
@@ -66,5 +69,14 @@ public class Settings {
             e.printStackTrace();
             return new Font("Arial", Font.PLAIN, 16);
         }
+    }
+
+    public static JPanel getGlassPane(){
+        return glassPane;
+    }
+
+    public static void setGlassPane(JPanel pane){
+        if (glassPane != null) return;
+        glassPane = pane;
     }
 }

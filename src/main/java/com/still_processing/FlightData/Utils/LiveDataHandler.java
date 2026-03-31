@@ -1,5 +1,6 @@
 package com.still_processing.FlightData.Utils;
 
+import com.still_processing.Application.MapPage.MapSideOverlay;
 import com.still_processing.Application.MapPage.MapViewFull;
 import com.still_processing.Application.MapPage.PlaneMarker;
 import com.still_processing.DefaultSettings.Settings;
@@ -35,6 +36,8 @@ public class LiveDataHandler {
     private static LinkedBlockingQueue<Runnable> eventQueue = new LinkedBlockingQueue<>();
 
     public static MapViewFull mvf;
+    public static JPanel sidebarOverlay;
+    public static MapSideOverlay sidebar;
 
     private static final SwingWorker<Void, Void> requestWorker = new SwingWorker<Void, Void>() {
         @Override
