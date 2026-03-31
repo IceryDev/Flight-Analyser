@@ -82,7 +82,7 @@ public class MapPanel extends JPanel {
         mapBorderLayout.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 
         System.setProperty("http.agent", "FlightAnalyser/1.0");
-        LiveDataHandler.mvf = new MapViewFull(true, Database.offlineFlights, this);
+        LiveDataHandler.mvf = new MapViewFull(true);
 
         mapBorderLayout.add(LiveDataHandler.mvf);
 

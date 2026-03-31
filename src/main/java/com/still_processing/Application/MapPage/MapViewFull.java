@@ -32,7 +32,7 @@ public class MapViewFull extends MapView implements MouseListener {
 
 
     // mode true/false -> live/historical
-    public MapViewFull(boolean mode, ArrayList<FlightInfo> flights, JPanel parent){
+    public MapViewFull(boolean mode){
         super();
         if (mode) {
             SwingUtilities.invokeLater(() -> {
