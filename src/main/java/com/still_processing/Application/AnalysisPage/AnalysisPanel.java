@@ -106,16 +106,16 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
 
         final int graphHeight = 900;
         float[] data = {
-                27.0f, 22.0f, 27.0f, 30.0f, 31.0f, 28.0f, 26.0f, 25.0f, 18.0f, 43.0f,
-                31.0f, 30.0f, 33.0f, 25.0f, 19.0f, 24.0f, 27.0f, 25.0f, 23.0f, 18.0f,
-                23.0f, 27.0f, 30.0f, 39.0f, 21.0f, 25.0f, 34.0f, 24.0f, 25.0f, 26.0f,
-                32.0f, 35.0f, 27.0f, 21.0f, 22.0f, 32.0f, 21.0f, 25.0f, 22.0f, 20.0f,
-                32.0f, 24.0f, 31.0f, 28.0f, 22.0f, 24.0f, 31.0f, 28.0f, 33.0f, 41.0f,
-                25.0f, 36.0f, 32.0f, 32.0f, 37.0f, 26.0f, 30.0f, 25.0f, 21.0f, 23.0f,
-                18.0f, 28.0f, 28.0f, 29.0f, 37.0f, 30.0f, 26.0f, 18.0f, 22.0f, 31.0f,
-                25.0f, 30.0f, 37.0f, 24.0f, 28.0f, 29.0f, 27.0f, 26.0f, 16.0f, 31.0f,
-                24.0f, 23.0f, 39.0f, 30.0f, 28.0f, 28.0f, 20.0f, 24.0f, 30.0f, 27.0f,
-                24.0f, 24.0f, 33.0f, 32.0f, 32.0f, 25.0f, 36.0f, 28.0f, 32.0f, 32.0f
+//                27.0f, 22.0f, 27.0f, 30.0f, 31.0f, 28.0f, 26.0f, 25.0f, 18.0f, 43.0f,
+//                31.0f, 30.0f, 33.0f, 25.0f, 19.0f, 24.0f, 27.0f, 25.0f, 23.0f, 18.0f,
+//                23.0f, 27.0f, 30.0f, 39.0f, 21.0f, 25.0f, 34.0f, 24.0f, 25.0f, 26.0f,
+//                32.0f, 35.0f, 27.0f, 21.0f, 22.0f, 32.0f, 21.0f, 25.0f, 22.0f, 20.0f,
+//                32.0f, 24.0f, 31.0f, 28.0f, 22.0f, 24.0f, 31.0f, 28.0f, 33.0f, 41.0f,
+//                25.0f, 36.0f, 32.0f, 32.0f, 37.0f, 26.0f, 30.0f, 25.0f, 21.0f, 23.0f,
+//                18.0f, 28.0f, 28.0f, 29.0f, 37.0f, 30.0f, 26.0f, 18.0f, 22.0f, 31.0f,
+//                25.0f, 30.0f, 37.0f, 24.0f, 28.0f, 29.0f, 27.0f, 26.0f, 16.0f, 31.0f,
+//                24.0f, 23.0f, 39.0f, 30.0f, 28.0f, 28.0f, 20.0f, 24.0f, 30.0f, 27.0f,
+//                24.0f, 24.0f, 33.0f, 32.0f, 32.0f, 25.0f, 36.0f, 28.0f, 32.0f, 32.0f
         };
         histogram = new Histogram(data, 5, 3);
         histogram.setPreferredSize(new Dimension(0, graphHeight));
@@ -124,49 +124,56 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
 
         float[] latenessData = Database.getLateness(Database.offlineFlights);
         latenessHistogram = new Histogram(latenessData, 240, 1000);
-        latenessHistogram.setPreferredSize(new Dimension(0, graphHeight));
-
-        Object[][] latenessStats = { { arithmeticMean(latenessData), median(latenessData), variance(latenessData),
-                standardDeviation(latenessData) } };
-
-        JScrollPane latenessStatsTable = new TableBuilder(latenessStats, columnNames)
-                .setFontSize(24)
-                .setFont(BOLD_FONT)
-                .setColumnWidth(new int[] { 100, 500, 100, 100 })
-                .buildPane();
-        latenessStatsTable.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
-        latenessStatsTable.setPreferredSize(new Dimension(Integer.MAX_VALUE, 200));
 
         JPanel latenessDisplay = new JPanel();
         latenessDisplay.setLayout(new BoxLayout(latenessDisplay, BoxLayout.Y_AXIS));
         latenessDisplay.setSize(new Dimension(700, 900));
-        latenessDisplay.add(latenessStatsTable);
+
+        if (latenessData != null){
+            latenessHistogram.setPreferredSize(new Dimension(0, graphHeight));
+
+            Object[][] latenessStats = { { arithmeticMean(latenessData), median(latenessData), variance(latenessData),
+                    standardDeviation(latenessData) } };
+
+            JScrollPane latenessStatsTable = new TableBuilder(latenessStats, columnNames)
+                    .setFontSize(24)
+                    .setFont(BOLD_FONT)
+                    .setColumnWidth(new int[] { 100, 500, 100, 100 })
+                    .buildPane();
+            latenessStatsTable.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+            latenessStatsTable.setPreferredSize(new Dimension(Integer.MAX_VALUE, 200));
+            latenessDisplay.add(latenessStatsTable);
+        }
         latenessDisplay.add(latenessHistogram);
 
         float[] distance = Database.getDistance(Database.offlineFlights);
         distanceHistogram = new Histogram(distance, 250, 200);
         distanceHistogram.setPreferredSize(new Dimension(0, graphHeight));
 
-        Object[][] distanceStats = {
-                { arithmeticMean(distance), median(distance), variance(distance), standardDeviation(distance) } };
-
-        JScrollPane distanceStatsTable = new TableBuilder(distanceStats, columnNames)
-                .setFontSize(24)
-                .setFont(BOLD_FONT)
-                .setColumnWidth(new int[] { 100, 500, 100, 100 })
-                .buildPane();
-        distanceStatsTable.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
-        distanceStatsTable.setPreferredSize(new Dimension(Integer.MAX_VALUE, 200));
-
         JPanel distanceDisplay = new JPanel();
         distanceDisplay.setLayout(new BoxLayout(distanceDisplay, BoxLayout.Y_AXIS));
         distanceDisplay.setSize(new Dimension(700, 900));
-        distanceDisplay.add(distanceStatsTable);
+
+        if (distance != null){
+            Object[][] distanceStats = {
+                    { arithmeticMean(distance), median(distance), variance(distance), standardDeviation(distance) } };
+
+            JScrollPane distanceStatsTable = new TableBuilder(distanceStats, columnNames)
+                    .setFontSize(24)
+                    .setFont(BOLD_FONT)
+                    .setColumnWidth(new int[] { 100, 500, 100, 100 })
+                    .buildPane();
+            distanceStatsTable.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+            distanceStatsTable.setPreferredSize(new Dimension(Integer.MAX_VALUE, 200));
+            distanceDisplay.add(distanceStatsTable);
+        }
         distanceDisplay.add(distanceHistogram);
-        HashMap<String, Integer> fligthOrigins = Database.getCategoricalFreq(Database.offlineFlights,
+
+
+        HashMap<String, Integer> flightOrigins = Database.getCategoricalFreq(Database.offlineFlights,
                 PropertyType.ORIGIN);
 
-        Map<String, Float> floatOriginMap = fligthOrigins.entrySet().stream()
+        Map<String, Float> floatOriginMap = flightOrigins.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
                         e -> e.getValue().floatValue()));
@@ -190,9 +197,9 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
 
         cardLayout = new CardLayout();
         graphDisplay = new JPanel(cardLayout);
-        graphDisplay.add(histogram, "poisson");
-        graphDisplay.add(latenessDisplay, "lateness");
-        graphDisplay.add(distanceDisplay, "distance");
+        graphDisplay.add(histogram, "Poisson");
+        graphDisplay.add(latenessDisplay, "Lateness");
+        graphDisplay.add(distanceDisplay, "Distance");
         graphDisplay.add(barChart, "Top 10 Airports");
         graphDisplay.add(latenessVsDistance, "ScatterPlot");
         this.add(graphDisplay);
