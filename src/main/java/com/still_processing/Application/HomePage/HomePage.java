@@ -227,15 +227,6 @@ public class HomePage extends JPanel implements Scrollable {
 
         this.add(Box.createRigidArea(new Dimension(0, 80)));
 
-        JButton analyseButton = new ButtonBuilder()
-                .setSize(25, 25)
-                .setForeground(BACKGROUND)
-                .setBackground(HIGHLIGHT)
-                .setText("Analyse")
-                .setFontSize(18)
-                .build();
-        analyseButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
-
         JButton mapButton = new ButtonBuilder()
                 .setSize(25, 25)
                 .setForeground(BACKGROUND)
@@ -254,18 +245,15 @@ public class HomePage extends JPanel implements Scrollable {
                 .build();
         searchButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
 
-        analyseButton.addActionListener(sceneSwitch);
         mapButton.addActionListener(sceneSwitch);
         searchButton.addActionListener(sceneSwitch);
 
         JPanel buttonContainer = new JPanel();
         buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.X_AXIS));
         buttonContainer.add(Box.createHorizontalGlue());
-        buttonContainer.add(analyseButton);
+        buttonContainer.add(searchButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(40, 0)));
         buttonContainer.add(mapButton);
-        buttonContainer.add(Box.createRigidArea(new Dimension(40, 0)));
-        buttonContainer.add(searchButton);
         buttonContainer.add(Box.createHorizontalGlue());
         buttonContainer.setOpaque(false);
         this.add(buttonContainer);
