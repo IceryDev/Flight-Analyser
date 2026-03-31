@@ -1,5 +1,6 @@
 package com.still_processing.UILib;
 
+import java.awt.image.BufferedImage;
 import java.util.Map;
 
 import java.awt.Dimension;
@@ -16,6 +17,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.FontMetrics;
 import java.awt.Font;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import static com.still_processing.DefaultSettings.Settings.*;
@@ -69,21 +71,22 @@ public class BarChartGraph extends JPanel implements Runnable {
                 values[i] = entry.getValue();
                 i++;
             }
+            setLayout(new BorderLayout(0, 0));
+            add(buildTopBar(), BorderLayout.NORTH);
+            // Add hover event the histogram
+            this.addMouseMotionListener(new MouseMotionAdapter() {
+                @Override
+                public void mouseMoved(MouseEvent event) {
+                    hover(event);
+                }
+            });
         }
-
-        // Add hover event the histogram
-        this.addMouseMotionListener(new MouseMotionAdapter() {
-            @Override
-            public void mouseMoved(MouseEvent event) {
-                hover(event);
-            }
-        });
         this.setPreferredSize(new Dimension(700, 450));
         this.setMinimumSize(new Dimension(300, 400));
         this.setDoubleBuffered(true);
-        setLayout(new BorderLayout(0, 0));
-        add(buildTopBar(), BorderLayout.NORTH);
         setVisible(true);
+
+
     }
 
     @Override
@@ -137,36 +140,46 @@ public class BarChartGraph extends JPanel implements Runnable {
         super.paintComponent(graphics);
         Graphics2D g2d = (Graphics2D) graphics.create();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        float max = values[0];
-        for (float value : values) {
-            max = Math.max(max, value);
+
+        if ( values != null && values.length != 0){
+            float max = values[0];
+            for (float value : values) {
+                max = Math.max(max, value);
+            }
+            int chartWidth = getWidth() - 2 * padding;
+            int chartHeight = getHeight() - 2 * padding;
+
+            int totalGaps = barGap * (values.length - 1);
+            int barWidth = (chartWidth - totalGaps) / values.length;
+            double maxValue = (values.length + 1) * yStep;
+
+            for (int i = 0; i < values.length; i++) {
+                int xPos = padding + i * (barWidth + barGap);
+                int yPos = (int) (chartHeight * values[i] / maxValue);
+                int barProgress = (int) (yPos * renderPercentage);
+                int barTop = (int) (getHeight() - padding - barProgress);
+
+                g2d.setColor(new Color(0x01796F));
+                g2d.fillRect(xPos, barTop, barWidth, barProgress);
+
+                g2d.setStroke(new BasicStroke(2));
+                g2d.setColor(new Color(0x001917));
+                g2d.drawRect(xPos, barTop, barWidth, barProgress);
+            }
+            drawAxis(g2d, max);
+            drawAxisTitles(g2d, "Category", "Value");
         }
-        int chartWidth = getWidth() - 2 * padding;
-        int chartHeight = getHeight() - 2 * padding;
-
-        int totalGaps = barGap * (values.length - 1);
-        int barWidth = (chartWidth - totalGaps) / values.length;
-        double maxValue = (values.length + 1) * yStep;
-
-        for (int i = 0; i < values.length; i++) {
-            int xPos = padding + i * (barWidth + barGap);
-            int yPos = (int) (chartHeight * values[i] / maxValue);
-            int barProgress = (int) (yPos * renderPercentage);
-            int barTop = (int) (getHeight() - padding - barProgress);
-
-            g2d.setColor(new Color(0x01796F));
-            g2d.fillRect(xPos, barTop, barWidth, barProgress);
-
-            g2d.setStroke(new BasicStroke(2));
-            g2d.setColor(new Color(0x001917));
-            g2d.drawRect(xPos, barTop, barWidth, barProgress);
-        }
-        drawAxis(g2d, max);
-        drawAxisTitles(g2d, "Category", "Value");
-
         if (showToolTip) {
             drawHoverTooltip(g2d);
             showToolTip = false;
+        }
+        if (values == null || values.length == 0) {
+            try {
+                BufferedImage image = ImageIO.read(getClass().getResource("/Images/error-message.png"));
+                g2d.drawImage(image, getWidth()/2 - 300, getHeight()/2 - 300, 600, 600, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         g2d.dispose();
     }
