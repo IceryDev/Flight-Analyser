@@ -350,43 +350,34 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         List<FlightInfo> filteredList = flightList;
         List<String> resultList;
         Filter filter = new Filter(flightList);
-        if (originAirport != null) {
-            if (originAirport.length() != 0) {
-                resultList = FuzzySearch.fuzzySearch(originAirport, airportList);
+        if (originAirport != null && originAirport.length() != 0) {
+            resultList = FuzzySearch.fuzzySearch(originAirport, airportList);
+            for (int searchAttempts = 0; searchAttempts < 10; searchAttempts++) {
+                filteredList = filter.byOriginAirport(resultList.get(searchAttempts));
 
-                for (int searchAttempts = 0; searchAttempts < 10; searchAttempts++) {
-                    filteredList = filter.byOriginAirport(resultList.get(searchAttempts));
-                    if (filteredList.size() != 0)
-                        break;
-                }
+                if (filteredList != null && filteredList.size() != 0)
+                    break;
             }
         }
 
-        if (destAirport != null) {
-            if (destAirport.length() != 0) {
-                if (filteredList.size() == 0) {
-                    filteredList = flightList;
-                }
-                resultList = FuzzySearch.fuzzySearch(destAirport, airportList);
-                filter = new Filter((ArrayList<FlightInfo>) filteredList);
-                for (int searchAttempts = 0; searchAttempts < 10; searchAttempts++) {
-                    filteredList = filter.byDestAirport(resultList.get(searchAttempts));
+        if (destAirport != null && destAirport.length() != 0) {
+            resultList = FuzzySearch.fuzzySearch(destAirport, airportList);
+            filter = new Filter((ArrayList<FlightInfo>) filteredList);
+            for (int searchAttempts = 0; searchAttempts < 10; searchAttempts++) {
+                filteredList = filter.byDestAirport(resultList.get(searchAttempts));
+
+                if (filteredList != null && filteredList.size() != 0)
                     if (filteredList.size() != 0)
                         break;
-                }
             }
         }
 
         if (startDate != null && endDate != null) {
-            if (filteredList.size() == 0) {
-                filteredList = flightList;
-            }
             filter = new Filter((ArrayList<FlightInfo>) filteredList);
             filteredList = filter.byDateRange(startDate, endDate);
         }
 
-        if (filteredList != null)
-            this.flightData = (ArrayList<FlightInfo>) filteredList;
+        this.flightData = (ArrayList<FlightInfo>) filteredList;
     }
 
     public void updateSearchBar() {
@@ -398,13 +389,15 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
 
     public void refreshEntries() {
         flightEntries.removeAll();
-        if (flightData.size() != 0) {
+        if (flightData != null && flightData.size() != 0) {
             for (int i = counter; i < (counter + 25); i++) {
                 if (counter + i >= flightData.size())
                     break;
                 flightEntries.add(new ExpandablePanel(flightData.get(i)));
             }
         }
+        flightEntries.revalidate();
+        flightEntries.repaint();
     }
 
     @Override
