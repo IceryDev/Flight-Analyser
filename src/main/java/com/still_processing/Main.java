@@ -28,8 +28,15 @@ public class Main {
             }
         }.execute();
 
-        System.setProperty("sun.java2d.uiScale", "1.0");
-        // System.setProperty("sun.java2d.opengl", "true");
+        String os = System.getProperty("os.name");
+        if (os.equals("Mac OS X")) {
+            System.setProperty("sun.java2d.uiScale", "2.0");
+        } else {
+            System.setProperty("sun.java2d.uiScale", "1.0");
+        }
+        if (os.equals("Linux")) {
+            System.setProperty("sun.java2d.opengl", "true");
+        }
         System.setProperty("awt.useSystemAAFontSettings", "on");
         System.setProperty("swing.aatext", "true");
 
