@@ -2,12 +2,18 @@ package com.still_processing.Application.MapPage;
 
 import com.still_processing.DefaultSettings.Settings;
 import com.still_processing.FlightData.FlightInfo;
+import com.still_processing.FlightData.Utils.LiveDataHandler;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class MapSideOverlay extends JPanel {
+public class MapSideOverlay extends JPanel implements Runnable{
     public final float TRANSPARENCY = 0.85f;
+    public boolean isExpanded = false;
+    public int maxWidth = 100;
+    public int renderWidth = 0;
+
+    private Thread animThread;
 
     public MapSideOverlay(){
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -24,7 +30,63 @@ public class MapSideOverlay extends JPanel {
         g.dispose();
     }
 
+    private void update() {
+        if (this.isExpanded) {
+            this.renderWidth += (this.renderWidth < this.maxWidth) ? 20 : 0;
+            this.renderWidth = Math.min(this.renderWidth, this.maxWidth);
+
+            if (this.renderWidth == this.maxWidth) {
+                this.animThread = null;
+            }
+        } else {
+            this.renderWidth -= (this.renderWidth > 0) ? 20 : 0;
+            this.renderWidth = Math.max(this.renderWidth, 0);
+
+            if (this.renderWidth == 0) {
+                this.animThread = null;
+                LiveDataHandler.sidebarOverlay.setVisible(false);
+            }
+        }
+    }
+
     public void setFlightToDisplay(FlightInfo fi){
         System.out.println("Displaying: " + fi.iataCode);
+    }
+
+    public void toggleDisplay(boolean show){
+        if (show != this.isExpanded){
+            if (show) LiveDataHandler.sidebarOverlay.setVisible(true);
+            if (this.animThread == null) {
+                this.animThread = new Thread(this);
+                this.animThread.start();
+            }
+
+            this.isExpanded = !this.isExpanded;
+        }
+    }
+
+    @Override
+    public void run() {
+        int FPS = 60;
+        double drawInterval = 1_000_000_000.0 / FPS;
+        double nextDrawTime = System.nanoTime() + drawInterval;
+
+        while (this.animThread != null) {
+            update();
+            LiveDataHandler.ca.componentMoved(null);
+
+            try {
+                double remainingTime = nextDrawTime - System.nanoTime();
+                remainingTime /= 1_000_000.0; // Converts to milliseconds
+
+                remainingTime = Math.max(remainingTime, 0);
+
+                Thread.sleep((long) remainingTime);
+                nextDrawTime += drawInterval;
+
+            } catch (InterruptedException error) {
+                error.printStackTrace();
+            }
+        }
     }
 }

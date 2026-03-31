@@ -93,7 +93,7 @@ public class MapPanel extends JPanel {
         LiveDataHandler.sidebarOverlay = glassPane;
         LiveDataHandler.sidebar = mso;
 
-        mapBorderLayout.addComponentListener(new ComponentAdapter() {
+        ComponentAdapter ca = new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 repositionSidebar();
@@ -107,12 +107,15 @@ public class MapPanel extends JPanel {
             private void repositionSidebar() {
                 Point p = SwingUtilities.convertPoint(mapBorderLayout, 0, 0, glassPane);
                 int w = mapBorderLayout.getWidth() - 2 * MARGIN;
-                int h = mapBorderLayout.getHeight() - 2 * MARGIN;;
-                int sidebarWidth = w / 4;
-                mso.setBounds(p.x + MARGIN, p.y + MARGIN, sidebarWidth, h);
+                int h = mapBorderLayout.getHeight() - 2 * MARGIN;
+                mso.maxWidth = w / 4;
+                mso.setBounds(p.x + MARGIN, p.y + MARGIN, mso.renderWidth, h);
                 glassPane.repaint();
             }
-        });
+        };
+        LiveDataHandler.ca = ca;
+
+        mapBorderLayout.addComponentListener(ca);
 
         this.add(Box.createRigidArea(new Dimension(0, 10)));
         this.add(titlePanel);

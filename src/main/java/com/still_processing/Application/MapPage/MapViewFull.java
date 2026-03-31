@@ -136,7 +136,7 @@ public class MapViewFull extends MapView implements MouseListener {
 
                 if (isSame) {
                     this.lastSelected = null;
-                    LiveDataHandler.sidebarOverlay.setVisible(false); //Change this to animation
+                    LiveDataHandler.sidebar.toggleDisplay(false);
                     return;
                 }
 
@@ -155,7 +155,7 @@ public class MapViewFull extends MapView implements MouseListener {
                 LiveDataHandler.markers.put(newPM, this.selectedInfo);
                 this.lastSelected = newPM;
                 LiveDataHandler.sidebar.setFlightToDisplay(this.selectedInfo);
-                LiveDataHandler.sidebarOverlay.setVisible(true); //Change this to animation
+                LiveDataHandler.sidebar.toggleDisplay(true);
 
                 this.inDatabase = true;
                 break;

@@ -12,6 +12,9 @@ import net.sf.geographiclib.GeodesicData;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,6 +41,7 @@ public class LiveDataHandler {
     public static MapViewFull mvf;
     public static JPanel sidebarOverlay;
     public static MapSideOverlay sidebar;
+    public static ComponentAdapter ca;
 
     private static final SwingWorker<Void, Void> requestWorker = new SwingWorker<Void, Void>() {
         @Override
