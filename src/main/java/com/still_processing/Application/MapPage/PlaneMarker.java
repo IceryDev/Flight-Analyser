@@ -13,6 +13,7 @@ import java.util.Objects;
 
 import javax.imageio.ImageIO;
 
+import com.still_processing.DefaultSettings.Settings;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.JMapViewer;
 import org.openstreetmap.gui.jmapviewer.Layer;
@@ -27,9 +28,10 @@ import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
 public class PlaneMarker implements MapMarker {
 
     private static final int BASE_ZOOM = 10;
-    private static final double SCALE_COEF = 1.5;
+    private static final double SCALE_COEF = 1;
     public BufferedImage icon = null;
     public BufferedImage selectedIcon = null;
+    public BufferedImage outline = null;
     public Coordinate coord;
     public JMapViewer jmv;
     public double rot;
@@ -41,6 +43,7 @@ public class PlaneMarker implements MapMarker {
         try {
             this.icon = ImageIO.read(Objects.requireNonNull(getClass().getResource(imagePath)));
             this.selectedIcon = ImageIO.read(Objects.requireNonNull(getClass().getResource(selectedPath)));
+            this.outline = ImageIO.read(Objects.requireNonNull(getClass().getResource(Settings.PLANE_SELECTED_CIRCLE)));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -107,10 +110,15 @@ public class PlaneMarker implements MapMarker {
         AffineTransform at = new AffineTransform();
         at.translate(position.x, position.y);
         at.rotate(Math.toRadians(this.rot));
-        at.translate((double) -size / 2, (double) -size / 2);
-        at.scale((double) size / this.icon.getWidth(), (double) size / this.icon.getHeight());
+        at.translate(-size / 2, -size / 2);
+        at.scale(size / this.icon.getWidth(), size / this.icon.getHeight());
         Graphics2D g2d = (Graphics2D) g;
-        if (this.selected) g2d.drawImage(this.selectedIcon, at, null);
+        if (this.selected) {
+            g2d.drawImage(this.selectedIcon, at, null);
+            at.translate((double) (this.icon.getWidth() - this.outline.getWidth()) /2,
+                    (double) (this.icon.getWidth() - this.outline.getWidth()) /2);
+            g2d.drawImage(this.outline, at, null);
+        }
         else g2d.drawImage(this.icon, at, null);
     }
 

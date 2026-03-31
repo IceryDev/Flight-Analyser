@@ -119,7 +119,7 @@ public class LiveDataHandler {
                 i.plane.heading = translation[2];
                 PlaneMarker tmp = new PlaneMarker(
                         new Coordinate(i.plane.latitude, i.plane.longitude), i.plane.heading, mvf,
-                        Settings.PLANE_RED, Settings.PLANE_BLACK);
+                        Settings.PLANE_RED, Settings.PLANE_CYAN);
                 if (i.selected) {
                     tmp.selected = true;
                     mvf.setLastSelected(tmp);

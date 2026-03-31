@@ -128,7 +128,7 @@ public class MapViewFull extends MapView implements MouseListener {
                             new Coordinate(tmp.plane.latitude, tmp.plane.longitude),
                             tmp.plane.heading,
                             this,
-                            Settings.PLANE_RED, Settings.PLANE_BLACK);
+                            Settings.PLANE_RED, Settings.PLANE_CYAN);
                     this.addMapMarker(newPM);
                     LiveDataHandler.markers.put(newPM, tmp);
                 }
@@ -142,7 +142,7 @@ public class MapViewFull extends MapView implements MouseListener {
                         new Coordinate(this.selectedInfo.plane.latitude, this.selectedInfo.plane.longitude),
                         this.selectedInfo.plane.heading,
                         this,
-                        Settings.PLANE_RED, Settings.PLANE_BLACK);
+                        Settings.PLANE_RED, Settings.PLANE_CYAN);
                 newPM.selected = true;
                 this.addMapMarker(newPM);
                 LiveDataHandler.markers.put(newPM, this.selectedInfo);

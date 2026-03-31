@@ -27,6 +27,8 @@ public class Settings {
     public static final String ICON_PATH = "/Images/logo.png";
     public static final String PLANE_RED = "/Images/plane-red.png";
     public static final String PLANE_BLACK = "/Images/plane-black.png";
+    public static final String PLANE_CYAN = "/Images/plane-cyan.png";
+    public static final String PLANE_SELECTED_CIRCLE = "/Images/plane-selected-circle.png";
     public static final String MAP_MARKER = "/Images/redmarker.png";
 
     public static final Color TEXT_COLOR = new Color(0x001917);
