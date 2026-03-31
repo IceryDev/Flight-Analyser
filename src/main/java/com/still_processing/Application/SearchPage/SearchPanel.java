@@ -26,7 +26,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.Scrollable;
@@ -39,10 +38,8 @@ import javax.swing.text.StyledDocument;
 import com.still_processing.FlightData.Airport;
 import com.still_processing.FlightData.Database;
 import com.still_processing.FlightData.FlightInfo;
-import com.still_processing.FlightData.Filters.FilterApplier;
+import com.still_processing.FlightData.Filters.Filter;
 import com.still_processing.FlightData.Filters.FuzzySearch;
-import com.still_processing.FlightData.Filters.impl.DestinationAirportNameFilter;
-import com.still_processing.FlightData.Filters.impl.OriginAirportNameFilter;
 import com.still_processing.UILib.ButtonBuilder;
 import com.still_processing.UILib.CalendarSettings;
 import com.still_processing.UILib.ExpandablePanel;
@@ -67,6 +64,8 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
 
     private JTextField originInput;
     private JTextField destInput;
+    private CalendarSettings startPicker;
+    private CalendarSettings endPicker;
 
     public SearchPanel(ActionListener sceneSwitch) {
 
@@ -92,6 +91,16 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         textPane.setSize(new Dimension(textWidth, textHeight));
         textPane.setMaximumSize(new Dimension(textWidth, textHeight));
 
+        JButton homeButton = new ButtonBuilder()
+                .setSize(25, 25)
+                .setForeground(BACKGROUND)
+                .setBackground(HIGHLIGHT)
+                .setText("Return Home")
+                .setFontSize(18)
+                .build();
+        homeButton.addActionListener(sceneSwitch);
+        homeButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
+
         JPanel titlePanel = new JPanel();
         titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.X_AXIS));
         titlePanel.setOpaque(false);
@@ -100,6 +109,8 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         titlePanel.add(Box.createRigidArea(new Dimension(20, 0)));
         titlePanel.add(textPane);
         titlePanel.add(Box.createHorizontalGlue());
+        titlePanel.add(homeButton);
+        titlePanel.add(Box.createRigidArea(new Dimension(20, 0)));
         this.add(titlePanel);
 
         this.add(Box.createRigidArea(new Dimension(0, 20)));
@@ -175,8 +186,8 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
             }
         });
 
-        CalendarSettings startPicker = new CalendarSettings();
-        CalendarSettings endPicker = new CalendarSettings();
+        startPicker = new CalendarSettings();
+        endPicker = new CalendarSettings();
 
         startPicker.setDate(LocalDate.now());
         endPicker.setDate(LocalDate.now());
@@ -237,15 +248,18 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         this.add(inputFieldContainer);
         this.add(Box.createRigidArea(new Dimension(0, 20)));
 
-        JButton homeButton = new ButtonBuilder()
+        JButton refineSearch = new ButtonBuilder()
                 .setSize(25, 25)
                 .setForeground(BACKGROUND)
                 .setBackground(HIGHLIGHT)
-                .setText("Return Home")
+                .setText("Refine Search")
                 .setFontSize(18)
                 .build();
-        homeButton.addActionListener(sceneSwitch);
-        homeButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
+        refineSearch.addActionListener(e -> {
+            updateSearch();
+            refreshEntries();
+        });
+        refineSearch.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
 
         JButton graphButton = new ButtonBuilder()
                 .setSize(25, 25)
@@ -297,7 +311,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         buttonContainer.setOpaque(false);
         buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.X_AXIS));
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
-        buttonContainer.add(homeButton);
+        buttonContainer.add(refineSearch);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(graphButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
@@ -315,6 +329,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         updateFlightData(Database.offlineFlights);
 
         this.add(flightEntries);
+        this.add(Box.createRigidArea(new Dimension(0, 20)));
 
         refreshEntries();
 
@@ -334,12 +349,13 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         ArrayList<FlightInfo> flightList = Database.offlineFlights;
         List<FlightInfo> filteredList = flightList;
         List<String> resultList;
-        FilterApplier filter = new FilterApplier(flightList);
+        Filter filter = new Filter(flightList);
         if (originAirport != null) {
             if (originAirport.length() != 0) {
                 resultList = FuzzySearch.fuzzySearch(originAirport, airportList);
+
                 for (int searchAttempts = 0; searchAttempts < 10; searchAttempts++) {
-                    filteredList = filter.apply(new OriginAirportNameFilter(), resultList.get(searchAttempts));
+                    filteredList = filter.byOriginAirport(resultList.get(searchAttempts));
                     if (filteredList.size() != 0)
                         break;
                 }
@@ -352,14 +368,21 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
                     filteredList = flightList;
                 }
                 resultList = FuzzySearch.fuzzySearch(destAirport, airportList);
-                filter = new FilterApplier(filteredList);
+                filter = new Filter((ArrayList<FlightInfo>) filteredList);
                 for (int searchAttempts = 0; searchAttempts < 10; searchAttempts++) {
-                    filteredList = filter.apply(new DestinationAirportNameFilter(),
-                            resultList.get(searchAttempts));
+                    filteredList = filter.byDestAirport(resultList.get(searchAttempts));
                     if (filteredList.size() != 0)
                         break;
                 }
             }
+        }
+
+        if (startDate != null && endDate != null) {
+            if (filteredList.size() == 0) {
+                filteredList = flightList;
+            }
+            filter = new Filter((ArrayList<FlightInfo>) filteredList);
+            filteredList = filter.byDateRange(startDate, endDate);
         }
 
         if (filteredList != null)
@@ -369,18 +392,19 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
     public void updateSearchBar() {
         originInput.setText(originAirport);
         destInput.setText(destAirport);
+        startPicker.setDate(startDate);
+        endPicker.setDate(endDate);
     }
 
     public void refreshEntries() {
         flightEntries.removeAll();
         if (flightData.size() != 0) {
             for (int i = counter; i < (counter + 25); i++) {
-                if (counter + i > flightData.size())
+                if (counter + i >= flightData.size())
                     break;
                 flightEntries.add(new ExpandablePanel(flightData.get(i)));
             }
         }
-        this.add(Box.createRigidArea(new Dimension(0, 20)));
     }
 
     @Override
@@ -452,5 +476,21 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
 
     public void setDestAirport(String destAirport) {
         this.destAirport = destAirport;
+    }
+
+    public LocalDate getStartDate() {
+        return this.startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return this.endDate;
+    }
+
+    public String getOriginAirport() {
+        return this.originAirport;
+    }
+
+    public String getDestAirport() {
+        return this.destAirport;
     }
 }

@@ -2,14 +2,11 @@ package com.still_processing;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 import com.still_processing.FlightData.Filters.Filter;
 import com.still_processing.FlightData.Filters.FilterApplier;
 import com.still_processing.FlightData.Filters.FuzzySearch;
-import com.still_processing.FlightData.Filters.impl.DistanceFilter;
 import com.still_processing.FlightData.Filters.impl.OriginAirportNameFilter;
 import com.still_processing.FlightData.Airport;
 import com.still_processing.FlightData.CSVHandler;
