@@ -91,6 +91,16 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         textPane.setSize(new Dimension(textWidth, textHeight));
         textPane.setMaximumSize(new Dimension(textWidth, textHeight));
 
+        JButton homeButton = new ButtonBuilder()
+                .setSize(25, 25)
+                .setForeground(BACKGROUND)
+                .setBackground(HIGHLIGHT)
+                .setText("Return Home")
+                .setFontSize(18)
+                .build();
+        homeButton.addActionListener(sceneSwitch);
+        homeButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
+
         JPanel titlePanel = new JPanel();
         titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.X_AXIS));
         titlePanel.setOpaque(false);
@@ -99,6 +109,8 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         titlePanel.add(Box.createRigidArea(new Dimension(20, 0)));
         titlePanel.add(textPane);
         titlePanel.add(Box.createHorizontalGlue());
+        titlePanel.add(homeButton);
+        titlePanel.add(Box.createRigidArea(new Dimension(20, 0)));
         this.add(titlePanel);
 
         this.add(Box.createRigidArea(new Dimension(0, 20)));
@@ -236,15 +248,18 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         this.add(inputFieldContainer);
         this.add(Box.createRigidArea(new Dimension(0, 20)));
 
-        JButton homeButton = new ButtonBuilder()
+        JButton refineSearch = new ButtonBuilder()
                 .setSize(25, 25)
                 .setForeground(BACKGROUND)
                 .setBackground(HIGHLIGHT)
-                .setText("Return Home")
+                .setText("Refine Search")
                 .setFontSize(18)
                 .build();
-        homeButton.addActionListener(sceneSwitch);
-        homeButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
+        refineSearch.addActionListener(e -> {
+            updateSearch();
+            refreshEntries();
+        });
+        refineSearch.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
 
         JButton graphButton = new ButtonBuilder()
                 .setSize(25, 25)
@@ -296,7 +311,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         buttonContainer.setOpaque(false);
         buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.X_AXIS));
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
-        buttonContainer.add(homeButton);
+        buttonContainer.add(refineSearch);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(graphButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
@@ -461,5 +476,21 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
 
     public void setDestAirport(String destAirport) {
         this.destAirport = destAirport;
+    }
+
+    public LocalDate getStartDate() {
+        return this.startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return this.endDate;
+    }
+
+    public String getOriginAirport() {
+        return this.originAirport;
+    }
+
+    public String getDestAirport() {
+        return this.destAirport;
     }
 }

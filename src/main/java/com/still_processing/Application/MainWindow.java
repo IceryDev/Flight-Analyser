@@ -85,6 +85,11 @@ public class MainWindow extends JFrame implements ActionListener {
         switch (e.getActionCommand()) {
             case "Home Page":
             case "Return Home":
+                body.setOriginAirport(search.getOriginAirport());
+                body.setDestAirport(search.getDestAirport());
+                body.setStartDate(search.getStartDate());
+                body.setEndDate(search.getEndDate());
+                body.updateSearchBar();
                 cardLayout.show(cards, "Main");
                 LiveDataHandler.stopRefresh();
                 break;

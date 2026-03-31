@@ -52,6 +52,11 @@ public class HomePage extends JPanel implements Scrollable {
     private String originAirport;
     private String destAirport;
 
+    private JTextField originInput;
+    private JTextField destInput;
+    private CalendarSettings startPicker;
+    private CalendarSettings endPicker;
+
     public HomePage(ActionListener sceneSwitch) {
         System.out.println("=== Home Page ===");
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -96,7 +101,7 @@ public class HomePage extends JPanel implements Scrollable {
         originInputContainer.setMinimumSize(inputFieldSize);
         originInputContainer.setBackground(LIME);
 
-        JTextField originInput = new InputFieldBuilder()
+        originInput = new InputFieldBuilder()
                 .setFont(REGULAR_FONT)
                 .setForeground(HIGHLIGHT)
                 .build();
@@ -131,7 +136,7 @@ public class HomePage extends JPanel implements Scrollable {
         destInputContainer.setMinimumSize(inputFieldSize);
         destInputContainer.setBackground(LIME);
 
-        JTextField destInput = new InputFieldBuilder()
+        destInput = new InputFieldBuilder()
                 .setFont(REGULAR_FONT)
                 .setForeground(HIGHLIGHT)
                 .build();
@@ -159,8 +164,8 @@ public class HomePage extends JPanel implements Scrollable {
             }
         });
 
-        CalendarSettings startPicker = new CalendarSettings();
-        CalendarSettings endPicker = new CalendarSettings();
+        startPicker = new CalendarSettings();
+        endPicker = new CalendarSettings();
 
         startPicker.setDate(LocalDate.now());
         endPicker.setDate(LocalDate.now());
@@ -266,6 +271,13 @@ public class HomePage extends JPanel implements Scrollable {
         this.add(buttonContainer);
     }
 
+    public void updateSearchBar() {
+        originInput.setText(originAirport);
+        destInput.setText(destAirport);
+        startPicker.setDate(startDate);
+        endPicker.setDate(endDate);
+    }
+
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
@@ -295,6 +307,22 @@ public class HomePage extends JPanel implements Scrollable {
     @Override
     public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
         return 32;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setOriginAirport(String originAirport) {
+        this.originAirport = originAirport;
+    }
+
+    public void setDestAirport(String destAirport) {
+        this.destAirport = destAirport;
     }
 
     public LocalDate getStartDate() {
