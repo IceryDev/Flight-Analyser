@@ -41,6 +41,15 @@ import static com.still_processing.DefaultSettings.Settings.*;
  * @author Deea Zaharia (Jagoda Koczwara-Szuba)
  */
 
+/**
+ * Add error handling
+ * Add error handling to stop the program from crashing when the data is null
+ * If data is null, then the graph is not added to the drop-down
+ * If all the graph data is null, then an error image will be shown
+ *
+ * @author Jessica Chen
+ */
+
 public class AnalysisPanel extends JPanel implements Scrollable, ActionListener {
     JPanel graphDisplay;
     Histogram latenessHistogram;
