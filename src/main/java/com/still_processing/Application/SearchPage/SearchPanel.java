@@ -304,7 +304,8 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
                 .build();
         nextButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         nextButton.addActionListener(e -> {
-            counter += (counter + 25 <= flightData.size()) ? 25 : 0;
+            if (flightData != null)
+                counter += (counter + 25 <= flightData.size()) ? 25 : 0;
             refreshEntries();
         });
 
@@ -342,7 +343,6 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
     public void updateFlightData(ArrayList<FlightInfo> flightData) {
         if (flightData != null) {
             this.flightData = flightData;
-            System.out.println(this.flightData.size());
         }
     }
 
@@ -405,7 +405,6 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "Sort By Lateness":
-                System.out.println("Doing some rigorous sorting!!!");
                 flightData.sort((FlightInfo a, FlightInfo b) -> Float.compare(a.lateness, b.lateness));
                 if (!sortOrderAscend) {
                     Collections.reverse(flightData);
