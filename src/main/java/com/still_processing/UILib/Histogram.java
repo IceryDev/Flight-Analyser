@@ -46,7 +46,7 @@ public class Histogram extends JPanel implements Runnable, Graph {
     private float labelFontSize = 12;
     private int fontWeight = 5;
     private int barOutlineWidth = 2;
-    private int padding = 200;
+    private int padding = 100;
     private String xLengendText = "X axis";
     private String yLengendText = "Y axis";
     private int toolTipPadding = 10;
@@ -227,7 +227,7 @@ public class Histogram extends JPanel implements Runnable, Graph {
             AffineTransform original = g2d.getTransform();
             g2d.rotate(Math.toRadians(-90));
             g2d.setFont(legendFont.deriveFont(legendFontSize));
-            g2d.drawString(yLengendText, -getHeight() / 2, padding / 2);
+            g2d.drawString(yLengendText, -getHeight() / 2, padding / 4);
             g2d.setTransform(original);
 
             int maxYIndex = barMaxValue / yStep + 1;
