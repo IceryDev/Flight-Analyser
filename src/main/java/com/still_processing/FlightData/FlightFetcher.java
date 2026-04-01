@@ -9,18 +9,21 @@ import com.still_processing.FlightData.Requests.RateLimitException;
 import com.still_processing.FlightData.Requests.RequestFailedException;
 import com.still_processing.FlightData.Utils.LiveDataHandler;
 
+import javax.imageio.ImageIO;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLParameters;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
+import java.net.*;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ExecutorService;
+import java.util.Optional;
+import java.util.concurrent.*;
 
 /**
  * Fetches live OpenSky flight data, enriches the data with local database elements and
@@ -35,6 +38,7 @@ public class FlightFetcher {
     private static final String OAUTH_URL =
             "https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token";
     private static final String GET_ROUTE_URL = "https://hexdb.io/api/v1/route/iata/";
+    private static final String GET_IMAGE_URL = "https://hexdb.io/hex-image-thumb?hex=";
 
     // Data Processing
     private static final String AIRLINE_FILE_PATH = "/airlines.json";
@@ -44,6 +48,7 @@ public class FlightFetcher {
     private static final int THREAD_COUNT = 5;
 
     private static AuthenticatedRequest aRequest;
+    private static HttpClient imageClient;
 
     public static boolean fetchActive = false;
 
@@ -199,10 +204,12 @@ public class FlightFetcher {
                         // End of instance
                 }
                 CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+                System.out.println(processed.size() + ":");
                 processed.removeIf(info ->
                         info.iataCode == null || info.iataCode.isBlank() || info.origin == null || info.dest == null
                 );
                 LiveDataHandler.addToQueue(() -> Database.flights.addAll(processed));
+                System.out.println(processed.size());
                 Thread.sleep(1000);
                 // End of batch
             }
@@ -310,6 +317,35 @@ public class FlightFetcher {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static BufferedImage fetchAircraftImage(String hex) {
+        try {
+            String url = GET_IMAGE_URL + hex;
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .GET()
+                    .build();
+            if (imageClient == null){
+                imageClient = HttpClient.newBuilder()
+                        .version(HttpClient.Version.HTTP_1_1)
+                        .build();
+            }
+
+            CompletableFuture<HttpResponse<String>> future = imageClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = future.join();
+
+            System.out.println(response.body());
+            if (response.body().equals("n/a") || response.body().isEmpty()){
+                return null;
+            }
+            return ImageIO.read(URI.create(response.body()).toURL());
+        }
+        catch (IOException e){
+            // Return default image
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public static void main(String[] args) throws InterruptedException {

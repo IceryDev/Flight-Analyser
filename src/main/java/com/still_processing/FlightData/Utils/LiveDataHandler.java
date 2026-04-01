@@ -12,6 +12,7 @@ import net.sf.geographiclib.GeodesicData;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 
 import javax.swing.*;
+import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;

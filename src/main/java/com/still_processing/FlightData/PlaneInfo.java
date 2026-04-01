@@ -2,7 +2,7 @@ package com.still_processing.FlightData;
 
 public class PlaneInfo {
 
-    String icao24;
+    public String icao24;
     String callSign;
     String country;
     long lastContact;
