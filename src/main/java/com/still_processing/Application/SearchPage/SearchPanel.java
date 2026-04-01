@@ -1,18 +1,6 @@
 package com.still_processing.Application.SearchPage;
 
-import static com.still_processing.DefaultSettings.Settings.BACKGROUND;
-import static com.still_processing.DefaultSettings.Settings.BOLD_FONT;
-import static com.still_processing.DefaultSettings.Settings.HIGHLIGHT;
-import static com.still_processing.DefaultSettings.Settings.HIGHLIGHT_20;
-import static com.still_processing.DefaultSettings.Settings.LIME;
-import static com.still_processing.DefaultSettings.Settings.REGULAR_FONT;
-
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
@@ -47,6 +35,8 @@ import com.still_processing.UILib.ImagePanel;
 import com.still_processing.UILib.InputFieldBuilder;
 import com.still_processing.UILib.TextPaneBuilder;
 
+import static com.still_processing.DefaultSettings.Settings.*;
+
 /**
  * @author Deea Zaharia, Jagoda Koczwara-Szuba
  */
@@ -61,6 +51,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
     private String destAirport;
     private boolean sortOrderAscend = true;
     private ArrayList<String> airportList = new ArrayList<>();
+    private boolean liveData = false;
 
     private JTextField originInput;
     private JTextField destInput;
@@ -312,11 +303,16 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         JButton liveDataButton = new ButtonBuilder()
                 .setSize(25, 25)
                 .setForeground(BACKGROUND)
-                .setBackground(HIGHLIGHT)
-                .setText("Live")
+                .setBackground(LIVE_BUTTON_COLOR)
+                .setText("LIVE")
                 .setFontSize(18)
                 .build();
         liveDataButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
+        liveDataButton.addActionListener(e -> {
+            liveData = !liveData;
+            if (liveData) liveDataButton.setBackground(GRAY);
+            else liveDataButton.setBackground(LIVE_BUTTON_COLOR);
+        });
 
         JPanel buttonContainer = new JPanel();
         buttonContainer.setOpaque(false);
