@@ -39,6 +39,7 @@ public class FlightFetcher {
             "https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token";
     private static final String GET_ROUTE_URL = "https://hexdb.io/api/v1/route/iata/";
     private static final String GET_IMAGE_URL = "https://hexdb.io/hex-image-thumb?hex=";
+    private static final String GET_ICON_URL = "https://api.airhex.com/v1/logos?codes=";
 
     // Data Processing
     private static final String AIRLINE_FILE_PATH = "/airlines.json";
@@ -204,12 +205,10 @@ public class FlightFetcher {
                         // End of instance
                 }
                 CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
-                System.out.println(processed.size() + ":");
                 processed.removeIf(info ->
                         info.iataCode == null || info.iataCode.isBlank() || info.origin == null || info.dest == null
                 );
                 LiveDataHandler.addToQueue(() -> Database.flights.addAll(processed));
-                System.out.println(processed.size());
                 Thread.sleep(1000);
                 // End of batch
             }
