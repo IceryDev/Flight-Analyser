@@ -21,13 +21,6 @@ import com.still_processing.Application.HomePage.HomePage;
 import com.still_processing.Application.MapPage.MapPanel;
 import com.still_processing.Application.SearchPage.SearchPanel;
 import com.still_processing.DefaultSettings.Settings;
-import com.still_processing.FlightData.Airport;
-import com.still_processing.FlightData.Database;
-import com.still_processing.FlightData.FlightInfo;
-import com.still_processing.FlightData.Filters.FilterApplier;
-import com.still_processing.FlightData.Filters.FuzzySearch;
-import com.still_processing.FlightData.Filters.impl.OriginAirportNameFilter;
-import com.still_processing.FlightData.Filters.impl.DestinationAirportNameFilter;
 import com.still_processing.FlightData.Utils.LiveDataHandler;
 import com.still_processing.UILib.ScrollPaneFactory;
 
@@ -45,8 +38,6 @@ public class MainWindow extends JFrame implements ActionListener {
     private JScrollPane scrollPaneHome;
     private JScrollPane scrollPaneSearch;
     private JScrollPane scrollPaneAnalyse;
-    private JScrollPane scrollPaneMap;
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     public MainWindow() {
         ImageIcon image = new ImageIcon(getClass().getResource("/Images/logo.png"));
@@ -97,6 +88,11 @@ public class MainWindow extends JFrame implements ActionListener {
         switch (e.getActionCommand()) {
             case "Home Page":
             case "Return Home":
+                body.setOriginAirport(search.getOriginAirport());
+                body.setDestAirport(search.getDestAirport());
+                body.setStartDate(search.getStartDate());
+                body.setEndDate(search.getEndDate());
+                body.updateSearchBar();
                 cardLayout.show(cards, "Main");
                 LiveDataHandler.stopRefresh();
                 break;

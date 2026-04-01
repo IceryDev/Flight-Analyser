@@ -31,7 +31,7 @@ import static com.still_processing.DefaultSettings.Settings.*;
  */
 public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
     private final int FPS = 60;
-    private Thread expandableThread;
+    private volatile Thread expandableThread;
 
     private JPanel defaultDisplay;
     private JPanel expandedDisplay;
@@ -62,19 +62,19 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
     private final String SCH_ARR_TITLE_TEXT = "Scheduled Arrival Time:";
     private final String ACT_ARR_TITLE_TEXT = "Actual Arrival Time:";
 
-    private String flightNumberText = "RYR123";
-    private String depTime = "10:10";
-    private String arrTime = "12:20";
-    private String tripDuration = "2h10m";
-    private String originIATA = "DUB";
-    private String destIATA = "LHR";
-    private String latenessText = "10m";
-    private String flightDateText = "1 January 2022";
-    private String schDepTimeText = "10:00";
-    private String actDepTimeText = "10:10";
-    private String flightCanceledText = "False";
-    private String schArrTimeText = "12:00";
-    private String actArrTimeText = "12:22";
+    private String flightNumberText;
+    private String depTime;
+    private String arrTime;
+    private String tripDuration;
+    private String originIATA;
+    private String destIATA;
+    private String latenessText;
+    private String flightDateText;
+    private String schDepTimeText;
+    private String actDepTimeText;
+    private String flightCanceledText;
+    private String schArrTimeText;
+    private String actArrTimeText;
 
     private String originName;
     private String destName;
@@ -425,6 +425,8 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
         expandedDisplay.add(Box.createHorizontalGlue());
         expandedDisplay.add(mapFrame);
         expandedDisplay.add(Box.createRigidArea(new Dimension(20, 0)));
+
+        expandedDisplay.setPreferredSize(new Dimension(Integer.MAX_VALUE, renderHeight));
         this.add(expandedDisplay);
 
     }
@@ -444,7 +446,6 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
             this.map = MapHandler.getInfoMap(this.fInfo);
             this.mapContainer.add(this.map);
         }
-        // repaint();
     }
 
     @Override
@@ -498,13 +499,16 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
                 expandableThread = null;
             }
         }
+
+        expandedDisplay.setPreferredSize(new Dimension(Integer.MAX_VALUE, renderHeight));
+        expandedDisplay.revalidate();
+        toggleButton.repaint();
+        toggleButton.revalidate();
     }
 
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
-        expandedDisplay.setPreferredSize(new Dimension(Integer.MAX_VALUE, renderHeight));
-        toggleButton.repaint();
 
         Graphics2D g2d = (Graphics2D) graphics;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -514,9 +518,6 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
         g2d.fillRoundRect(padding, padding, getWidth() - 2 * padding, getHeight() - padding,
                 borderRadius,
                 borderRadius);
-
-        toggleButton.revalidate();
-        revalidate();
     }
 
     @Override
