@@ -108,6 +108,7 @@ public class MainWindow extends JFrame implements ActionListener {
             case "Analyse":
             case "View Graph":
                 cardLayout.show(cards, "Analyse");
+                analyse.refreshGraph();
                 analyse.startRender();
                 break;
             case "Map View":

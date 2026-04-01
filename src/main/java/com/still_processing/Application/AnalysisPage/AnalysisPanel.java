@@ -74,7 +74,8 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         textPane.setSize(new Dimension(textWidth, textHeight));
         textPane.setMaximumSize(new Dimension(textWidth, textHeight));
 
-        String[] graphOptions = { "--Select Option--", "poisson", "lateness", "distance", "Top 10 Airports", "ScatterPlot" };
+        String[] graphOptions = { "--Select Option--", "poisson", "lateness", "distance", "Top 10 Airports",
+                "ScatterPlot" };
         JComboBox<String> dropDown = new DropdownBuilder(graphOptions)
                 .setFontSize(18)
                 .build();
@@ -104,6 +105,20 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         titlePanel.add(Box.createRigidArea(new Dimension(20, 0)));
         this.add(titlePanel);
 
+        renderGraph();
+        this.add(graphDisplay);
+    }
+
+    public void refreshGraph() {
+        graphDisplay.removeAll();
+        this.remove(graphDisplay);
+        renderGraph();
+        this.add(graphDisplay);
+        revalidate();
+        repaint();
+    }
+
+    public void renderGraph() {
         final int graphHeight = 900;
         float[] data = {
                 27.0f, 22.0f, 27.0f, 30.0f, 31.0f, 28.0f, 26.0f, 25.0f, 18.0f, 43.0f,
@@ -122,20 +137,27 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
 
         String[] columnNames = { "Mean", "Median", "Variance", "SD" };
 
-        float[] latenessData = Database.getLateness(Database.offlineFlights);
-        latenessHistogram = new Histogram(latenessData, 240, 1000);
+        float[] latenessData = Database.getLateness(Database.flightData);
+        float maxLateness = 0;
+        for (float dataPoint : latenessData) {
+            maxLateness = (maxLateness > dataPoint) ? maxLateness : dataPoint;
+        }
+        latenessHistogram = new Histogram(latenessData, (maxLateness > 500) ? 250 : 50, latenessData.length / 10);
+        latenessHistogram.setXLengendText("Lateness (in minutes)");
+        latenessHistogram.setYLengendText("Number of Flights");
         latenessHistogram.setPreferredSize(new Dimension(0, graphHeight));
 
         Object[][] latenessStats = { { arithmeticMean(latenessData), median(latenessData), variance(latenessData),
                 standardDeviation(latenessData) } };
 
         JScrollPane latenessStatsTable = new TableBuilder(latenessStats, columnNames)
-                .setFontSize(24)
+                .setFontSize(14)
                 .setFont(BOLD_FONT)
                 .setColumnWidth(new int[] { 100, 500, 100, 100 })
                 .buildPane();
-        latenessStatsTable.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
-        latenessStatsTable.setPreferredSize(new Dimension(Integer.MAX_VALUE, 200));
+        latenessStatsTable.setBorder(BorderFactory.createEmptyBorder(50, 50, 0, 50));
+        latenessStatsTable.setMinimumSize(new Dimension(Integer.MAX_VALUE, 200));
+        latenessStatsTable.setPreferredSize(new Dimension(Integer.MAX_VALUE, 150));
 
         JPanel latenessDisplay = new JPanel();
         latenessDisplay.setLayout(new BoxLayout(latenessDisplay, BoxLayout.Y_AXIS));
@@ -143,7 +165,7 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         latenessDisplay.add(latenessStatsTable);
         latenessDisplay.add(latenessHistogram);
 
-        float[] distance = Database.getDistance(Database.offlineFlights);
+        float[] distance = Database.getDistance(Database.flightData);
         distanceHistogram = new Histogram(distance, 250, 200);
         distanceHistogram.setPreferredSize(new Dimension(0, graphHeight));
 
@@ -151,12 +173,13 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
                 { arithmeticMean(distance), median(distance), variance(distance), standardDeviation(distance) } };
 
         JScrollPane distanceStatsTable = new TableBuilder(distanceStats, columnNames)
-                .setFontSize(24)
+                .setFontSize(14)
                 .setFont(BOLD_FONT)
                 .setColumnWidth(new int[] { 100, 500, 100, 100 })
                 .buildPane();
-        distanceStatsTable.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
-        distanceStatsTable.setPreferredSize(new Dimension(Integer.MAX_VALUE, 200));
+        distanceStatsTable.setBorder(BorderFactory.createEmptyBorder(50, 50, 0, 50));
+        distanceStatsTable.setMinimumSize(new Dimension(Integer.MAX_VALUE, 200));
+        distanceStatsTable.setPreferredSize(new Dimension(Integer.MAX_VALUE, 150));
 
         JPanel distanceDisplay = new JPanel();
         distanceDisplay.setLayout(new BoxLayout(distanceDisplay, BoxLayout.Y_AXIS));
@@ -185,7 +208,7 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         barChart.setYStep(50);
 
         latenessVsDistance = new ScatterPlot(
-                Database.getScatterPlot(Database.offlineFlights, PropertyType.LATENESS, PropertyType.DISTANCE),
+                Database.getScatterPlot(Database.flightData, PropertyType.LATENESS, PropertyType.DISTANCE),
                 "Test");
 
         cardLayout = new CardLayout();
@@ -195,10 +218,10 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         graphDisplay.add(distanceDisplay, "distance");
         graphDisplay.add(barChart, "Top 10 Airports");
         graphDisplay.add(latenessVsDistance, "ScatterPlot");
-        this.add(graphDisplay);
     }
 
     public void startRender() {
+        System.out.println("Animate");
         histogram.animate();
         latenessHistogram.animate();
         distanceHistogram.animate();
