@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -49,11 +50,13 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
     private String destAirport;
     private boolean sortOrderAscend = true;
     private ArrayList<String> airportList = new ArrayList<>();
+    private ImagePanel notFoundImage;
 
     private JTextField originInput;
     private JTextField destInput;
     private CalendarSettings startPicker;
     private CalendarSettings endPicker;
+    boolean isFound = true;
 
     public SearchPanel(ActionListener sceneSwitch) {
 
@@ -315,6 +318,8 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
 
         flightEntries = new JPanel();
         flightEntries.setLayout(new BoxLayout(flightEntries, BoxLayout.Y_AXIS));
+        notFoundImage = new ImagePanel("/Images/not-found-page.png", 900, 500);
+        this.add(notFoundImage);
 
         updateFlightData(Database.offlineFlights);
 
@@ -367,8 +372,11 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         }
 
         this.flightData = (ArrayList<FlightInfo>) filteredList;
-    }
 
+        this.isFound = (!(filteredList == null || filteredList.isEmpty()));
+        this.refreshEntries();
+
+    }
 
 
 
@@ -391,8 +399,11 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
                 flightEntries.add(new ExpandablePanel(flightData.get(i)));
             }
         }
+        notFoundImage.setVisible(!this.isFound);
         flightEntries.revalidate();
         flightEntries.repaint();
+        this.revalidate();
+        this.repaint();
     }
 
     @Override
