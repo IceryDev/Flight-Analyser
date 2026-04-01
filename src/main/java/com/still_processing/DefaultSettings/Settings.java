@@ -36,6 +36,7 @@ public class Settings {
     public static final Color HIGHLIGHT_90 = new Color(1, 121, 111, 90);
     public static final Color GRAY = new Color(0xaaaaaa);
     public static final Color LABEL_COLOR = new Color(0x3A3939);
+    public static final Color LIVE_BUTTON_COLOR = new Color(0x800000);
 
     public static final Color LIME = new Color(0xd2e0de);
     public static final Color LIGHT_BLUE = new Color(0x4ECDC4);
