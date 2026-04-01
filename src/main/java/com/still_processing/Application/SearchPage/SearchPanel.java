@@ -309,6 +309,15 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
             refreshEntries();
         });
 
+        JButton liveDataButton = new ButtonBuilder()
+                .setSize(25, 25)
+                .setForeground(BACKGROUND)
+                .setBackground(HIGHLIGHT)
+                .setText("Live")
+                .setFontSize(18)
+                .build();
+        liveDataButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
+
         JPanel buttonContainer = new JPanel();
         buttonContainer.setOpaque(false);
         buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.X_AXIS));
@@ -318,6 +327,8 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         buttonContainer.add(graphButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(sortButton);
+        buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
+        buttonContainer.add(liveDataButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(previousButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
