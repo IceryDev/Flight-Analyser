@@ -6,13 +6,9 @@ import static com.still_processing.DefaultSettings.Settings.HIGHLIGHT;
 import static com.still_processing.DefaultSettings.Settings.HIGHLIGHT_20;
 import static com.still_processing.DefaultSettings.Settings.LIME;
 import static com.still_processing.DefaultSettings.Settings.REGULAR_FONT;
+import static javax.swing.SwingConstants.CENTER;
 
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
@@ -20,16 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.Scrollable;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.SimpleAttributeSet;
@@ -362,8 +349,14 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
             }
         }
 
-        if (filteredList != null)
+        if (filteredList != null) {
             this.flightData = (ArrayList<FlightInfo>) filteredList;
+        }
+
+
+    }
+
+    private void add(Image image) {
     }
 
     public void updateSearchBar() {
@@ -373,6 +366,8 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
 
     public void refreshEntries() {
         flightEntries.removeAll();
+        ArrayList<FlightInfo> flightList = Database.offlineFlights;
+        List<FlightInfo> filteredList = flightList;
         if (flightData.size() != 0) {
             for (int i = counter; i < (counter + 25); i++) {
                 if (counter + i > flightData.size())
@@ -381,6 +376,15 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
             }
         }
         this.add(Box.createRigidArea(new Dimension(0, 20)));
+
+        if(filteredList.size() == 0){
+            ImageIcon image = new ImageIcon(getClass().getResource("/Images/not-found-page.png"));
+            Image scaledImg = image.getImage().getScaledInstance(900, 500, Image.SCALE_SMOOTH);
+            JLabel notFound = new JLabel(new ImageIcon(scaledImg));
+            notFound.setHorizontalAlignment(CENTER);
+            notFound.setVerticalAlignment(CENTER);
+            this.add(notFound, BorderLayout.CENTER);
+        }
     }
 
     @Override
