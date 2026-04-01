@@ -15,6 +15,8 @@ public class CSVHandler {
     static final String CSV_SPLIT_REGEX = ",(?=[\",\\d-]|$)(?<=[\",\\d-])";
 
     static final int MIN_IN_HRS = 60;
+    static final int MIN_IN_DAY = 1440;
+    static final int MIN_THRESHOLD = -1000;
     static final String TIME_DELIMITER = ":";
 
     /**
@@ -167,7 +169,7 @@ public class CSVHandler {
                 }
 
                 tmp.lateness = (tmp.cancelled) ? 0
-                        : formattedTimeToMinutes(tmp.depTime) - formattedTimeToMinutes(tmp.CRSDepTime);
+                        : getLateness(formattedTimeToMinutes(tmp.CRSDepTime), formattedTimeToMinutes(tmp.depTime));
 
                 tmp.origin = Database.airports.get(originTmp.iataCode);
                 tmp.dest = Database.airports.get(destTmp.iataCode);
@@ -214,6 +216,19 @@ public class CSVHandler {
         time = String.format("%02d:%02d", Integer.parseInt(time.substring(0, time.length() - 2)),
                 Integer.parseInt(time.substring(time.length() - 2)));
         return time;
+    }
+
+    /**
+     * Returns the lateness value, and checks if there is error due to flight
+     * being overnight and fixes it.
+     *
+     * @param scheduled Scheduled departure time, in minutes from start of day.
+     * @param actual Actual departure time, in minutes from start of day.
+     * @return Lateness in minutes.
+     */
+    private static int getLateness(int scheduled, int actual){
+        int gap = actual-scheduled;
+        return (gap < MIN_THRESHOLD) ? MIN_IN_DAY + gap : gap;
     }
 
     // For testing
