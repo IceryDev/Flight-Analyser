@@ -263,6 +263,7 @@ public class FlightFetcher {
                     tmp = selected;
                 }
             }
+            tmp.isLive = true;
             if (tmp.plane.callSign.length() > 3){
                 String airlineIcao = tmp.plane.callSign.trim().substring(0, 3);
                 if(Database.airlineIcaoToIata.containsKey(airlineIcao)){
@@ -318,6 +319,13 @@ public class FlightFetcher {
         }
     }
 
+    /**
+     * Fetch aircraft image from hexdb.io.
+     * @param hex The icao24 code for the plane.
+     * @return {@code BufferedImage} of the aircraft, if not found, returns not found image.
+     *
+     * @author Ulaş İçer
+     */
     public static BufferedImage fetchAircraftImage(String hex) {
         try {
             String url = GET_IMAGE_URL + hex;
@@ -334,9 +342,8 @@ public class FlightFetcher {
             CompletableFuture<HttpResponse<String>> future = imageClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
             HttpResponse<String> response = future.join();
 
-            System.out.println(response.body());
             if (response.body().equals("n/a") || response.body().isEmpty()){
-                return null;
+                return ImageIO.read(Objects.requireNonNull(FlightFetcher.class.getResource(Settings.NOT_FOUND_PLANE)));
             }
             return ImageIO.read(URI.create(response.body()).toURL());
         }

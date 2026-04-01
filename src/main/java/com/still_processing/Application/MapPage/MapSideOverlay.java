@@ -12,8 +12,13 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * The sidebar within the live map. Contains flight specific information.
+ *
+ * @author Ulaş İçer
+ */
 public class MapSideOverlay extends JPanel implements Runnable{
-    public final float TRANSPARENCY = 0.85f;
+    public final float TRANSPARENCY = 0.65f;
     public final int MARGIN = 15;
     public boolean isExpanded = false;
     public int maxWidth = 100;
@@ -40,12 +45,17 @@ public class MapSideOverlay extends JPanel implements Runnable{
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
+        int w = getWidth();
+        int h = getHeight();
+
+
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, TRANSPARENCY));
         g2d.setColor(Settings.TEXT_COLOR);
-        g2d.fillRect(0, 0, getWidth(), getHeight());
+        g2d.fillRect(0, 0, w, h);
 
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1));
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         int cumulativeY = MARGIN*2;
-        int w = getWidth();
         FlightInfo tmpInfo = mvf.getSelectedInfo();
         g2d.setColor(Settings.BACKGROUND);
         g2d.setFont(Settings.REGULAR_FONT.deriveFont(18f));
@@ -64,6 +74,8 @@ public class MapSideOverlay extends JPanel implements Runnable{
 
         cumulativeY += (int) (textHeight*1.5);
         g2d.drawString(String.format("%s (%s)", tmpInfo.origin.name, tmpInfo.origin.iataCode), MARGIN, cumulativeY);
+        cumulativeY += (int) (textHeight*1.5);
+        g2d.drawString(String.format("%s (%s)", tmpInfo.origin.municipality, tmpInfo.origin.country), MARGIN, cumulativeY);
 
         if (this.planeMarker != null){
             g2d.drawImage(this.planeMarker, w/2-15, cumulativeY + (5*MARGIN-textHeight)/2, 30, 30, null);
@@ -74,6 +86,9 @@ public class MapSideOverlay extends JPanel implements Runnable{
 
         cumulativeY += (int) (textHeight*1.5);
         g2d.drawString(String.format("%s (%s)", tmpInfo.dest.name, tmpInfo.dest.iataCode), MARGIN, cumulativeY);
+
+        cumulativeY += (int) (textHeight*1.5);
+        g2d.drawString(String.format("%s (%s)", tmpInfo.dest.municipality, tmpInfo.dest.country), MARGIN, cumulativeY);
 
         if (this.airlineLogo != null){
             cumulativeY += 3*MARGIN;
@@ -87,6 +102,9 @@ public class MapSideOverlay extends JPanel implements Runnable{
         cumulativeY += (int) (textHeight*1.5);
         g2d.drawString(String.format("%s (%s)", tmpInfo.airline, tmpInfo.iataCode.toUpperCase()), MARGIN, cumulativeY);
 
+        cumulativeY += (int) (textHeight*1.5);
+        g2d.drawString(String.format("%s", tmpInfo.plane.country), MARGIN, cumulativeY);
+
         cumulativeY += textHeight/2 + MARGIN;
         g2d.drawLine(MARGIN, cumulativeY, w-MARGIN, cumulativeY);
         g2d.drawLine(w/2, cumulativeY, w/2, cumulativeY + 10*MARGIN);
@@ -98,6 +116,9 @@ public class MapSideOverlay extends JPanel implements Runnable{
         cumulativeY += (int) (textHeight*2);
         g2d.drawString(String.format("Longitude: %.2f", tmpInfo.plane.longitude), MARGIN, cumulativeY);
         g2d.drawString(String.format("Vel: %.2f m/s", tmpInfo.plane.velocity), w/2 + MARGIN, cumulativeY);
+
+        cumulativeY += (int) (textHeight*2);
+        g2d.drawString(String.format("Altitude: %.2f m", tmpInfo.plane.altitude), MARGIN, cumulativeY);
 
         g2d.dispose();
         super.paintComponent(g);
@@ -125,14 +146,13 @@ public class MapSideOverlay extends JPanel implements Runnable{
 
     public void setFlightToDisplay(FlightInfo fi){
         if (fi != null && fi.plane != null){
-            System.out.println(fi.plane.icao24);
             BufferedImage tmp = FlightFetcher.fetchAircraftImage(fi.plane.icao24);
             if (tmp != null){
                 this.aircraftPanel = tmp;
             }
         }
-        this.revalidate();
-        this.repaint();
+        LiveDataHandler.sidebarOverlay.revalidate();
+        LiveDataHandler.sidebarOverlay.repaint();
     }
 
     public void toggleDisplay(boolean show){

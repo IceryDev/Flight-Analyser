@@ -29,6 +29,8 @@ public class MapViewFull extends MapView implements MouseListener {
     private PlaneMarker lastSelected;
     public boolean inDatabase = true;
 
+    public boolean updateMap = false;
+
 
     // mode true/false -> live/historical
     public MapViewFull(boolean mode){
@@ -60,6 +62,7 @@ public class MapViewFull extends MapView implements MouseListener {
 
     @Override
     public void moveMap(int x, int y) {
+        if (this.updateMap) { return; }
         super.moveMap(x, y);
         confineLatitude(getZoom());
     }
@@ -109,6 +112,12 @@ public class MapViewFull extends MapView implements MouseListener {
         this.selectedInfo = selectedInfo;
     }
 
+    /**
+     * Switches between flights on the live map.
+     * @param e the event to be processed
+     *
+     * @author Ulaş İçer
+     */
     @Override
     public void mouseClicked(MouseEvent e) {
         Point clicked = e.getPoint();

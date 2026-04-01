@@ -33,6 +33,7 @@ public class Settings {
     public static final String PLANE_SELECTED_CIRCLE = "/Images/plane-selected-circle.png";
     public static final String PLANE_WHITE_ROT = "/Images/plane-white-rotated.png";
     public static final String PLANE_TAIL = "/Images/airplane-tail.png";
+    public static final String NOT_FOUND_PLANE = "/Images/no-image-found.png";
     public static final String MAP_MARKER = "/Images/redmarker.png";
 
     public static final Color TEXT_COLOR = new Color(0x001917);
