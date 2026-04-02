@@ -62,6 +62,8 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
     private CalendarSettings startPicker;
     private CalendarSettings endPicker;
 
+    private JTextPane pageDisplay;
+
     public SearchPanel(ActionListener sceneSwitch) {
 
         System.out.println("=== Search Panel ===");
@@ -281,7 +283,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         int pageTextHeight = pageFont.getHeight() / 2 + pageFont.getMaxAscent();
         String pageText = String.format("%d", (int) ((float) counter / 25) + 1);
 
-        JTextPane pageDisplay = new TextPaneBuilder()
+        pageDisplay = new TextPaneBuilder()
                 .setText(pageText)
                 .setForeground(TEXT_COLOR)
                 .setFont(BOLD_FONT)
@@ -313,6 +315,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         previousPreviousButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         previousPreviousButton.addActionListener(e -> {
             counter -= (counter >= 250) ? 250 : counter;
+            counter = (counter < 0) ? 0 : counter;
             refreshEntries();
             pageDisplay.setText(String.format("%d", (int) ((float) counter / 25) + 1));
         });
@@ -341,7 +344,17 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
                 .build();
         nextNextButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         nextNextButton.addActionListener(e -> {
-            counter += (counter <= flightData.size() + 250) ? 250 : flightData.size() - counter;
+            if (flightData != null) {
+                int remainingFlightCount = flightData.size() - counter;
+                // this is a floor division, get the remainingFlightCount -
+                // remainder
+                int remainingJumpValue = (remainingFlightCount / 25) * 25;
+
+                if (counter + remainingJumpValue > flightData.size() + 25)
+                    remainingJumpValue = 0;
+
+                counter += (counter + 250 <= flightData.size()) ? 250 : remainingJumpValue;
+            }
             refreshEntries();
             pageDisplay.setText(String.format("%d", (int) ((float) counter / 25) + 1));
         });
@@ -433,6 +446,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
 
     public void refreshEntries() {
         flightEntries.removeAll();
+        pageDisplay.setText(String.format("%d", (int) ((float) counter / 25) + 1));
         if (flightData != null && flightData.size() != 0) {
             for (int i = counter; i < (counter + 25); i++) {
                 if (i >= flightData.size())
