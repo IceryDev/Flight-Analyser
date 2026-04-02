@@ -1,11 +1,17 @@
 package com.still_processing.Application.SearchPage;
 
+import static com.still_processing.DefaultSettings.Settings.BACKGROUND;
+import static com.still_processing.DefaultSettings.Settings.BOLD_FONT;
+import static com.still_processing.DefaultSettings.Settings.HIGHLIGHT;
+import static com.still_processing.DefaultSettings.Settings.HIGHLIGHT_20;
+import static com.still_processing.DefaultSettings.Settings.LIME;
+import static com.still_processing.DefaultSettings.Settings.REGULAR_FONT;
+
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -41,7 +47,7 @@ import com.still_processing.UILib.ImagePanel;
 import com.still_processing.UILib.InputFieldBuilder;
 import com.still_processing.UILib.TextPaneBuilder;
 
-import static com.still_processing.DefaultSettings.Settings.*;
+import static com.still_processing.FlightData.Database.flightData;
 
 /**
  * @author Deea Zaharia, Jagoda Koczwara-Szuba
@@ -49,7 +55,6 @@ import static com.still_processing.DefaultSettings.Settings.*;
 
 public class SearchPanel extends JPanel implements Scrollable, ActionListener {
     private JPanel flightEntries = new JPanel();
-    private ArrayList<FlightInfo> flightData = Database.offlineFlights;
     private int counter = 0;
     private LocalDate startDate = LocalDate.parse("2022-01-01");
     private LocalDate endDate = LocalDate.now();
@@ -57,15 +62,11 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
     private String destAirport;
     private boolean sortOrderAscend = true;
     private ArrayList<String> airportList = new ArrayList<>();
-    private ImagePanel notFoundImage;
 
     private JTextField originInput;
     private JTextField destInput;
     private CalendarSettings startPicker;
     private CalendarSettings endPicker;
-    boolean isFound = true;
-
-    private JTextPane pageDisplay;
 
     public SearchPanel(ActionListener sceneSwitch) {
 
@@ -282,84 +283,31 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         sortButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         sortButton.addActionListener(this);
 
-        FontMetrics pageFont = getFontMetrics(BOLD_FONT.deriveFont(22f));
-        int pageTextHeight = pageFont.getHeight() / 2 + pageFont.getMaxAscent();
-        String pageText = String.format("%d", (int) ((float) counter / 25) + 1);
-
-        pageDisplay = new TextPaneBuilder()
-                .setText(pageText)
-                .setForeground(TEXT_COLOR)
-                .setFont(BOLD_FONT)
-                .setFontSize(22)
-                .build();
-        pageDisplay.setMaximumSize(new Dimension(pageFont.stringWidth(pageText), pageTextHeight));
-
         JButton previousButton = new ButtonBuilder()
                 .setSize(25, 25)
                 .setForeground(BACKGROUND)
                 .setBackground(HIGHLIGHT)
-                .setText("<")
+                .setText("Previous")
                 .setFontSize(18)
                 .build();
-        previousButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        previousButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         previousButton.addActionListener(e -> {
             counter -= (counter >= 25) ? 25 : 0;
             refreshEntries();
-            pageDisplay.setText(String.format("%d", (int) ((float) counter / 25) + 1));
-        });
-
-        JButton previousPreviousButton = new ButtonBuilder()
-                .setSize(25, 25)
-                .setForeground(BACKGROUND)
-                .setBackground(HIGHLIGHT)
-                .setText("<<")
-                .setFontSize(18)
-                .build();
-        previousPreviousButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        previousPreviousButton.addActionListener(e -> {
-            counter -= (counter >= 250) ? 250 : counter;
-            counter = (counter < 0) ? 0 : counter;
-            refreshEntries();
-            pageDisplay.setText(String.format("%d", (int) ((float) counter / 25) + 1));
         });
 
         JButton nextButton = new ButtonBuilder()
                 .setSize(25, 25)
                 .setForeground(BACKGROUND)
                 .setBackground(HIGHLIGHT)
-                .setText(">")
+                .setText("Next")
                 .setFontSize(18)
                 .build();
-        nextButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        nextButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         nextButton.addActionListener(e -> {
             if (flightData != null)
                 counter += (counter + 25 <= flightData.size()) ? 25 : 0;
             refreshEntries();
-            pageDisplay.setText(String.format("%d", (int) ((float) counter / 25) + 1));
-        });
-
-        JButton nextNextButton = new ButtonBuilder()
-                .setSize(25, 25)
-                .setForeground(BACKGROUND)
-                .setBackground(HIGHLIGHT)
-                .setText(">>")
-                .setFontSize(18)
-                .build();
-        nextNextButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-        nextNextButton.addActionListener(e -> {
-            if (flightData != null) {
-                int remainingFlightCount = flightData.size() - counter;
-                // this is a floor division, get the remainingFlightCount -
-                // remainder
-                int remainingJumpValue = (remainingFlightCount / 25) * 25;
-
-                if (counter + remainingJumpValue > flightData.size() + 25)
-                    remainingJumpValue = 0;
-
-                counter += (counter + 250 <= flightData.size()) ? 250 : remainingJumpValue;
-            }
-            refreshEntries();
-            pageDisplay.setText(String.format("%d", (int) ((float) counter / 25) + 1));
         });
 
         JPanel buttonContainer = new JPanel();
@@ -371,23 +319,15 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         buttonContainer.add(graphButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(sortButton);
-        buttonContainer.add(Box.createHorizontalGlue());
-        buttonContainer.add(previousPreviousButton);
-        buttonContainer.add(Box.createRigidArea(new Dimension(10, 0)));
+        buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(previousButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
-        buttonContainer.add(pageDisplay);
-        buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(nextButton);
-        buttonContainer.add(Box.createRigidArea(new Dimension(10, 0)));
-        buttonContainer.add(nextNextButton);
-        buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
+        buttonContainer.add(Box.createHorizontalGlue());
         this.add(buttonContainer);
 
         flightEntries = new JPanel();
         flightEntries.setLayout(new BoxLayout(flightEntries, BoxLayout.Y_AXIS));
-        notFoundImage = new ImagePanel("/Images/not-found-page.png", 900, 500);
-        this.add(notFoundImage);
 
         updateFlightData(Database.offlineFlights);
 
@@ -402,7 +342,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
     }
 
     public void updateFlightData(ArrayList<FlightInfo> newData) {
-        if (newData != null) {
+        if (flightData != null) {
             flightData = newData;
         }
     }
@@ -439,14 +379,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
             filteredList = filter.byDateRange(startDate, endDate);
         }
 
-        this.flightData = (ArrayList<FlightInfo>) filteredList;
-
-        this.isFound = (!(filteredList == null || filteredList.isEmpty()));
-        this.refreshEntries();
-
-    }
-
-    private void add(Image image) {
+        flightData = (ArrayList<FlightInfo>) filteredList;
     }
 
     public void updateSearchBar() {
@@ -458,7 +391,6 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
 
     public void refreshEntries() {
         flightEntries.removeAll();
-        pageDisplay.setText(String.format("%d", (int) ((float) counter / 25) + 1));
         if (flightData != null && flightData.size() != 0) {
             for (int i = counter; i < (counter + 25); i++) {
                 if (i >= flightData.size())
@@ -466,11 +398,8 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
                 flightEntries.add(new ExpandablePanel(flightData.get(i)));
             }
         }
-        notFoundImage.setVisible(!this.isFound);
         flightEntries.revalidate();
         flightEntries.repaint();
-        this.revalidate();
-        this.repaint();
     }
 
     @Override
