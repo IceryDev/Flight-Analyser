@@ -57,6 +57,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
     private String destAirport;
     private boolean sortOrderAscend = true;
     private ArrayList<String> airportList = new ArrayList<>();
+    private boolean liveData = true;
     private ImagePanel notFoundImage;
 
     private JTextField originInput;
@@ -362,6 +363,24 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
             pageDisplay.setText(String.format("%d", (int) ((float) counter / 25) + 1));
         });
 
+        JButton liveDataButton = new ButtonBuilder()
+                .setSize(25, 25)
+                .setForeground(BACKGROUND)
+                .setBackground(GRAY)
+                .setText("LIVE")
+                .setFontSize(18)
+                .setBold(true)
+                .build();
+        liveDataButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
+        liveDataButton.addActionListener(e -> {
+            liveData = !liveData;
+            if (liveData) liveDataButton.setBackground(GRAY);
+            else liveDataButton.setBackground(LIVE_BUTTON_COLOR);
+            Database.toggleSelectedFlights();
+            updateSearch();
+            refreshEntries();
+        });
+
         JPanel buttonContainer = new JPanel();
         buttonContainer.setOpaque(false);
         buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.X_AXIS));
@@ -371,6 +390,9 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         buttonContainer.add(graphButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(sortButton);
+        buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
+        buttonContainer.add(liveDataButton);
+        buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(Box.createHorizontalGlue());
         buttonContainer.add(previousPreviousButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(10, 0)));
@@ -408,7 +430,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
     }
 
     public void updateSearch() {
-        ArrayList<FlightInfo> flightList = Database.offlineFlights;
+        ArrayList<FlightInfo> flightList = Database.baseFlights;
         List<FlightInfo> filteredList = flightList;
         List<String> resultList;
         Filter filter = new Filter(flightList);

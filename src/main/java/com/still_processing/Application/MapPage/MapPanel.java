@@ -81,6 +81,7 @@ public class MapPanel extends JPanel {
 
         System.setProperty("http.agent", "FlightAnalyser/1.0");
         LiveDataHandler.mvf = new MapViewFull(true);
+        LiveDataHandler.resetRefresh();
 
         mapBorderLayout.add(LiveDataHandler.mvf);
 
