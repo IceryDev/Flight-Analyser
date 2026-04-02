@@ -20,6 +20,7 @@ import com.still_processing.Application.AnalysisPage.AnalysisPanel;
 import com.still_processing.Application.HomePage.HomePage;
 import com.still_processing.Application.MapPage.MapPanel;
 import com.still_processing.Application.SearchPage.SearchPanel;
+import com.still_processing.DefaultSettings.Settings;
 import com.still_processing.FlightData.Utils.LiveDataHandler;
 import com.still_processing.UILib.ScrollPaneFactory;
 
@@ -42,6 +43,8 @@ public class MainWindow extends JFrame implements ActionListener {
         ImageIcon image = new ImageIcon(getClass().getResource("/Images/logo.png"));
         this.setIconImage(image.getImage());
         cards.setOpaque(false);
+
+        Settings.setGlassPane((JPanel) this.getGlassPane());
 
         body = new HomePage(this);
         scrollPaneHome = ScrollPaneFactory.createPane();
@@ -108,13 +111,15 @@ public class MainWindow extends JFrame implements ActionListener {
             case "Analyse":
             case "View Graph":
                 cardLayout.show(cards, "Analyse");
+                analyse.refreshGraph();
                 analyse.startRender();
                 break;
             case "Map View":
                 cardLayout.show(cards, "Map");
-                LiveDataHandler.startRefresh();
+                LiveDataHandler.resetRefresh();
                 break;
         }
+        Settings.getGlassPane().setVisible(false);
         cards.repaint();
         revalidate();
     }

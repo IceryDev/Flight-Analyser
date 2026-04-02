@@ -1,20 +1,16 @@
 package com.still_processing.Application.MapPage;
 
-import java.awt.Dimension;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JTextPane;
+import javax.swing.*;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+import com.still_processing.DefaultSettings.Settings;
 import com.still_processing.FlightData.Database;
 import com.still_processing.FlightData.Utils.LiveDataHandler;
 import com.still_processing.UILib.ButtonBuilder;
@@ -28,6 +24,8 @@ import static com.still_processing.DefaultSettings.Settings.HIGHLIGHT;
  * @author Deea Zaharia, Ulaş İçer
  */
 public class MapPanel extends JPanel {
+
+    private static final int MARGIN = 10;
 
     public MapPanel(ActionListener sceneSwitch) {
 
@@ -82,9 +80,43 @@ public class MapPanel extends JPanel {
         mapBorderLayout.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 
         System.setProperty("http.agent", "FlightAnalyser/1.0");
-        LiveDataHandler.mvf = new MapViewFull(true, Database.offlineFlights, this);
+        LiveDataHandler.mvf = new MapViewFull(true);
+        LiveDataHandler.resetRefresh();
 
         mapBorderLayout.add(LiveDataHandler.mvf);
+
+        MapSideOverlay mso = new MapSideOverlay();
+        JPanel glassPane = Settings.getGlassPane();
+        glassPane.setLayout(null);
+        glassPane.setOpaque(false);
+
+        glassPane.add(mso);
+        LiveDataHandler.sidebarOverlay = glassPane;
+        LiveDataHandler.sidebar = mso;
+
+        ComponentAdapter ca = new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                repositionSidebar();
+            }
+
+            @Override
+            public void componentMoved(ComponentEvent e) {
+                repositionSidebar(); // fires if layout shifts too
+            }
+
+            private void repositionSidebar() {
+                Point p = SwingUtilities.convertPoint(mapBorderLayout, 0, 0, glassPane);
+                int w = mapBorderLayout.getWidth() - 2 * MARGIN;
+                int h = mapBorderLayout.getHeight() - 2 * MARGIN;
+                mso.maxWidth = w / 4;
+                mso.setBounds(p.x + MARGIN, p.y + MARGIN, mso.renderWidth, h);
+                glassPane.repaint();
+            }
+        };
+        LiveDataHandler.ca = ca;
+
+        mapBorderLayout.addComponentListener(ca);
 
         this.add(Box.createRigidArea(new Dimension(0, 10)));
         this.add(titlePanel);

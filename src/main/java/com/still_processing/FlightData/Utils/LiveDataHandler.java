@@ -1,17 +1,22 @@
 package com.still_processing.FlightData.Utils;
 
+import com.still_processing.Application.MapPage.MapSideOverlay;
 import com.still_processing.Application.MapPage.MapViewFull;
 import com.still_processing.Application.MapPage.PlaneMarker;
 import com.still_processing.DefaultSettings.Settings;
 import com.still_processing.FlightData.Database;
+import com.still_processing.FlightData.FlightFetcher;
 import com.still_processing.FlightData.FlightInfo;
 import net.sf.geographiclib.Geodesic;
 import net.sf.geographiclib.GeodesicData;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 
-import javax.swing.SwingUtilities;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ComponentAdapter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -23,6 +28,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class LiveDataHandler {
 
     private static final int REFRESH_PERIOD_S = 10;
+    private static final int REQUEST_AFTER_ITERATION = 10000;
+
+    private static int iterationNo = 0;
     private static Thread refreshThread;
     private static boolean refreshRunning = false;
     private static AtomicBoolean queueRunning = new AtomicBoolean(false);
@@ -30,6 +38,19 @@ public class LiveDataHandler {
     private static LinkedBlockingQueue<Runnable> eventQueue = new LinkedBlockingQueue<>();
 
     public static MapViewFull mvf;
+    public static JPanel sidebarOverlay;
+    public static MapSideOverlay sidebar;
+    public static ComponentAdapter ca;
+
+    private static final SwingWorker<Void, Void> requestWorker = new SwingWorker<Void, Void>() {
+        @Override
+        protected Void doInBackground() throws Exception {
+            FlightFetcher.fetchLiveFlightInfo(100);
+            return null;
+        }
+    };
+
+    public static ConcurrentHashMap<PlaneMarker, FlightInfo> markers = new ConcurrentHashMap<>();
 
     /**
      * Returns the next location projection based on current plane velocity, position, and rotation.
@@ -54,9 +75,14 @@ public class LiveDataHandler {
             try {
                 refreshRunning = true;
                 while (refreshRunning){
+                    if (Database.flights.isEmpty() || iterationNo >= REQUEST_AFTER_ITERATION){
+                        eventQueue.add(LiveDataHandler::fullRefresh);
+                        iterationNo = 0;
+                    }
                     eventQueue.add(LiveDataHandler::update);
                     runQueue();
                     Thread.sleep(REFRESH_PERIOD_S * 1000);
+                    iterationNo++;
                 }
             } catch (InterruptedException e) {
                 System.out.println("Refresh Interrupted!");
@@ -85,8 +111,11 @@ public class LiveDataHandler {
      */
     private static void update() {
         List<FlightInfo> snapshot = new ArrayList<>(Database.flights);
+        if (mvf.getSelectedInfo() != null && !mvf.inDatabase) snapshot.add(mvf.getSelectedInfo());
         SwingUtilities.invokeLater(() -> {
             mvf.removeAllMapMarkers();
+            mvf.clearSelectedMarker();
+            markers.clear();
             for (FlightInfo i : snapshot){
                 double[] translation = getNewCoordinate(
                         new Coordinate(i.plane.latitude, i.plane.longitude),
@@ -94,7 +123,15 @@ public class LiveDataHandler {
                 i.plane.latitude = translation[0];
                 i.plane.longitude = translation[1];
                 i.plane.heading = translation[2];
-                mvf.addMapMarker(new PlaneMarker(new Coordinate(i.plane.latitude, i.plane.longitude), i.plane.heading, mvf, Settings.PLANE_RED));
+                PlaneMarker tmp = new PlaneMarker(
+                        new Coordinate(i.plane.latitude, i.plane.longitude), i.plane.heading, mvf,
+                        Settings.PLANE_RED, Settings.PLANE_CYAN);
+                if (i.selected) {
+                    tmp.selected = true;
+                    mvf.setLastSelected(tmp);
+                }
+                mvf.addMapMarker(tmp);
+                markers.put(tmp, i);
             }
         });
     }
@@ -126,5 +163,26 @@ public class LiveDataHandler {
             }
         }
         queueRunning.set(false);
+    }
+
+    private static void fullRefresh(){
+        Database.flights.clear();
+        markers.clear();
+        mvf.removeAllMapMarkers();
+        mvf.inDatabase = false;
+        eventQueue.clear();
+
+        requestWorker.execute();
+        //runQueue();
+    }
+
+    public static void resetRefresh(){
+        LiveDataHandler.startRefresh();
+        if (mvf != null){
+            if (mvf.getSelectedInfo() != null)
+                mvf.getSelectedInfo().selected = false;
+            mvf.setSelectedInfo(null);
+            mvf.setLastSelected(null);
+        }
     }
 }

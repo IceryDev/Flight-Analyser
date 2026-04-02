@@ -47,7 +47,7 @@ import com.still_processing.UILib.TextPaneBuilder;
  * @author Jessica Chen
  */
 public class HomePage extends JPanel implements Scrollable {
-    private LocalDate startDate = LocalDate.now();
+    private LocalDate startDate = LocalDate.parse("2022-01-01");
     private LocalDate endDate = LocalDate.now();
     private String originAirport;
     private String destAirport;
@@ -161,8 +161,8 @@ public class HomePage extends JPanel implements Scrollable {
         startPicker = new CalendarSettings();
         endPicker = new CalendarSettings();
 
-        startPicker.setDate(LocalDate.now());
-        endPicker.setDate(LocalDate.now());
+        startPicker.setDate(startDate);
+        endPicker.setDate(endDate);
         startPicker.setOpaque(false);
         startPicker.addDateChangeListener(event -> {
             LocalDate start = startPicker.getDate();

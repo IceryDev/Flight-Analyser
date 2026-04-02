@@ -113,8 +113,8 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
         this.schDepTimeText = data.depTime;
         this.actDepTimeText = data.CRSDepTime;
         this.flightCanceledText = (data.cancelled) ? "True" : "False";
-        this.schArrTimeText = data.arrTime;
-        this.actArrTimeText = data.CRSArrTime;
+        this.schArrTimeText = (data.CRSArrTime == null) ? "Not Available" : data.CRSArrTime;
+        this.actArrTimeText = (data.arrTime == null) ? "Not Available" : data.arrTime;
         this.originName = data.origin.name;
         this.destName = data.dest.name;
 

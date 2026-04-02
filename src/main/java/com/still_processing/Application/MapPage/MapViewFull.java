@@ -1,13 +1,17 @@
 package com.still_processing.Application.MapPage;
 
+import com.still_processing.DefaultSettings.Settings;
 import com.still_processing.FlightData.FlightInfo;
+import com.still_processing.FlightData.Utils.LiveDataHandler;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 import org.openstreetmap.gui.jmapviewer.interfaces.ICoordinate;
+import org.openstreetmap.gui.jmapviewer.interfaces.MapMarker;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
-import java.awt.Dimension;
-import java.awt.Point;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 /**
@@ -15,21 +19,29 @@ import java.util.ArrayList;
  *
  * @author Ulaş İçer
  */
-public class MapViewFull extends MapView {
+public class MapViewFull extends MapView implements MouseListener {
 
     private static final double MAX_LAT =  85.0;
     private static final double MIN_LAT = -85.0;
     private final int MAX_ZOOM = 3;
 
+    private FlightInfo selectedInfo;
+    private PlaneMarker lastSelected;
+    public boolean inDatabase = true;
+
+    public boolean updateMap = false;
+
 
     // mode true/false -> live/historical
-    public MapViewFull(boolean mode, ArrayList<FlightInfo> flights, JPanel parent){
+    public MapViewFull(boolean mode){
         super();
+        this.setZoomControlsVisible(false);
         if (mode) {
             SwingUtilities.invokeLater(() -> {
                 this.setDisplayPosition(new Coordinate(53.3498, -6.2603), 7);
                 this.repaint();
             });
+            this.addMouseListener(this);
         }
     }
 
@@ -50,6 +62,7 @@ public class MapViewFull extends MapView {
 
     @Override
     public void moveMap(int x, int y) {
+        if (this.updateMap) { return; }
         super.moveMap(x, y);
         confineLatitude(getZoom());
     }
@@ -83,5 +96,99 @@ public class MapViewFull extends MapView {
         }
     }
 
+    public void clearSelectedMarker(){
+        this.lastSelected = null;
+    }
 
+    public void setLastSelected(PlaneMarker lastSelected) {
+        this.lastSelected = lastSelected;
+    }
+
+    public FlightInfo getSelectedInfo() {
+        return selectedInfo;
+    }
+
+    public void setSelectedInfo(FlightInfo selectedInfo) {
+        this.selectedInfo = selectedInfo;
+    }
+
+    /**
+     * Switches between flights on the live map.
+     * @param e the event to be processed
+     *
+     * @author Ulaş İçer
+     */
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        Point clicked = e.getPoint();
+
+        for (MapMarker marker : new ArrayList<>(this.getMapMarkerList())){
+            Point markerP = this.getMapPosition(marker.getLat(), marker.getLon(), false);
+
+            if (marker instanceof PlaneMarker pm && markerP != null && clicked.distance(markerP) <= marker.getRadius() * 2){
+
+                boolean isSame = (this.lastSelected == pm);
+                if (this.lastSelected != null) {
+                    FlightInfo tmp = LiveDataHandler.markers.get(this.lastSelected);
+                    tmp.selected = false;
+
+                    LiveDataHandler.markers.remove(this.lastSelected);
+                    this.removeMapMarker(this.lastSelected);
+                    PlaneMarker newPM = new PlaneMarker(
+                            new Coordinate(tmp.plane.latitude, tmp.plane.longitude),
+                            tmp.plane.heading,
+                            this,
+                            Settings.PLANE_RED, Settings.PLANE_CYAN);
+                    this.addMapMarker(newPM);
+                    LiveDataHandler.markers.put(newPM, tmp);
+                }
+
+                if (isSame) {
+                    this.lastSelected = null;
+                    LiveDataHandler.sidebar.toggleDisplay(false);
+                    return;
+                }
+
+                this.selectedInfo = LiveDataHandler.markers.get(pm);
+                this.selectedInfo.selected = true;
+
+                LiveDataHandler.markers.remove(pm);
+                this.removeMapMarker(pm);
+                PlaneMarker newPM = new PlaneMarker(
+                        new Coordinate(this.selectedInfo.plane.latitude, this.selectedInfo.plane.longitude),
+                        this.selectedInfo.plane.heading,
+                        this,
+                        Settings.PLANE_RED, Settings.PLANE_CYAN);
+                newPM.selected = true;
+                this.addMapMarker(newPM);
+                LiveDataHandler.markers.put(newPM, this.selectedInfo);
+                this.lastSelected = newPM;
+                LiveDataHandler.sidebar.setFlightToDisplay(this.selectedInfo);
+                LiveDataHandler.sidebar.toggleDisplay(true);
+
+                this.inDatabase = true;
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
 }

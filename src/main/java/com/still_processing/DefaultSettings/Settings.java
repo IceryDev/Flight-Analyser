@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import io.github.cdimascio.dotenv.Dotenv;
 
+import javax.swing.*;
+
 /**
  * Some reuseable default settings
  * 
@@ -27,6 +29,11 @@ public class Settings {
     public static final String ICON_PATH = "/Images/logo.png";
     public static final String PLANE_RED = "/Images/plane-red.png";
     public static final String PLANE_BLACK = "/Images/plane-black.png";
+    public static final String PLANE_CYAN = "/Images/plane-cyan.png";
+    public static final String PLANE_SELECTED_CIRCLE = "/Images/plane-selected-circle.png";
+    public static final String PLANE_WHITE_ROT = "/Images/plane-white-rotated.png";
+    public static final String PLANE_TAIL = "/Images/airplane-tail.png";
+    public static final String NOT_FOUND_PLANE = "/Images/no-image-found.png";
     public static final String MAP_MARKER = "/Images/redmarker.png";
 
     public static final Color TEXT_COLOR = new Color(0x001917);
@@ -46,9 +53,10 @@ public class Settings {
     public static final Color LIGHT_BURGUNDY = new Color(0xFFC17676);
     public static final Color BURGUNDY = new Color(0x431928);
 
-    public static final String API_KEY = Dotenv.load().get("FLIGHT_API");
     public static final String CLIENT_SECRET = Dotenv.load().get("CLIENT_SECRET"); // For OpenSky API
     public static final String USER_NAME_OPENSKY = Dotenv.load().get("CLIENT_ID"); // For OpenSky API
+
+    private static JPanel glassPane;
 
     /**
      * Loads the font from the resouces folder
@@ -65,5 +73,14 @@ public class Settings {
             e.printStackTrace();
             return new Font("Arial", Font.PLAIN, 16);
         }
+    }
+
+    public static JPanel getGlassPane(){
+        return glassPane;
+    }
+
+    public static void setGlassPane(JPanel pane){
+        if (glassPane != null) return;
+        glassPane = pane;
     }
 }

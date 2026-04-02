@@ -1,6 +1,14 @@
 package com.still_processing.Application.SearchPage;
 
 import java.awt.*;
+import static com.still_processing.DefaultSettings.Settings.BACKGROUND;
+import static com.still_processing.DefaultSettings.Settings.BOLD_FONT;
+import static com.still_processing.DefaultSettings.Settings.HIGHLIGHT;
+import static com.still_processing.DefaultSettings.Settings.HIGHLIGHT_20;
+import static com.still_processing.DefaultSettings.Settings.LIME;
+import static com.still_processing.DefaultSettings.Settings.REGULAR_FONT;
+
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
@@ -8,15 +16,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.Scrollable;
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.SimpleAttributeSet;
@@ -45,18 +46,20 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
     private JPanel flightEntries = new JPanel();
     private ArrayList<FlightInfo> flightData = Database.offlineFlights;
     private int counter = 0;
-    private LocalDate startDate = LocalDate.now();
+    private LocalDate startDate = LocalDate.parse("2022-01-01");
     private LocalDate endDate = LocalDate.now();
     private String originAirport;
     private String destAirport;
     private boolean sortOrderAscend = true;
     private ArrayList<String> airportList = new ArrayList<>();
     private boolean liveData = false;
+    private ImagePanel notFoundImage;
 
     private JTextField originInput;
     private JTextField destInput;
     private CalendarSettings startPicker;
     private CalendarSettings endPicker;
+    boolean isFound = true;
 
     public SearchPanel(ActionListener sceneSwitch) {
 
@@ -180,8 +183,8 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         startPicker = new CalendarSettings();
         endPicker = new CalendarSettings();
 
-        startPicker.setDate(LocalDate.now());
-        endPicker.setDate(LocalDate.now());
+        startPicker.setDate(startDate);
+        endPicker.setDate(endDate);
         startPicker.setOpaque(false);
         startPicker.addDateChangeListener(event -> {
             LocalDate start = startPicker.getDate();
@@ -334,6 +337,8 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
 
         flightEntries = new JPanel();
         flightEntries.setLayout(new BoxLayout(flightEntries, BoxLayout.Y_AXIS));
+        notFoundImage = new ImagePanel("/Images/not-found-page.png", 900, 500);
+        this.add(notFoundImage);
 
         updateFlightData(Database.offlineFlights);
 
@@ -347,14 +352,14 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         }
     }
 
-    public void updateFlightData(ArrayList<FlightInfo> flightData) {
+    public void updateFlightData(ArrayList<FlightInfo> newData) {
         if (flightData != null) {
-            this.flightData = flightData;
+            flightData = newData;
         }
     }
 
     public void updateSearch() {
-        ArrayList<FlightInfo> flightList = Database.offlineFlights;
+        ArrayList<FlightInfo> flightList = Database.baseFlights;
         List<FlightInfo> filteredList = flightList;
         List<String> resultList;
         Filter filter = new Filter(flightList);
@@ -386,6 +391,15 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         }
 
         this.flightData = (ArrayList<FlightInfo>) filteredList;
+
+        this.isFound = (!(filteredList == null || filteredList.isEmpty()));
+        this.refreshEntries();
+
+    }
+
+
+
+    private void add(Image image) {
     }
 
     public void updateSearchBar() {
@@ -404,8 +418,11 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
                 flightEntries.add(new ExpandablePanel(flightData.get(i)));
             }
         }
+        notFoundImage.setVisible(!this.isFound);
         flightEntries.revalidate();
         flightEntries.repaint();
+        this.revalidate();
+        this.repaint();
     }
 
     @Override
