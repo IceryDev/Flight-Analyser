@@ -23,6 +23,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
@@ -298,6 +300,11 @@ public class FlightFetcher {
             tmp.plane.verticalRate = flight.get(11).asDouble();
             tmp.plane.geoAltitude = flight.get(13).asDouble();
             tmp.plane.squawk = flight.get(14).isNull() ? null : flight.get(14).asText();
+            tmp.flightDate = LocalDate.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+            tmp.depTime = "00:00";
+            tmp.CRSDepTime = "00:00";
+            tmp.arrTime = "00:00";
+            tmp.CRSArrTime = "00:00";
 
             array.add(tmp);
         }

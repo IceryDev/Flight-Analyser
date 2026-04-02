@@ -377,6 +377,8 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
             if (liveData) liveDataButton.setBackground(GRAY);
             else liveDataButton.setBackground(LIVE_BUTTON_COLOR);
             Database.toggleSelectedFlights();
+            updateSearch();
+            refreshEntries();
         });
 
         JPanel buttonContainer = new JPanel();
