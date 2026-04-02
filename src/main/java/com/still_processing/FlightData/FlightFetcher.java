@@ -9,18 +9,21 @@ import com.still_processing.FlightData.Requests.RateLimitException;
 import com.still_processing.FlightData.Requests.RequestFailedException;
 import com.still_processing.FlightData.Utils.LiveDataHandler;
 
+import javax.imageio.ImageIO;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLParameters;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
+import java.net.*;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ExecutorService;
+import java.util.Optional;
+import java.util.concurrent.*;
 
 /**
  * Fetches live OpenSky flight data, enriches the data with local database elements and
@@ -35,6 +38,8 @@ public class FlightFetcher {
     private static final String OAUTH_URL =
             "https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token";
     private static final String GET_ROUTE_URL = "https://hexdb.io/api/v1/route/iata/";
+    private static final String GET_IMAGE_URL = "https://hexdb.io/hex-image-thumb?hex=";
+    private static final String GET_ICON_URL = "https://api.airhex.com/v1/logos?codes=";
 
     // Data Processing
     private static final String AIRLINE_FILE_PATH = "/airlines.json";
@@ -44,6 +49,9 @@ public class FlightFetcher {
     private static final int THREAD_COUNT = 5;
 
     private static AuthenticatedRequest aRequest;
+    private static HttpClient imageClient;
+
+    public static boolean fetchActive = false;
 
     /**
      * Periodically populates {@link Database#flights} with live info with information fetched
@@ -66,7 +74,8 @@ public class FlightFetcher {
      * @author Ulaş İçer
      */
     public static void fetchLiveFlightInfo(int limit) throws RequestFailedException, InterruptedException {
-
+        if (fetchActive) { return; }
+        fetchActive = true;
         int retryCount = 0;
 
         ArrayList<FlightInfo> result = new ArrayList<>();
@@ -96,6 +105,7 @@ public class FlightFetcher {
             catch (CompletionException e) {
                 if(e.getCause() instanceof RateLimitException rle){
                     if (retryCount >= MAX_RETRY){
+                        fetchActive = false;
                         throw new RequestFailedException(
                                 "RequestFailedException: Http request failed after " + MAX_RETRY + " trials.",
                                 MAX_RETRY,
@@ -106,6 +116,7 @@ public class FlightFetcher {
                     Thread.sleep(rle.getDelay());
                 }
                 else if (e.getCause() instanceof RequestFailedException rfe){
+                    fetchActive = false;
                     throw new RequestFailedException(
                             "RequestFailedException: Http request failed to get from hexDb database.",
                             MAX_RETRY,
@@ -119,6 +130,7 @@ public class FlightFetcher {
             catch (JsonProcessingException e){
                 System.err.println("Error: An error occurred while parsing JSON structure.");
             }
+            fetchActive = false;
         }
     }
 
@@ -204,10 +216,6 @@ public class FlightFetcher {
         }
     }
 
-    private static void addNewFlights(ArrayList<FlightInfo> processed){
-
-    }
-
     /**
      * Extracts flight and aircraft parameters from OpenSky JSON {@code HttpResponse}.
      * Full list of parameters that are filled: <p>
@@ -245,7 +253,21 @@ public class FlightFetcher {
             tmp.plane = new PlaneInfo();
 
             tmp.plane.icao24 = flight.get(0).asText();
+            if (tmp.plane.icao24.length() > 6) { continue; }
+            tmp.plane.icao24 = tmp.plane.icao24.replaceAll(" +", "");
+            tmp.plane.icao24 = ("000000" + tmp.plane.icao24).substring(tmp.plane.icao24.length());
+
             tmp.plane.callSign = flight.get(1).asText().trim();
+            if (LiveDataHandler.mvf != null){
+                FlightInfo selected = LiveDataHandler.mvf.getSelectedInfo();
+                if (selected != null && selected.plane.callSign.equals(tmp.plane.callSign)){
+                    selected.plane.icao24 = tmp.plane.icao24;
+                    selected.plane.callSign = tmp.plane.callSign;
+                    LiveDataHandler.mvf.inDatabase = true;
+                    tmp = selected;
+                }
+            }
+            tmp.isLive = true;
             if (tmp.plane.callSign.length() > 3){
                 String airlineIcao = tmp.plane.callSign.trim().substring(0, 3);
                 if(Database.airlineIcaoToIata.containsKey(airlineIcao)){
@@ -299,6 +321,44 @@ public class FlightFetcher {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Fetch aircraft image from hexdb.io.
+     * @param hex The icao24 code for the plane.
+     * @return {@code BufferedImage} of the aircraft, if not found, returns not found image.
+     *
+     * @author Ulaş İçer
+     */
+    public static BufferedImage fetchAircraftImage(String hex) {
+        try {
+            String url = GET_IMAGE_URL + hex;
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(url))
+                    .GET()
+                    .build();
+            if (imageClient == null){
+                imageClient = HttpClient.newBuilder()
+                        .version(HttpClient.Version.HTTP_1_1)
+                        .build();
+            }
+
+            CompletableFuture<HttpResponse<String>> future = imageClient.sendAsync(request, HttpResponse.BodyHandlers.ofString());
+            HttpResponse<String> response = future.join();
+
+            if (response.body().equals("n/a") || response.body().isEmpty()){
+                return ImageIO.read(Objects.requireNonNull(FlightFetcher.class.getResource(Settings.NOT_FOUND_PLANE)));
+            }
+            return ImageIO.read(URI.create(response.body()).toURL());
+        }
+        catch (IOException e){
+            try {
+                return ImageIO.read(Objects.requireNonNull(FlightFetcher.class.getResource(Settings.NOT_FOUND_PLANE)));
+            } catch (IOException ex) {
+                System.err.println("Error: Failed to Load Internal Resource");
+            }
+        }
+        return null;
     }
 
     public static void main(String[] args) throws InterruptedException {

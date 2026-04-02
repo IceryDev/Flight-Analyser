@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.Component;
 
 import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
@@ -78,6 +79,7 @@ public class TableBuilder {
 
             setBackground(background);
             setForeground(foreground);
+            setHorizontalAlignment(JLabel.CENTER);
 
             setFont(font.deriveFont(fontSize));
 

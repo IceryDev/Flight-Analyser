@@ -41,6 +41,7 @@ public class ButtonBuilder {
         tmpButton.setText(this.text);
         tmpButton.setForeground(this.foreground);
         tmpButton.setBackground(this.background);
+        tmpButton.setFocusPainted(false);
 
         int style = Font.PLAIN;
         if (this.bold)
