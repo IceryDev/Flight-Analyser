@@ -119,8 +119,8 @@ public class Database {
         return tmp;
     }
 
-    public static void toggleSelectedFlights(){
-        baseFlights = (isPointingToLive) ? offlineFlights : (ArrayList<FlightInfo>) Collections.unmodifiableList(flights);
+    public static void toggleSelectedFlights() {
+        baseFlights = (isPointingToLive) ? offlineFlights : flights;
 
         isPointingToLive = !isPointingToLive;
     }
