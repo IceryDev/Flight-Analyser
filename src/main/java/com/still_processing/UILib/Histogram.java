@@ -11,7 +11,9 @@ import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import static com.still_processing.DefaultSettings.Settings.*;
@@ -21,6 +23,14 @@ import static com.still_processing.DefaultSettings.Settings.*;
  * 
  * @author Zhou Sun
  */
+
+/**
+ * Restrict drawing of the chart if there is no data (null)
+ * Add in error "result not found" image
+ *
+ * @author Jessica Chen
+ */
+
 public class Histogram extends JPanel implements Runnable, Graph {
     // Variable parameters to parse data
     private float[] data = null;
@@ -63,36 +73,40 @@ public class Histogram extends JPanel implements Runnable, Graph {
      */
     public Histogram(float[] data, int xStep, int yStep) {
         if (data != null) {
-            this.data = data;
-            this.xStep = xStep;
-            this.yStep = yStep;
+            if (data.length != 0) {
+                this.data = data;
+                this.xStep = xStep;
+                this.yStep = yStep;
 
-            // Getting the max and min value from the dataset
-            float max = data[0];
-            float min = data[0];
-            for (float dataPoint : data) {
-                max = (max > dataPoint) ? max : dataPoint;
-                min = (min < dataPoint) ? min : dataPoint;
-            }
-            min = (min > 0) ? 0 : min;
+                // Getting the max and min value from the dataset
+                float max = data[0];
+                float min = data[0];
+                for (float dataPoint : data) {
+                    max = (max > dataPoint) ? max : dataPoint;
+                    min = (min < dataPoint) ? min : dataPoint;
+                }
+                min = (min > 0) ? 0 : min;
 
-            // Loading data to each bars
-            barValues = new int[(int) (max - min) / xStep + 1];
-            for (float dataPoint : data) {
-                int interval = (int) dataPoint / xStep;
-                int index = (int) (interval - min / xStep);
-                barValues[index]++;
-                barMaxValue = (barMaxValue > barValues[index]) ? barMaxValue : barValues[index];
+                // Loading data to each bars
+                barValues = new int[(int) (max - min) / xStep + 1];
+                for (float dataPoint : data) {
+                    int interval = (int) dataPoint / xStep;
+                    int index = (int) (interval - min / xStep);
+                    barValues[index]++;
+                    barMaxValue = (barMaxValue > barValues[index]) ? barMaxValue : barValues[index];
+                }
+
+
+                // Add hover event the histogram
+                this.addMouseMotionListener(new MouseMotionAdapter() {
+                    @Override
+                    public void mouseMoved(MouseEvent event) {
+                        hover(event);
+                    }
+                });
             }
         }
 
-        // Add hover event the histogram
-        this.addMouseMotionListener(new MouseMotionAdapter() {
-            @Override
-            public void mouseMoved(MouseEvent event) {
-                hover(event);
-            }
-        });
 
         this.setPreferredSize(new Dimension(0, 1440));
         this.setOpaque(false);
@@ -166,7 +180,7 @@ public class Histogram extends JPanel implements Runnable, Graph {
         Graphics2D g2d = (Graphics2D) graphics;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        if (barValues != null) {
+        if (barValues != null && barValues.length != 0) {
             int height = getHeight();
 
             int barWidth = (getWidth() - 2 * padding) / barValues.length;
@@ -192,7 +206,14 @@ public class Histogram extends JPanel implements Runnable, Graph {
                 showToolTip = false;
             }
         }
-
+        if (barValues == null || barValues.length == 0) {
+            try {
+                BufferedImage image = ImageIO.read(getClass().getResource("/Images/error-message.png"));
+                g2d.drawImage(image, getWidth()/2 - 300, getHeight()/2 - 300, 600, 600, null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         g2d.dispose();
     }
 

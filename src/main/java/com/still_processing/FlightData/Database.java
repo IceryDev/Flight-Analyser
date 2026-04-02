@@ -24,23 +24,30 @@ public class Database {
     }
 
     public static float[] getLateness(ArrayList<FlightInfo> array) {
-        float[] lateness = new float[array.size()];
-
-        for (int i = 0; i < array.size(); i++) {
-            lateness[i] = array.get(i).lateness;
+        if(array != null){
+            float[] lateness = new float[array.size()];
+            for (int i = 0; i < array.size(); i++) {
+                lateness[i] = array.get(i).lateness;
+            }
+            return lateness;
         }
-
-        return lateness;
+        else{
+            return null;
+        }
     }
 
     public static float[] getDistance(ArrayList<FlightInfo> array) {
-        float[] dist = new float[array.size()];
-
-        for (int i = 0; i < array.size(); i++) {
-            dist[i] = array.get(i).distance;
+        if(array != null){
+            float[] dist = new float[array.size()];
+            for (int i = 0; i < array.size(); i++) {
+                dist[i] = array.get(i).distance;
+            }
+            return dist;
+        }
+        else{
+            return null;
         }
 
-        return dist;
     }
 
     public static HashMap<String, Integer> getCategoricalFreq(ArrayList<FlightInfo> array, PropertyType parameter) {
