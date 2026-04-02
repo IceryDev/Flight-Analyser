@@ -17,6 +17,9 @@ public class Database {
     public static ArrayList<FlightInfo> flights = new ArrayList<>();
     public static ArrayList<FlightInfo> offlineFlights = new ArrayList<>();
 
+    public static ArrayList<FlightInfo> baseFlights = offlineFlights;
+    private static boolean isPointingToLive = false;
+
     public static ArrayList<FlightInfo> flightData = offlineFlights;
 
     public static Map<String, Airport> getAirports() {
@@ -114,5 +117,11 @@ public class Database {
             default -> tmp = 0;
         }
         return tmp;
+    }
+
+    public static void toggleSelectedFlights(){
+        baseFlights = (isPointingToLive) ? offlineFlights : (ArrayList<FlightInfo>) Collections.unmodifiableList(flights);
+
+        isPointingToLive = !isPointingToLive;
     }
 }

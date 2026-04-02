@@ -116,13 +116,7 @@ public class MainWindow extends JFrame implements ActionListener {
                 break;
             case "Map View":
                 cardLayout.show(cards, "Map");
-                LiveDataHandler.startRefresh();
-                if (LiveDataHandler.mvf != null){
-                    if (LiveDataHandler.mvf.getSelectedInfo() != null)
-                        LiveDataHandler.mvf.getSelectedInfo().selected = false;
-                    LiveDataHandler.mvf.setSelectedInfo(null);
-                    LiveDataHandler.mvf.setLastSelected(null);
-                }
+                LiveDataHandler.resetRefresh();
                 break;
         }
         Settings.getGlassPane().setVisible(false);

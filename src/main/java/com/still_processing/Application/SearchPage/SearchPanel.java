@@ -340,7 +340,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
     }
 
     public void updateSearch() {
-        ArrayList<FlightInfo> flightList = Database.offlineFlights;
+        ArrayList<FlightInfo> flightList = Database.baseFlights;
         List<FlightInfo> filteredList = flightList;
         List<String> resultList;
         Filter filter = new Filter(flightList);
