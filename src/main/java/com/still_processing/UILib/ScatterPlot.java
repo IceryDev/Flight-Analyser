@@ -1,6 +1,5 @@
 package com.still_processing.UILib;
 
-
 import com.still_processing.DefaultSettings.Settings;
 import com.still_processing.FlightData.Graphs.ScatterPlotData;
 
@@ -203,7 +202,8 @@ public class ScatterPlot extends JPanel implements Runnable {
         return clamp(smoothed, 0.15, 0.45);
     }
 
-    private double getTickStep(double visibleMinimumAxis, double visibleMaximumAxis, int axisPixels, int minimumLabelPixels, double scale) {
+    private double getTickStep(double visibleMinimumAxis, double visibleMaximumAxis, int axisPixels,
+            int minimumLabelPixels, double scale) {
         int desiredTickCount = axisPixels / minimumLabelPixels;
         if (desiredTickCount < 10) {
             desiredTickCount = 10;
@@ -289,10 +289,12 @@ public class ScatterPlot extends JPanel implements Runnable {
         axisXPx = clamp(axisXPx, STD_PADDING, getWidth() - STD_PADDING);
         double axisYPx = (getHeight() - offsetY) - (axisYValue - dataMinY) * yScale;
         axisYPx = clamp(axisYPx, STD_PADDING, getHeight() - STD_PADDING);
-        return new double[]{dataMinX, dataMaxX, dataMinY, dataMaxY, yScale, offsetX, offsetY, axisXPx, axisYPx, negW, xScaleNeg, xScalePos, zeroXPx};
+        return new double[] { dataMinX, dataMaxX, dataMinY, dataMaxY, yScale, offsetX, offsetY, axisXPx, axisYPx, negW,
+                xScaleNeg, xScalePos, zeroXPx };
     }
 
-    private double mapX(double x, double dataMinX, double negW, double xScaleNeg, double xScalePos, double zeroXPx, double offsetX) {
+    private double mapX(double x, double dataMinX, double negW, double xScaleNeg, double xScalePos, double zeroXPx,
+            double offsetX) {
         if (dataMinX < 0 && negW > 0) {
             if (x < 0) {
                 return offsetX + (x - dataMinX) * xScaleNeg;
@@ -302,10 +304,12 @@ public class ScatterPlot extends JPanel implements Runnable {
         return offsetX + (x - dataMinX) * xScaleNeg;
     }
 
-    private void drawXTicks(Graphics2D g2d, FontMetrics metrics, double dataMinX, double dataMaxX, double offsetX, double axisYPx, double negW, double xScaleNeg, double xScalePos, double zeroXPx) {
+    private void drawXTicks(Graphics2D g2d, FontMetrics metrics, double dataMinX, double dataMaxX, double offsetX,
+            double axisYPx, double negW, double xScaleNeg, double xScalePos, double zeroXPx) {
         int axisY = (int) Math.round(axisYPx);
         int axisPixelsX = Math.max(1, getWidth() - (STD_PADDING * 2));
-        int maxLabelWidth = Math.max(metrics.stringWidth(formatTickLabel(dataMinX, 1)), metrics.stringWidth(formatTickLabel(dataMaxX, 1)));
+        int maxLabelWidth = Math.max(metrics.stringWidth(formatTickLabel(dataMinX, 1)),
+                metrics.stringWidth(formatTickLabel(dataMaxX, 1)));
         int minLabelPixels = Math.max(18, maxLabelWidth + 6);
         boolean split = (dataMinX < 0 && dataMaxX > 0 && negW > 0);
         if (!split) {
@@ -322,7 +326,8 @@ public class ScatterPlot extends JPanel implements Runnable {
                 int labelWidth = metrics.stringWidth(label);
                 int labelX = x - (labelWidth / 2);
                 int labelY = axisY + STD_TICK_SEPARATOR + metrics.getAscent() + 2;
-                boolean labelVisible = labelX >= 0 && labelX + labelWidth <= getWidth() && labelY <= getHeight() - metrics.getDescent();
+                boolean labelVisible = labelX >= 0 && labelX + labelWidth <= getWidth()
+                        && labelY <= getHeight() - metrics.getDescent();
                 g2d.drawLine(x, axisY - STD_TICK_SEPARATOR, x, axisY + STD_TICK_SEPARATOR);
                 if (labelVisible) {
                     drawRotate(g2d, labelX, labelY, 45, label);
@@ -345,7 +350,8 @@ public class ScatterPlot extends JPanel implements Runnable {
             int labelWidth = metrics.stringWidth(label);
             int labelX = x - (labelWidth / 2);
             int labelY = axisY + STD_TICK_SEPARATOR + metrics.getAscent() + 2;
-            boolean labelVisible = labelX >= 0 && labelX + labelWidth <= getWidth() && labelY <= getHeight() - metrics.getDescent();
+            boolean labelVisible = labelX >= 0 && labelX + labelWidth <= getWidth()
+                    && labelY <= getHeight() - metrics.getDescent();
             g2d.drawLine(x, axisY - STD_TICK_SEPARATOR, x, axisY + STD_TICK_SEPARATOR);
             if (labelVisible) {
                 drawRotate(g2d, labelX, labelY, 45, label);
@@ -363,7 +369,8 @@ public class ScatterPlot extends JPanel implements Runnable {
             int labelWidth = metrics.stringWidth(label);
             int labelX = x - (labelWidth / 2);
             int labelY = axisY + STD_TICK_SEPARATOR + metrics.getAscent() + 2;
-            boolean labelVisible = labelX >= 0 && labelX + labelWidth <= getWidth() && labelY <= getHeight() - metrics.getDescent();
+            boolean labelVisible = labelX >= 0 && labelX + labelWidth <= getWidth()
+                    && labelY <= getHeight() - metrics.getDescent();
             g2d.drawLine(x, axisY - STD_TICK_SEPARATOR, x, axisY + STD_TICK_SEPARATOR);
             if (labelVisible) {
                 drawRotate(g2d, labelX, labelY, 45, label);
@@ -371,7 +378,8 @@ public class ScatterPlot extends JPanel implements Runnable {
         }
     }
 
-    private void drawYTicks(Graphics2D g2d, FontMetrics metrics, double dataMinY, double dataMaxY, double scale, double offsetY, double axisXPx, double tickStep) {
+    private void drawYTicks(Graphics2D g2d, FontMetrics metrics, double dataMinY, double dataMaxY, double scale,
+            double offsetY, double axisXPx, double tickStep) {
         double firstTick = Math.ceil(dataMinY / tickStep) * tickStep;
         double lastTick = Math.floor(dataMaxY / tickStep) * tickStep;
         int axisX = (int) Math.round(axisXPx);
@@ -384,7 +392,8 @@ public class ScatterPlot extends JPanel implements Runnable {
             int labelWidth = metrics.stringWidth(label);
             int labelX = axisX - STD_TICK_SEPARATOR - 4 - labelWidth;
             int labelY = y + (metrics.getAscent() / 2) - 2;
-            boolean labelVisible = labelX >= 0 && labelX + labelWidth <= getWidth() && labelY >= metrics.getAscent() && labelY <= getHeight() - metrics.getDescent();
+            boolean labelVisible = labelX >= 0 && labelX + labelWidth <= getWidth() && labelY >= metrics.getAscent()
+                    && labelY <= getHeight() - metrics.getDescent();
             g2d.drawLine(axisX - STD_TICK_SEPARATOR, y, axisX + STD_TICK_SEPARATOR, y);
             if (labelVisible && !label.equals("-0")) {
                 // Skipping duplicated "0" label
@@ -429,7 +438,8 @@ public class ScatterPlot extends JPanel implements Runnable {
         int hoverRadiusSquared = (POINT_SIZE + 2) * (POINT_SIZE + 2);
         int hoveredIndex = -1;
         for (int pointIndex = 0; pointIndex < sampledData.length; pointIndex++) {
-            int x = (int) Math.round(mapX(sampledData[pointIndex][0], dataMinX, negW, xScaleNeg, xScalePos, zeroXPx, offsetX));
+            int x = (int) Math
+                    .round(mapX(sampledData[pointIndex][0], dataMinX, negW, xScaleNeg, xScalePos, zeroXPx, offsetX));
             int y = (int) Math.round((getHeight() - offsetY) - (sampledData[pointIndex][1] - dataMinY) * yScale);
             int deltaX = mouseX - x;
             int deltaY = mouseY - y;
@@ -443,13 +453,16 @@ public class ScatterPlot extends JPanel implements Runnable {
         repaint();
     }
 
-    private void drawHoverTooltip(Graphics2D g2d, double dataMinX, double dataMinY, double yScale, double offsetX, double offsetY, double negW, double xScaleNeg, double xScalePos, double zeroXPx) {
+    private void drawHoverTooltip(Graphics2D g2d, double dataMinX, double dataMinY, double yScale, double offsetX,
+            double offsetY, double negW, double xScaleNeg, double xScalePos, double zeroXPx) {
         if (!showToolTip || toolTipIndex < 0 || toolTipIndex >= sampledData.length) {
             return;
         }
-        int x = (int) Math.round(mapX(sampledData[toolTipIndex][0], dataMinX, negW, xScaleNeg, xScalePos, zeroXPx, offsetX));
+        int x = (int) Math
+                .round(mapX(sampledData[toolTipIndex][0], dataMinX, negW, xScaleNeg, xScalePos, zeroXPx, offsetX));
         int y = (int) Math.round((getHeight() - offsetY) - (sampledData[toolTipIndex][1] - dataMinY) * yScale);
-        String output = String.format("(%.3g, %.3g)", (double) sampledData[toolTipIndex][0], (double) sampledData[toolTipIndex][1]);
+        String output = String.format("(%.3g, %.3g)", (double) sampledData[toolTipIndex][0],
+                (double) sampledData[toolTipIndex][1]);
         FontMetrics metrics = g2d.getFontMetrics();
         int boxWidth = metrics.stringWidth(output) + (POINT_SIZE * 2);
         int boxHeight = metrics.getAscent() + metrics.getDescent() + (POINT_SIZE * 2);

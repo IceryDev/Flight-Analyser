@@ -47,15 +47,16 @@ import com.still_processing.UILib.ImagePanel;
 import com.still_processing.UILib.InputFieldBuilder;
 import com.still_processing.UILib.TextPaneBuilder;
 
+import static com.still_processing.FlightData.Database.flightData;
+
 /**
  * @author Deea Zaharia, Jagoda Koczwara-Szuba
  */
 
 public class SearchPanel extends JPanel implements Scrollable, ActionListener {
     private JPanel flightEntries = new JPanel();
-    private ArrayList<FlightInfo> flightData = Database.offlineFlights;
     private int counter = 0;
-    private LocalDate startDate = LocalDate.now();
+    private LocalDate startDate = LocalDate.parse("2022-01-01");
     private LocalDate endDate = LocalDate.now();
     private String originAirport;
     private String destAirport;
@@ -189,8 +190,8 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         startPicker = new CalendarSettings();
         endPicker = new CalendarSettings();
 
-        startPicker.setDate(LocalDate.now());
-        endPicker.setDate(LocalDate.now());
+        startPicker.setDate(startDate);
+        endPicker.setDate(endDate);
         startPicker.setOpaque(false);
         startPicker.addDateChangeListener(event -> {
             LocalDate start = startPicker.getDate();
@@ -340,9 +341,9 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         }
     }
 
-    public void updateFlightData(ArrayList<FlightInfo> flightData) {
+    public void updateFlightData(ArrayList<FlightInfo> newData) {
         if (flightData != null) {
-            this.flightData = flightData;
+            flightData = newData;
         }
     }
 
@@ -378,7 +379,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
             filteredList = filter.byDateRange(startDate, endDate);
         }
 
-        this.flightData = (ArrayList<FlightInfo>) filteredList;
+        flightData = (ArrayList<FlightInfo>) filteredList;
     }
 
     public void updateSearchBar() {
