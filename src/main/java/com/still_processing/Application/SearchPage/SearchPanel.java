@@ -260,7 +260,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         graphButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         graphButton.addActionListener(sceneSwitch);
 
-        String[] graphOptions = {"Lateness - Ascending", "Lateness - Descending", "Distance - Ascending", "Distance - Descending"};
+        String[] graphOptions = {"--Sort Option--", "Lateness - Ascending", "Lateness - Descending", "Distance - Ascending", "Distance - Descending"};
 
         JComboBox<String> sortDropDown = new DropdownBuilder(graphOptions)
                 .setFontSize(18)
@@ -400,13 +400,30 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        switch (e.getActionCommand()) {
-            case "Sort By Lateness":
+        JComboBox<String> dropDown = (JComboBox<String>) e.getSource();
+        dropDown.getParent().repaint();
+        switch ((String) dropDown.getSelectedItem()) {
+            case "--Sort Option--":
+                break;
+            case "Lateness - Ascending":
                 flightData.sort((FlightInfo a, FlightInfo b) -> Float.compare(a.lateness, b.lateness));
-                if (!sortOrderAscend) {
-                    Collections.reverse(flightData);
-                }
-                sortOrderAscend = !sortOrderAscend;
+                counter = 0;
+                refreshEntries();
+                break;
+            case "Lateness - Descending":
+                flightData.sort((FlightInfo a, FlightInfo b) -> Float.compare(a.lateness, b.lateness));
+                Collections.reverse(flightData);
+                counter = 0;
+                refreshEntries();
+                break;
+            case "Distance - Ascending":
+                flightData.sort((FlightInfo a, FlightInfo b) -> Float.compare(a.distance, b.distance));
+                counter = 0;
+                refreshEntries();
+                break;
+            case "Distance - Descending":
+                flightData.sort((FlightInfo a, FlightInfo b) -> Float.compare(a.distance, b.distance));
+                Collections.reverse(flightData);
                 counter = 0;
                 refreshEntries();
                 break;
