@@ -369,6 +369,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
                 .setBackground(GRAY)
                 .setText("LIVE")
                 .setFontSize(18)
+                .setBold(true)
                 .build();
         liveDataButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         liveDataButton.addActionListener(e -> {
