@@ -253,6 +253,10 @@ public class FlightFetcher {
             tmp.plane = new PlaneInfo();
 
             tmp.plane.icao24 = flight.get(0).asText();
+            if (tmp.plane.icao24.length() > 6) { continue; }
+            tmp.plane.icao24 = tmp.plane.icao24.replaceAll(" +", "");
+            tmp.plane.icao24 = ("000000" + tmp.plane.icao24).substring(tmp.plane.icao24.length());
+
             tmp.plane.callSign = flight.get(1).asText().trim();
             if (LiveDataHandler.mvf != null){
                 FlightInfo selected = LiveDataHandler.mvf.getSelectedInfo();
@@ -348,8 +352,11 @@ public class FlightFetcher {
             return ImageIO.read(URI.create(response.body()).toURL());
         }
         catch (IOException e){
-            // Return default image
-            e.printStackTrace();
+            try {
+                return ImageIO.read(Objects.requireNonNull(FlightFetcher.class.getResource(Settings.NOT_FOUND_PLANE)));
+            } catch (IOException ex) {
+                System.err.println("Error: Failed to Load Internal Resource");
+            }
         }
         return null;
     }
