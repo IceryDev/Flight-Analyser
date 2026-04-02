@@ -1,14 +1,12 @@
 package com.still_processing.Application.SearchPage;
 
-import java.awt.*;
-import static com.still_processing.DefaultSettings.Settings.BACKGROUND;
-import static com.still_processing.DefaultSettings.Settings.BOLD_FONT;
-import static com.still_processing.DefaultSettings.Settings.HIGHLIGHT;
-import static com.still_processing.DefaultSettings.Settings.HIGHLIGHT_20;
-import static com.still_processing.DefaultSettings.Settings.LIME;
-import static com.still_processing.DefaultSettings.Settings.REGULAR_FONT;
-
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
@@ -16,8 +14,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.Scrollable;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.SimpleAttributeSet;
@@ -60,6 +65,8 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
     private CalendarSettings startPicker;
     private CalendarSettings endPicker;
     boolean isFound = true;
+
+    private JTextPane pageDisplay;
 
     public SearchPanel(ActionListener sceneSwitch) {
 
@@ -276,31 +283,84 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         sortButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         sortButton.addActionListener(this);
 
+        FontMetrics pageFont = getFontMetrics(BOLD_FONT.deriveFont(22f));
+        int pageTextHeight = pageFont.getHeight() / 2 + pageFont.getMaxAscent();
+        String pageText = String.format("%d", (int) ((float) counter / 25) + 1);
+
+        pageDisplay = new TextPaneBuilder()
+                .setText(pageText)
+                .setForeground(TEXT_COLOR)
+                .setFont(BOLD_FONT)
+                .setFontSize(22)
+                .build();
+        pageDisplay.setMaximumSize(new Dimension(pageFont.stringWidth(pageText), pageTextHeight));
+
         JButton previousButton = new ButtonBuilder()
                 .setSize(25, 25)
                 .setForeground(BACKGROUND)
                 .setBackground(HIGHLIGHT)
-                .setText("Previous")
+                .setText("<")
                 .setFontSize(18)
                 .build();
-        previousButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
+        previousButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         previousButton.addActionListener(e -> {
             counter -= (counter >= 25) ? 25 : 0;
             refreshEntries();
+            pageDisplay.setText(String.format("%d", (int) ((float) counter / 25) + 1));
+        });
+
+        JButton previousPreviousButton = new ButtonBuilder()
+                .setSize(25, 25)
+                .setForeground(BACKGROUND)
+                .setBackground(HIGHLIGHT)
+                .setText("<<")
+                .setFontSize(18)
+                .build();
+        previousPreviousButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        previousPreviousButton.addActionListener(e -> {
+            counter -= (counter >= 250) ? 250 : counter;
+            counter = (counter < 0) ? 0 : counter;
+            refreshEntries();
+            pageDisplay.setText(String.format("%d", (int) ((float) counter / 25) + 1));
         });
 
         JButton nextButton = new ButtonBuilder()
                 .setSize(25, 25)
                 .setForeground(BACKGROUND)
                 .setBackground(HIGHLIGHT)
-                .setText("Next")
+                .setText(">")
                 .setFontSize(18)
                 .build();
-        nextButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
+        nextButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         nextButton.addActionListener(e -> {
             if (flightData != null)
                 counter += (counter + 25 <= flightData.size()) ? 25 : 0;
             refreshEntries();
+            pageDisplay.setText(String.format("%d", (int) ((float) counter / 25) + 1));
+        });
+
+        JButton nextNextButton = new ButtonBuilder()
+                .setSize(25, 25)
+                .setForeground(BACKGROUND)
+                .setBackground(HIGHLIGHT)
+                .setText(">>")
+                .setFontSize(18)
+                .build();
+        nextNextButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        nextNextButton.addActionListener(e -> {
+            if (flightData != null) {
+                int remainingFlightCount = flightData.size() - counter;
+                // this is a floor division, get the remainingFlightCount -
+                // remainder
+                int remainingJumpValue = (remainingFlightCount / 25) * 25;
+
+                if (counter + remainingJumpValue > flightData.size() + 25)
+                    remainingJumpValue = 0;
+
+                counter += (counter + 250 <= flightData.size()) ? 250 : remainingJumpValue;
+            }
+            refreshEntries();
+            pageDisplay.setText(String.format("%d", (int) ((float) counter / 25) + 1));
         });
 
         JButton liveDataButton = new ButtonBuilder()
@@ -329,10 +389,17 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(liveDataButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
+        buttonContainer.add(Box.createHorizontalGlue());
+        buttonContainer.add(previousPreviousButton);
+        buttonContainer.add(Box.createRigidArea(new Dimension(10, 0)));
         buttonContainer.add(previousButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
+        buttonContainer.add(pageDisplay);
+        buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(nextButton);
-        buttonContainer.add(Box.createHorizontalGlue());
+        buttonContainer.add(Box.createRigidArea(new Dimension(10, 0)));
+        buttonContainer.add(nextNextButton);
+        buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         this.add(buttonContainer);
 
         flightEntries = new JPanel();
@@ -353,7 +420,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
     }
 
     public void updateFlightData(ArrayList<FlightInfo> newData) {
-        if (flightData != null) {
+        if (newData != null) {
             flightData = newData;
         }
     }
@@ -397,8 +464,6 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
 
     }
 
-
-
     private void add(Image image) {
     }
 
@@ -411,6 +476,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
 
     public void refreshEntries() {
         flightEntries.removeAll();
+        pageDisplay.setText(String.format("%d", (int) ((float) counter / 25) + 1));
         if (flightData != null && flightData.size() != 0) {
             for (int i = counter; i < (counter + 25); i++) {
                 if (i >= flightData.size())
