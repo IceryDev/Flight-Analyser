@@ -17,45 +17,54 @@ public class Database {
     public static ArrayList<FlightInfo> flights = new ArrayList<>();
     public static ArrayList<FlightInfo> offlineFlights = new ArrayList<>();
 
+    public static ArrayList<FlightInfo> flightData = offlineFlights;
+
     public static Map<String, Airport> getAirports() {
         return Collections.unmodifiableMap(airports);
     }
 
     public static float[] getLateness(ArrayList<FlightInfo> array) {
-        float[] lateness = new float[array.size()];
-
-        for (int i = 0; i < array.size(); i++) {
-            lateness[i] = array.get(i).lateness;
+        if(array != null){
+            float[] lateness = new float[array.size()];
+            for (int i = 0; i < array.size(); i++) {
+                lateness[i] = array.get(i).lateness;
+            }
+            return lateness;
         }
-
-        return lateness;
+        else{
+            return null;
+        }
     }
 
     public static float[] getDistance(ArrayList<FlightInfo> array) {
-        float[] dist = new float[array.size()];
-
-        for (int i = 0; i < array.size(); i++) {
-            dist[i] = array.get(i).distance;
+        if(array != null){
+            float[] dist = new float[array.size()];
+            for (int i = 0; i < array.size(); i++) {
+                dist[i] = array.get(i).distance;
+            }
+            return dist;
+        }
+        else{
+            return null;
         }
 
-        return dist;
     }
 
-    public static HashMap<String, Integer> getCategoricalFreq(ArrayList<FlightInfo> array, PropertyType parameter){
-        if (!parameter.isCategorical){
-            System.err.println("Use the other method to get frequency bins for quantitative data."); //Replace other with the name after
+    public static HashMap<String, Integer> getCategoricalFreq(ArrayList<FlightInfo> array, PropertyType parameter) {
+        if (!parameter.isCategorical) {
+            System.err.println("Use the other method to get frequency bins for quantitative data."); // Replace other
+
             return null;
         }
 
         HashMap<String, Integer> result = new HashMap<>();
 
-        for (FlightInfo info : array){
+        for (FlightInfo info : array) {
             String tmp = getCorrespondingCategorical(info, parameter);
 
-            if (!result.containsKey(tmp)){
+            if (!result.containsKey(tmp)) {
                 result.put(tmp, 1);
-            }
-            else{
+            } else {
                 result.replace(tmp, result.get(tmp) + 1);
             }
         }
@@ -64,16 +73,16 @@ public class Database {
     }
 
     public static ScatterPlotData getScatterPlot(
-            ArrayList<FlightInfo> array, PropertyType param1, PropertyType param2){
+            ArrayList<FlightInfo> array, PropertyType param1, PropertyType param2) {
 
-        if (array == null || param1.isCategorical || param2.isCategorical){
+        if (array == null || param1.isCategorical || param2.isCategorical) {
             System.err.println("Cannot use categorical values for scatter plot data.");
             return null;
         }
 
         float[][] tmpArray = new float[array.size()][2];
 
-        for (int i = 0; i < array.size(); i++){
+        for (int i = 0; i < array.size(); i++) {
             FlightInfo info = array.get(i);
 
             tmpArray[i][0] = getCorrespondingQuantitative(info, param1);
@@ -84,9 +93,9 @@ public class Database {
         return new ScatterPlotData(param1.paramName, param2.paramName, tmpArray);
     }
 
-    private static String getCorrespondingCategorical(FlightInfo info, PropertyType type){
+    private static String getCorrespondingCategorical(FlightInfo info, PropertyType type) {
         String tmp;
-        switch (type){
+        switch (type) {
             case ORIGIN -> tmp = info.origin.name;
             case DESTINATION -> tmp = info.dest.name;
             case IATA -> tmp = info.iataCode;
@@ -97,9 +106,9 @@ public class Database {
         return tmp;
     }
 
-    private static float getCorrespondingQuantitative(FlightInfo info, PropertyType type){
+    private static float getCorrespondingQuantitative(FlightInfo info, PropertyType type) {
         float tmp;
-        switch (type){
+        switch (type) {
             case LATENESS -> tmp = info.lateness;
             case DISTANCE -> tmp = info.distance;
             default -> tmp = 0;
