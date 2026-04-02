@@ -8,6 +8,9 @@ import com.still_processing.FlightData.Requests.AuthenticatedRequest;
 import com.still_processing.FlightData.Requests.RateLimitException;
 import com.still_processing.FlightData.Requests.RequestFailedException;
 import com.still_processing.FlightData.Utils.LiveDataHandler;
+import net.sf.geographiclib.Geodesic;
+import net.sf.geographiclib.GeodesicData;
+import net.sf.geographiclib.GeodesicMask;
 
 import javax.imageio.ImageIO;
 import javax.net.ssl.SSLContext;
@@ -193,6 +196,15 @@ public class FlightFetcher {
                                         }
                                         info.origin = Database.airports.get(route[0]);
                                         info.dest = Database.airports.get(route[1]);
+
+                                        GeodesicData g = Geodesic.WGS84.Inverse(
+                                                info.origin.latitude,
+                                                info.origin.longitude,
+                                                info.dest.latitude,
+                                                info.dest.longitude,
+                                                GeodesicMask.DISTANCE
+                                                );
+                                        info.distance = (float) g.s12;
                                     } else {
                                         if (debug) {
                                             System.err.println("Skip: No match found for instance. Skipping...");
