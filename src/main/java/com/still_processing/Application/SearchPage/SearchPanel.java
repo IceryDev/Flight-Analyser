@@ -20,15 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.Scrollable;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.SimpleAttributeSet;
@@ -40,12 +32,7 @@ import com.still_processing.FlightData.Database;
 import com.still_processing.FlightData.FlightInfo;
 import com.still_processing.FlightData.Filters.Filter;
 import com.still_processing.FlightData.Filters.FuzzySearch;
-import com.still_processing.UILib.ButtonBuilder;
-import com.still_processing.UILib.CalendarSettings;
-import com.still_processing.UILib.ExpandablePanel;
-import com.still_processing.UILib.ImagePanel;
-import com.still_processing.UILib.InputFieldBuilder;
-import com.still_processing.UILib.TextPaneBuilder;
+import com.still_processing.UILib.*;
 
 import static com.still_processing.FlightData.Database.flightData;
 
@@ -273,15 +260,24 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         graphButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         graphButton.addActionListener(sceneSwitch);
 
-        JButton sortButton = new ButtonBuilder()
-                .setSize(25, 25)
-                .setForeground(BACKGROUND)
-                .setBackground(HIGHLIGHT)
-                .setText("Sort By Lateness")
+        String[] graphOptions = {"Lateness - Ascending", "Lateness - Descending", "Distance - Ascending", "Distance - Descending"};
+
+        JComboBox<String> sortDropDown = new DropdownBuilder(graphOptions)
                 .setFontSize(18)
                 .build();
-        sortButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
-        sortButton.addActionListener(this);
+        sortDropDown.setMaximumSize(new Dimension(70, 100));
+        sortDropDown.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+        sortDropDown.addActionListener(this);
+
+//        JButton sortButton = new ButtonBuilder()
+//                .setSize(25, 25)
+//                .setForeground(BACKGROUND)
+//                .setBackground(HIGHLIGHT)
+//                .setText("Sort By Lateness")
+//                .setFontSize(18)
+//                .build();
+//        sortButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
+//        sortButton.addActionListener(this);
 
         JButton previousButton = new ButtonBuilder()
                 .setSize(25, 25)
@@ -318,7 +314,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(graphButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
-        buttonContainer.add(sortButton);
+        buttonContainer.add(sortDropDown);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(previousButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
