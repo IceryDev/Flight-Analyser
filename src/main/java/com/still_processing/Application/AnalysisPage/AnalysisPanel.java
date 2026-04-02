@@ -84,12 +84,18 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
     }
 
     public void renderGraph() {
-        float[] latenessData = Database.getLateness(Database.flightData);
-        float[] distance = Database.getDistance(Database.flightData);
-        HashMap<String, Integer> flightOrigins = Database.getCategoricalFreq(Database.flightData,
-                PropertyType.ORIGIN);
-        ScatterPlotData scatterPlotData = Database.getScatterPlot(Database.flightData, PropertyType.LATENESS,
-                PropertyType.DISTANCE);
+        float[] latenessData = null;
+        float[] distance = null;
+        HashMap<String, Integer> flightOrigins = null;
+        ScatterPlotData scatterPlotData = null;
+        if (Database.flightData != null) {
+            latenessData = Database.getLateness(Database.flightData);
+            distance = Database.getDistance(Database.flightData);
+            flightOrigins = Database.getCategoricalFreq(Database.flightData,
+                    PropertyType.ORIGIN);
+            scatterPlotData = Database.getScatterPlot(Database.flightData, PropertyType.LATENESS,
+                    PropertyType.DISTANCE);
+        }
 
         ArrayList<String> graphOptionsTemp = new ArrayList<>();
         graphOptionsTemp.add("--Select Option--");
