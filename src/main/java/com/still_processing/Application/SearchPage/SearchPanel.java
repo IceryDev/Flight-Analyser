@@ -5,6 +5,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -41,7 +42,6 @@ import com.still_processing.UILib.InputFieldBuilder;
 import com.still_processing.UILib.TextPaneBuilder;
 
 import static com.still_processing.DefaultSettings.Settings.*;
-import static com.still_processing.FlightData.Database.flightData;
 
 /**
  * @author Deea Zaharia, Jagoda Koczwara-Szuba
@@ -49,6 +49,7 @@ import static com.still_processing.FlightData.Database.flightData;
 
 public class SearchPanel extends JPanel implements Scrollable, ActionListener {
     private JPanel flightEntries = new JPanel();
+    private ArrayList<FlightInfo> flightData = Database.offlineFlights;
     private int counter = 0;
     private LocalDate startDate = LocalDate.parse("2022-01-01");
     private LocalDate endDate = LocalDate.now();
@@ -56,11 +57,13 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
     private String destAirport;
     private boolean sortOrderAscend = true;
     private ArrayList<String> airportList = new ArrayList<>();
+    private ImagePanel notFoundImage;
 
     private JTextField originInput;
     private JTextField destInput;
     private CalendarSettings startPicker;
     private CalendarSettings endPicker;
+    boolean isFound = true;
 
     private JTextPane pageDisplay;
 
@@ -383,6 +386,8 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
 
         flightEntries = new JPanel();
         flightEntries.setLayout(new BoxLayout(flightEntries, BoxLayout.Y_AXIS));
+        notFoundImage = new ImagePanel("/Images/not-found-page.png", 900, 500);
+        this.add(notFoundImage);
 
         updateFlightData(Database.offlineFlights);
 
@@ -434,7 +439,14 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
             filteredList = filter.byDateRange(startDate, endDate);
         }
 
-        flightData = (ArrayList<FlightInfo>) filteredList;
+        this.flightData = (ArrayList<FlightInfo>) filteredList;
+
+        this.isFound = (!(filteredList == null || filteredList.isEmpty()));
+        this.refreshEntries();
+
+    }
+
+    private void add(Image image) {
     }
 
     public void updateSearchBar() {
@@ -454,8 +466,11 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
                 flightEntries.add(new ExpandablePanel(flightData.get(i)));
             }
         }
+        notFoundImage.setVisible(!this.isFound);
         flightEntries.revalidate();
         flightEntries.repaint();
+        this.revalidate();
+        this.repaint();
     }
 
     @Override
