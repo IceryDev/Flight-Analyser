@@ -57,7 +57,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
     private String destAirport;
     private boolean sortOrderAscend = true;
     private ArrayList<String> airportList = new ArrayList<>();
-    private boolean liveData = false;
+    private boolean liveData = true;
     private ImagePanel notFoundImage;
 
     private JTextField originInput;
@@ -366,7 +366,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         JButton liveDataButton = new ButtonBuilder()
                 .setSize(25, 25)
                 .setForeground(BACKGROUND)
-                .setBackground(LIVE_BUTTON_COLOR)
+                .setBackground(GRAY)
                 .setText("LIVE")
                 .setFontSize(18)
                 .build();
@@ -375,6 +375,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
             liveData = !liveData;
             if (liveData) liveDataButton.setBackground(GRAY);
             else liveDataButton.setBackground(LIVE_BUTTON_COLOR);
+            Database.toggleSelectedFlights();
         });
 
         JPanel buttonContainer = new JPanel();
