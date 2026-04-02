@@ -86,7 +86,6 @@ public class BarChartGraph extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
         setVisible(true);
 
-
     }
 
     @Override
@@ -115,6 +114,7 @@ public class BarChartGraph extends JPanel implements Runnable {
 
     // This initialises the Graph - don't change
     public void animate() {
+        renderPercentage = 0;
         graphThread = new Thread(this);
         graphThread.start();
     }
@@ -141,7 +141,7 @@ public class BarChartGraph extends JPanel implements Runnable {
         Graphics2D g2d = (Graphics2D) graphics.create();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        if ( values != null && values.length != 0){
+        if (values != null && values.length != 0) {
             float max = values[0];
             for (float value : values) {
                 max = Math.max(max, value);
@@ -176,7 +176,7 @@ public class BarChartGraph extends JPanel implements Runnable {
         if (values == null || values.length == 0) {
             try {
                 BufferedImage image = ImageIO.read(getClass().getResource("/Images/error-message.png"));
-                g2d.drawImage(image, getWidth()/2 - 300, getHeight()/2 - 300, 600, 600, null);
+                g2d.drawImage(image, getWidth() / 2 - 300, getHeight() / 2 - 300, 600, 600, null);
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -16,7 +16,6 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -44,41 +43,57 @@ import static com.still_processing.DefaultSettings.Settings.*;
 
 public class AnalysisPanel extends JPanel implements Scrollable, ActionListener {
     JPanel graphDisplay;
-    Histogram histogram;
     Histogram latenessHistogram;
     Histogram distanceHistogram;
     ScatterPlot latenessVsDistance;
     CardLayout cardLayout;
     BarChartGraph barChart;
+    ActionListener sceneSwitch;
+    JPanel titlePanel;
 
     public AnalysisPanel(ActionListener sceneSwitch) {
         System.out.println("=== Analysis Panel ===");
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBackground(BACKGROUND);
         this.add(Box.createRigidArea(new Dimension(0, 20)));
+        this.sceneSwitch = sceneSwitch;
 
-        float[] histogramTestData = null;
-        float[] latenessData = Database.getLateness(Database.offlineFlights);
-        float[] distance = Database.getDistance(Database.offlineFlights);
-        HashMap<String, Integer> flightOrigins = Database.getCategoricalFreq(Database.offlineFlights,
+        renderGraph();
+        this.add(titlePanel);
+        this.add(graphDisplay);
+    }
+
+    public void refreshGraph() {
+        graphDisplay.removeAll();
+        this.remove(titlePanel);
+        this.remove(graphDisplay);
+        renderGraph();
+        this.add(titlePanel);
+        this.add(graphDisplay);
+        revalidate();
+        repaint();
+    }
+
+    public void renderGraph() {
+        float[] latenessData = Database.getLateness(Database.flightData);
+        float[] distance = Database.getDistance(Database.flightData);
+        HashMap<String, Integer> flightOrigins = Database.getCategoricalFreq(Database.flightData,
                 PropertyType.ORIGIN);
-        ScatterPlotData scatterPlotData = Database.getScatterPlot(Database.offlineFlights, PropertyType.LATENESS, PropertyType.DISTANCE);
+        ScatterPlotData scatterPlotData = Database.getScatterPlot(Database.flightData, PropertyType.LATENESS,
+                PropertyType.DISTANCE);
 
         ArrayList<String> graphOptionsTemp = new ArrayList<>();
         graphOptionsTemp.add("--Select Option--");
-        if (histogramTestData != null){
-            graphOptionsTemp.add("poisson");
-        }
-        if(latenessData != null){
+        if (latenessData != null && latenessData.length != 0) {
             graphOptionsTemp.add("lateness");
         }
-        if(distance != null){
+        if (distance != null && distance.length != 0) {
             graphOptionsTemp.add("distance");
         }
-        if(flightOrigins != null){
+        if (flightOrigins != null && !flightOrigins.isEmpty()) {
             graphOptionsTemp.add("Top 10 Airports");
         }
-        if(scatterPlotData != null){
+        if (scatterPlotData != null && scatterPlotData.data != null && scatterPlotData.data.length != 0) {
             graphOptionsTemp.add("ScatterPlot");
         }
 
@@ -88,12 +103,11 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         JComboBox<String> dropDown = new DropdownBuilder(graphOptions)
                 .setFontSize(18)
                 .build();
-        dropDown.setMaximumSize(new Dimension(70, 200));
+        dropDown.setMaximumSize(new Dimension(70, 75));
         dropDown.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         dropDown.addActionListener(this);
 
-
-        JPanel titlePanel = new JPanel();
+        titlePanel = new JPanel();
         titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.X_AXIS));
         ImagePanel logo = new ImagePanel("/Images/logo.png", 70, 70);
         String title = "Flight Analyser";
@@ -133,21 +147,25 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         titlePanel.add(Box.createHorizontalGlue());
         titlePanel.add(homeButton);
         titlePanel.add(Box.createRigidArea(new Dimension(20, 0)));
-        this.add(titlePanel);
 
         final int graphHeight = 900;
 
-        histogram = new Histogram(histogramTestData, 5, 3);
-        histogram.setPreferredSize(new Dimension(0, graphHeight));
         String[] columnNames = { "Mean", "Median", "Variance", "SD" };
-
-        latenessHistogram = new Histogram(latenessData, 240, 1000);
 
         JPanel latenessDisplay = new JPanel();
         latenessDisplay.setLayout(new BoxLayout(latenessDisplay, BoxLayout.Y_AXIS));
-        latenessDisplay.setSize(new Dimension(700, 900));
 
-        if (latenessData != null){
+        latenessDisplay.setSize(new Dimension(700, 900));
+        latenessHistogram = new Histogram(latenessData, 100, 1000);
+        if (latenessData != null && latenessData.length != 0) {
+            float maxLateness = 0;
+            for (float dataPoint : latenessData) {
+                maxLateness = (maxLateness > dataPoint) ? maxLateness : dataPoint;
+            }
+            latenessHistogram.setXStep((maxLateness > 500) ? 250 : 50);
+            latenessHistogram.setYStep(latenessData.length / 10);
+            latenessHistogram.setXLengendText("Lateness (in minutes)");
+            latenessHistogram.setYLengendText("Number of Flights");
             latenessHistogram.setPreferredSize(new Dimension(0, graphHeight));
 
             Object[][] latenessStats = { { arithmeticMean(latenessData), median(latenessData), variance(latenessData),
@@ -158,20 +176,20 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
                     .setFont(BOLD_FONT)
                     .setColumnWidth(new int[] { 100, 500, 100, 100 })
                     .buildPane();
-            latenessStatsTable.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
-            latenessStatsTable.setPreferredSize(new Dimension(Integer.MAX_VALUE, 200));
+            latenessStatsTable.setBorder(BorderFactory.createEmptyBorder(50, 50, 0, 50));
+            latenessStatsTable.setMinimumSize(new Dimension(Integer.MAX_VALUE, 200));
+            latenessStatsTable.setPreferredSize(new Dimension(Integer.MAX_VALUE, 150));
             latenessDisplay.add(latenessStatsTable);
         }
         latenessDisplay.add(latenessHistogram);
-
-        distanceHistogram = new Histogram(distance, 250, 200);
-        distanceHistogram.setPreferredSize(new Dimension(0, graphHeight));
 
         JPanel distanceDisplay = new JPanel();
         distanceDisplay.setLayout(new BoxLayout(distanceDisplay, BoxLayout.Y_AXIS));
         distanceDisplay.setSize(new Dimension(700, 900));
 
-        if (distance != null){
+        distanceHistogram = new Histogram(distance, 250, 200);
+        distanceHistogram.setPreferredSize(new Dimension(0, graphHeight));
+        if (distance != null && distance.length != 0) {
             Object[][] distanceStats = {
                     { arithmeticMean(distance), median(distance), variance(distance), standardDeviation(distance) } };
 
@@ -180,14 +198,15 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
                     .setFont(BOLD_FONT)
                     .setColumnWidth(new int[] { 100, 500, 100, 100 })
                     .buildPane();
-            distanceStatsTable.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
-            distanceStatsTable.setPreferredSize(new Dimension(Integer.MAX_VALUE, 200));
+            distanceStatsTable.setBorder(BorderFactory.createEmptyBorder(50, 50, 0, 50));
+            distanceStatsTable.setMinimumSize(new Dimension(Integer.MAX_VALUE, 200));
+            distanceStatsTable.setPreferredSize(new Dimension(Integer.MAX_VALUE, 150));
             distanceDisplay.add(distanceStatsTable);
         }
         distanceDisplay.add(distanceHistogram);
 
         Map<String, Float> sortedTop10Airports = new LinkedHashMap<>();
-        if (Database.offlineFlights != null && flightOrigins != null && !flightOrigins.isEmpty()){
+        if (flightOrigins != null && !flightOrigins.isEmpty()) {
             Map<String, Float> floatOriginMap = flightOrigins.entrySet().stream()
                     .collect(Collectors.toMap(
                             Map.Entry::getKey,
@@ -206,13 +225,13 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         barChart.setPreferredSize(new Dimension(0, graphHeight));
         barChart.setYStep(50);
 
-        if(scatterPlotData != null){
-            latenessVsDistance = new ScatterPlot(scatterPlotData,"Test");
+        if (scatterPlotData != null && scatterPlotData.data != null && scatterPlotData.data.length != 0) {
+            latenessVsDistance = new ScatterPlot(scatterPlotData, "Test");
         }
 
         JPanel emptyPanel = new JPanel();
         emptyPanel.setBackground(BACKGROUND);
-        if(graphOptionsTemp.size() == 1){
+        if (graphOptionsTemp.size() == 1) {
             emptyPanel.setLayout(new BoxLayout(emptyPanel, BoxLayout.Y_AXIS));
             ImagePanel errorImage = new ImagePanel("/Images/error-message.png", 500, 500);
             emptyPanel.add(Box.createVerticalGlue());
@@ -222,34 +241,25 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         cardLayout = new CardLayout();
         graphDisplay = new JPanel(cardLayout);
         graphDisplay.add(emptyPanel, "empty");
-        graphDisplay.add(histogram, "poisson");
         graphDisplay.add(latenessDisplay, "lateness");
         graphDisplay.add(distanceDisplay, "distance");
         graphDisplay.add(barChart, "Top 10 Airports");
-        if(scatterPlotData != null){
-            graphDisplay.add(latenessVsDistance, "ScatterPlot");
-        }
+        graphDisplay.add(latenessVsDistance, "ScatterPlot");
         this.add(graphDisplay);
     }
 
     public void startRender() {
-        histogram.animate();
         latenessHistogram.animate();
         distanceHistogram.animate();
+        barChart.animate();
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         JComboBox<String> dropDown = (JComboBox<String>) e.getSource();
         dropDown.getParent().repaint();
-        System.out.println("dropdown option;" + (String) dropDown.getSelectedItem());
         switch ((String) dropDown.getSelectedItem()) {
             case "--Select Option--":
-                break;
-            case "poisson":
-                System.out.println("Testing Poisson");
-                cardLayout.show(graphDisplay, "poisson");
-                histogram.animate();
                 break;
             case "lateness":
                 cardLayout.show(graphDisplay, "lateness");

@@ -54,7 +54,7 @@ public class CalendarSettings extends DatePicker {
 
         for (Component c : this.getComponents()) {
             if (c != null)
-                c.setBackground(new Color(0, 0, 0, 0));
+                c.setBackground(LIME);
         }
 
         updateButtonLabel(toggleButton, this.getDate());

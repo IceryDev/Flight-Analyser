@@ -47,16 +47,18 @@ import com.still_processing.UILib.TextPaneBuilder;
  * @author Jessica Chen
  */
 public class HomePage extends JPanel implements Scrollable {
-    private LocalDate startDate = LocalDate.now();
+    private LocalDate startDate = LocalDate.parse("2022-01-01");
     private LocalDate endDate = LocalDate.now();
     private String originAirport;
     private String destAirport;
 
+    private JTextField originInput;
+    private JTextField destInput;
+    private CalendarSettings startPicker;
+    private CalendarSettings endPicker;
+
     public HomePage(ActionListener sceneSwitch) {
         System.out.println("=== Home Page ===");
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        this.setBackground(BACKGROUND);
-        this.add(Box.createRigidArea(new Dimension(0, 50)));
 
         JPanel titlePanel = new JPanel();
         titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.X_AXIS));
@@ -84,11 +86,8 @@ public class HomePage extends JPanel implements Scrollable {
         titlePanel.add(Box.createRigidArea(new Dimension(20, 0)));
         titlePanel.add(textPane);
         titlePanel.add(Box.createHorizontalGlue());
-        this.add(titlePanel);
 
-        this.add(Box.createRigidArea(new Dimension(0, 50)));
-
-        Dimension inputFieldSize = new Dimension(350, 50);
+        Dimension inputFieldSize = new Dimension(300, 50);
         JPanel originInputContainer = new JPanel();
         originInputContainer.setBorder(BorderFactory.createLineBorder(HIGHLIGHT, 2));
         originInputContainer.setMaximumSize(inputFieldSize);
@@ -96,7 +95,7 @@ public class HomePage extends JPanel implements Scrollable {
         originInputContainer.setMinimumSize(inputFieldSize);
         originInputContainer.setBackground(LIME);
 
-        JTextField originInput = new InputFieldBuilder()
+        originInput = new InputFieldBuilder()
                 .setFont(REGULAR_FONT)
                 .setForeground(HIGHLIGHT)
                 .build();
@@ -131,7 +130,7 @@ public class HomePage extends JPanel implements Scrollable {
         destInputContainer.setMinimumSize(inputFieldSize);
         destInputContainer.setBackground(LIME);
 
-        JTextField destInput = new InputFieldBuilder()
+        destInput = new InputFieldBuilder()
                 .setFont(REGULAR_FONT)
                 .setForeground(HIGHLIGHT)
                 .build();
@@ -159,11 +158,11 @@ public class HomePage extends JPanel implements Scrollable {
             }
         });
 
-        CalendarSettings startPicker = new CalendarSettings();
-        CalendarSettings endPicker = new CalendarSettings();
+        startPicker = new CalendarSettings();
+        endPicker = new CalendarSettings();
 
-        startPicker.setDate(LocalDate.now());
-        endPicker.setDate(LocalDate.now());
+        startPicker.setDate(startDate);
+        endPicker.setDate(endDate);
         startPicker.setOpaque(false);
         startPicker.addDateChangeListener(event -> {
             LocalDate start = startPicker.getDate();
@@ -192,19 +191,24 @@ public class HomePage extends JPanel implements Scrollable {
         endLabel.setForeground(HIGHLIGHT);
         endLabel.setBorder(BorderFactory.createEmptyBorder(2, 10, 2, 20));
 
+        Dimension datePickerSize = new Dimension(300, 50);
         JPanel startGroup = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 5));
         startGroup.setBackground(HIGHLIGHT_20);
         startGroup.setBorder(BorderFactory.createLineBorder(HIGHLIGHT, 2));
         startGroup.add(startLabel);
         startGroup.add(startPicker);
-        startGroup.setMaximumSize(new Dimension(500, 100));
+        startGroup.setMaximumSize(datePickerSize);
+        startGroup.setPreferredSize(datePickerSize);
+        startGroup.setMinimumSize(datePickerSize);
 
         JPanel endGroup = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 5));
         endGroup.setBackground(HIGHLIGHT_20);
         endGroup.setBorder(BorderFactory.createLineBorder(HIGHLIGHT, 2));
         endGroup.add(endLabel);
         endGroup.add(endPicker);
-        endGroup.setMaximumSize(new Dimension(500, 100));
+        endGroup.setMaximumSize(datePickerSize);
+        endGroup.setPreferredSize(datePickerSize);
+        endGroup.setMinimumSize(datePickerSize);
 
         JPanel inputFieldContainer = new JPanel();
         inputFieldContainer.setLayout(new BoxLayout(inputFieldContainer, BoxLayout.X_AXIS));
@@ -218,19 +222,8 @@ public class HomePage extends JPanel implements Scrollable {
         inputFieldContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         inputFieldContainer.add(endGroup);
         inputFieldContainer.add(Box.createHorizontalGlue());
-        this.add(inputFieldContainer);
 
-        this.add(Box.createRigidArea(new Dimension(0, 80)));
-
-        JButton analyseButton = new ButtonBuilder()
-                .setSize(25, 25)
-                .setForeground(BACKGROUND)
-                .setBackground(HIGHLIGHT)
-                .setText("Analyse")
-                .setFontSize(18)
-                .build();
-        analyseButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
-
+        Dimension buttonSize = new Dimension(200, 40);
         JButton mapButton = new ButtonBuilder()
                 .setSize(25, 25)
                 .setForeground(BACKGROUND)
@@ -239,6 +232,9 @@ public class HomePage extends JPanel implements Scrollable {
                 .setFontSize(18)
                 .build();
         mapButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
+        mapButton.setMaximumSize(buttonSize);
+        mapButton.setPreferredSize(buttonSize);
+        mapButton.setMinimumSize(buttonSize);
 
         JButton searchButton = new ButtonBuilder()
                 .setSize(25, 25)
@@ -248,22 +244,38 @@ public class HomePage extends JPanel implements Scrollable {
                 .setFontSize(18)
                 .build();
         searchButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
+        searchButton.setMaximumSize(buttonSize);
+        searchButton.setPreferredSize(buttonSize);
+        searchButton.setMinimumSize(buttonSize);
 
-        analyseButton.addActionListener(sceneSwitch);
         mapButton.addActionListener(sceneSwitch);
         searchButton.addActionListener(sceneSwitch);
 
         JPanel buttonContainer = new JPanel();
         buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.X_AXIS));
         buttonContainer.add(Box.createHorizontalGlue());
-        buttonContainer.add(analyseButton);
-        buttonContainer.add(Box.createRigidArea(new Dimension(40, 0)));
-        buttonContainer.add(mapButton);
-        buttonContainer.add(Box.createRigidArea(new Dimension(40, 0)));
         buttonContainer.add(searchButton);
+        buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
+        buttonContainer.add(mapButton);
         buttonContainer.add(Box.createHorizontalGlue());
         buttonContainer.setOpaque(false);
+
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.setBackground(BACKGROUND);
+        this.add(Box.createRigidArea(new Dimension(0, 200)));
+        this.add(titlePanel);
+        this.add(Box.createRigidArea(new Dimension(0, 50)));
+        this.add(inputFieldContainer);
+        this.add(Box.createRigidArea(new Dimension(0, 50)));
         this.add(buttonContainer);
+        this.add(Box.createVerticalGlue());
+    }
+
+    public void updateSearchBar() {
+        originInput.setText(originAirport);
+        destInput.setText(destAirport);
+        startPicker.setDate(startDate);
+        endPicker.setDate(endDate);
     }
 
     @Override
@@ -283,7 +295,7 @@ public class HomePage extends JPanel implements Scrollable {
 
     @Override
     public boolean getScrollableTracksViewportHeight() {
-        return false;
+        return true;
     }
 
     @Override
@@ -295,6 +307,22 @@ public class HomePage extends JPanel implements Scrollable {
     @Override
     public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
         return 32;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public void setOriginAirport(String originAirport) {
+        this.originAirport = originAirport;
+    }
+
+    public void setDestAirport(String destAirport) {
+        this.destAirport = destAirport;
     }
 
     public LocalDate getStartDate() {
