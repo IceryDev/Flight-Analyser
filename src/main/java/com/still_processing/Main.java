@@ -20,13 +20,6 @@ public class Main {
         CSVHandler.loadAirportCSV();
         CSVHandler.loadOfflineFlightCSV();
         FlightFetcher.getAirlineCodes();
-        new SwingWorker<Void, Void>() {
-            @Override
-            protected Void doInBackground() throws Exception {
-                FlightFetcher.fetchLiveFlightInfo(100);
-                return null;
-            }
-        }.execute();
 
         String os = System.getProperty("os.name");
         if (os.equals("Mac OS X")) {
