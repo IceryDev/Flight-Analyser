@@ -8,6 +8,9 @@ import com.still_processing.FlightData.Requests.AuthenticatedRequest;
 import com.still_processing.FlightData.Requests.RateLimitException;
 import com.still_processing.FlightData.Requests.RequestFailedException;
 import com.still_processing.FlightData.Utils.LiveDataHandler;
+import net.sf.geographiclib.Geodesic;
+import net.sf.geographiclib.GeodesicData;
+import net.sf.geographiclib.GeodesicMask;
 
 import javax.imageio.ImageIO;
 import javax.net.ssl.SSLContext;
@@ -20,6 +23,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
@@ -193,6 +198,17 @@ public class FlightFetcher {
                                         }
                                         info.origin = Database.airports.get(route[0]);
                                         info.dest = Database.airports.get(route[1]);
+
+                                        if (info.origin != null && info.dest != null){
+                                            GeodesicData g = Geodesic.WGS84.Inverse(
+                                                    info.origin.latitude,
+                                                    info.origin.longitude,
+                                                    info.dest.latitude,
+                                                    info.dest.longitude,
+                                                    GeodesicMask.DISTANCE
+                                            );
+                                            info.distance = (float) g.s12;
+                                        }
                                     } else {
                                         if (debug) {
                                             System.err.println("Skip: No match found for instance. Skipping...");
@@ -286,6 +302,11 @@ public class FlightFetcher {
             tmp.plane.verticalRate = flight.get(11).asDouble();
             tmp.plane.geoAltitude = flight.get(13).asDouble();
             tmp.plane.squawk = flight.get(14).isNull() ? null : flight.get(14).asText();
+            tmp.flightDate = LocalDate.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
+            tmp.depTime = "00:00";
+            tmp.CRSDepTime = "00:00";
+            tmp.arrTime = "00:00";
+            tmp.CRSArrTime = "00:00";
 
             array.add(tmp);
         }

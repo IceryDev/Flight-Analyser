@@ -89,7 +89,7 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
         }
         this.fInfo = data;
 
-        this.flightNumberText = data.iataCode + data.flightNumber;
+        this.flightNumberText = (data.flightNumber == null) ? data.plane.icao24.toUpperCase() : data.iataCode + data.flightNumber;
         this.depTime = data.depTime;
         this.arrTime = data.arrTime;
         int depHour = Integer.parseInt(depTime.substring(0, 2));
@@ -135,7 +135,7 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
         flightNumberContainer.setOpaque(false);
         flightNumberContainer.setLayout(new BoxLayout(flightNumberContainer, BoxLayout.Y_AXIS));
         JTextPane flightNumberTitle = new TextPaneBuilder()
-                .setText(FLIGHT_TITLE_TEXT)
+                .setText((data.flightNumber != null) ? FLIGHT_TITLE_TEXT : "Flight Code:")
                 .setFont(titleFont)
                 .build();
         JTextPane flightNumber = new TextPaneBuilder()
