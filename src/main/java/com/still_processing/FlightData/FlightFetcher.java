@@ -199,14 +199,16 @@ public class FlightFetcher {
                                         info.origin = Database.airports.get(route[0]);
                                         info.dest = Database.airports.get(route[1]);
 
-                                        GeodesicData g = Geodesic.WGS84.Inverse(
-                                                info.origin.latitude,
-                                                info.origin.longitude,
-                                                info.dest.latitude,
-                                                info.dest.longitude,
-                                                GeodesicMask.DISTANCE
-                                                );
-                                        info.distance = (float) g.s12;
+                                        if (info.origin != null && info.dest != null){
+                                            GeodesicData g = Geodesic.WGS84.Inverse(
+                                                    info.origin.latitude,
+                                                    info.origin.longitude,
+                                                    info.dest.latitude,
+                                                    info.dest.longitude,
+                                                    GeodesicMask.DISTANCE
+                                            );
+                                            info.distance = (float) g.s12;
+                                        }
                                     } else {
                                         if (debug) {
                                             System.err.println("Skip: No match found for instance. Skipping...");
