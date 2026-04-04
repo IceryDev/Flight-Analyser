@@ -52,6 +52,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
     private CalendarSettings startPicker;
     private CalendarSettings endPicker;
     boolean isFound = true;
+    JTextPane resultCount;
 
     private JTextPane pageDisplay;
 
@@ -265,7 +266,9 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         JComboBox<String> sortDropDown = new DropdownBuilder(graphOptions)
                 .setFontSize(18)
                 .build();
-        sortDropDown.setMaximumSize(new Dimension(70, 100));
+        sortDropDown.setMaximumSize(new Dimension(240, 85));
+        sortDropDown.setMinimumSize(new Dimension(240, 85));
+        sortDropDown.setPreferredSize(new Dimension(240, 85));
         sortDropDown.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         sortDropDown.addActionListener(this);
 
@@ -377,6 +380,14 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
             refreshEntries();
         });
 
+        String resultCountText = String.format("%d Result%s Found", flightData.size(), (flightData.size() == 1) ? "" : "s");
+        resultCount = new TextPaneBuilder()
+                .setText(resultCountText)
+                .setFontSize(22)
+                .setFont(BOLD_FONT)
+                .build();
+        resultCount.setMaximumSize(new Dimension(pageFont.stringWidth(resultCountText), pageTextHeight));
+
         JPanel buttonContainer = new JPanel();
         buttonContainer.setOpaque(false);
         buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.X_AXIS));
@@ -388,6 +399,8 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         buttonContainer.add(sortDropDown);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(liveDataButton);
+        buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
+        buttonContainer.add(resultCount);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(Box.createHorizontalGlue());
         buttonContainer.add(previousPreviousButton);
@@ -477,6 +490,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
     public void refreshEntries() {
         flightEntries.removeAll();
         pageDisplay.setText(String.format("%d", (int) ((float) counter / 25) + 1));
+        resultCount.setText(String.format("%d Result%s Found", flightData.size(), (flightData.size() == 1) ? "" : "s"));
         if (flightData != null && flightData.size() != 0) {
             for (int i = counter; i < (counter + 25); i++) {
                 if (i >= flightData.size())
