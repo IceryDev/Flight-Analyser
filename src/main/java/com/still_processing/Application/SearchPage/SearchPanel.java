@@ -121,7 +121,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         Image scaledFromLabelIcon = fromLabelIcon.getScaledInstance(inputFieldSize.height - 20, inputFieldSize.height - 20, Image.SCALE_SMOOTH);
         fromLabel.setIcon(new ImageIcon(scaledFromLabelIcon));
 
-        JLabel destinationLabel = new JLabel("Destination");
+        JLabel destinationLabel = new JLabel("To");
         destinationLabel.setPreferredSize(new Dimension(130, inputFieldSize.height));
         destinationLabel.setFont(REGULAR_FONT.deriveFont(Font.PLAIN, 12));
         destinationLabel.setForeground(HIGHLIGHT);
@@ -540,13 +540,16 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
     public void refreshEntries() {
         flightEntries.removeAll();
         pageDisplay.setText(String.format("%d", (int) ((float) counter / 25) + 1));
-        resultCount.setText(String.format("%d Result%s Found", flightData.size(), (flightData.size() == 1) ? "" : "s"));
         if (flightData != null && flightData.size() != 0) {
+            resultCount.setText(String.format("%d Result%s Found", flightData.size(), (flightData.size() == 1) ? "" : "s"));
             for (int i = counter; i < (counter + 25); i++) {
                 if (i >= flightData.size())
                     break;
                 flightEntries.add(new ExpandablePanel(flightData.get(i)));
             }
+        }
+        else{
+            resultCount.setText("No Results Found");
         }
         notFoundImage.setVisible(!this.isFound);
         flightEntries.revalidate();

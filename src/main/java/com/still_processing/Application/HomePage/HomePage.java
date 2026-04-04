@@ -108,7 +108,7 @@ public class HomePage extends JPanel implements Scrollable {
         Image scaledFromLabelIcon = fromLabelIcon.getScaledInstance(inputFieldSize.height - 20, inputFieldSize.height - 20, Image.SCALE_SMOOTH);
         fromLabel.setIcon(new ImageIcon(scaledFromLabelIcon));
 
-        JLabel destinationLabel = new JLabel("Destination");
+        JLabel destinationLabel = new JLabel("To");
         destinationLabel.setPreferredSize(new Dimension(130, inputFieldSize.height));
         destinationLabel.setFont(REGULAR_FONT.deriveFont(Font.PLAIN, 12));
         destinationLabel.setForeground(HIGHLIGHT);

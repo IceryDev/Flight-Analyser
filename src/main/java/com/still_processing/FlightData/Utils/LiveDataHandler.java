@@ -45,7 +45,7 @@ public class LiveDataHandler {
     private static final SwingWorker<Void, Void> requestWorker = new SwingWorker<Void, Void>() {
         @Override
         protected Void doInBackground() throws Exception {
-            FlightFetcher.fetchLiveFlightInfo(100);
+            FlightFetcher.fetchLiveFlightInfo(250);
             return null;
         }
     };
