@@ -14,15 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.Scrollable;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.SimpleAttributeSet;
@@ -34,12 +26,7 @@ import com.still_processing.FlightData.Database;
 import com.still_processing.FlightData.FlightInfo;
 import com.still_processing.FlightData.Filters.Filter;
 import com.still_processing.FlightData.Filters.FuzzySearch;
-import com.still_processing.UILib.ButtonBuilder;
-import com.still_processing.UILib.CalendarSettings;
-import com.still_processing.UILib.ExpandablePanel;
-import com.still_processing.UILib.ImagePanel;
-import com.still_processing.UILib.InputFieldBuilder;
-import com.still_processing.UILib.TextPaneBuilder;
+import com.still_processing.UILib.*;
 
 import static com.still_processing.DefaultSettings.Settings.*;
 
@@ -65,6 +52,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
     private CalendarSettings startPicker;
     private CalendarSettings endPicker;
     boolean isFound = true;
+    JTextPane resultCount;
 
     private JTextPane pageDisplay;
 
@@ -273,15 +261,26 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         graphButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         graphButton.addActionListener(sceneSwitch);
 
-        JButton sortButton = new ButtonBuilder()
-                .setSize(25, 25)
-                .setForeground(BACKGROUND)
-                .setBackground(HIGHLIGHT)
-                .setText("Sort By Lateness")
+        String[] graphOptions = {"--Sort Option--", "Lateness - Ascending", "Lateness - Descending", "Distance - Ascending", "Distance - Descending"};
+
+        JComboBox<String> sortDropDown = new DropdownBuilder(graphOptions)
                 .setFontSize(18)
                 .build();
-        sortButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
-        sortButton.addActionListener(this);
+        sortDropDown.setMaximumSize(new Dimension(240, 85));
+        sortDropDown.setMinimumSize(new Dimension(240, 85));
+        sortDropDown.setPreferredSize(new Dimension(240, 85));
+        sortDropDown.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+        sortDropDown.addActionListener(this);
+
+//        JButton sortButton = new ButtonBuilder()
+//                .setSize(25, 25)
+//                .setForeground(BACKGROUND)
+//                .setBackground(HIGHLIGHT)
+//                .setText("Sort By Lateness")
+//                .setFontSize(18)
+//                .build();
+//        sortButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
+//        sortButton.addActionListener(this);
 
         FontMetrics pageFont = getFontMetrics(BOLD_FONT.deriveFont(22f));
         int pageTextHeight = pageFont.getHeight() / 2 + pageFont.getMaxAscent();
@@ -381,6 +380,14 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
             refreshEntries();
         });
 
+        String resultCountText = String.format("%d Result%s Found", flightData.size(), (flightData.size() == 1) ? "" : "s");
+        resultCount = new TextPaneBuilder()
+                .setText(resultCountText)
+                .setFontSize(22)
+                .setFont(BOLD_FONT)
+                .build();
+        resultCount.setMaximumSize(new Dimension(pageFont.stringWidth(resultCountText), pageTextHeight));
+
         JPanel buttonContainer = new JPanel();
         buttonContainer.setOpaque(false);
         buttonContainer.setLayout(new BoxLayout(buttonContainer, BoxLayout.X_AXIS));
@@ -389,9 +396,11 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(graphButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
-        buttonContainer.add(sortButton);
+        buttonContainer.add(sortDropDown);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(liveDataButton);
+        buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
+        buttonContainer.add(resultCount);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(Box.createHorizontalGlue());
         buttonContainer.add(previousPreviousButton);
@@ -481,6 +490,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
     public void refreshEntries() {
         flightEntries.removeAll();
         pageDisplay.setText(String.format("%d", (int) ((float) counter / 25) + 1));
+        resultCount.setText(String.format("%d Result%s Found", flightData.size(), (flightData.size() == 1) ? "" : "s"));
         if (flightData != null && flightData.size() != 0) {
             for (int i = counter; i < (counter + 25); i++) {
                 if (i >= flightData.size())
@@ -497,13 +507,30 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        switch (e.getActionCommand()) {
-            case "Sort By Lateness":
+        JComboBox<String> dropDown = (JComboBox<String>) e.getSource();
+        dropDown.getParent().repaint();
+        switch ((String) dropDown.getSelectedItem()) {
+            case "--Sort Option--":
+                break;
+            case "Lateness - Ascending":
                 flightData.sort((FlightInfo a, FlightInfo b) -> Float.compare(a.lateness, b.lateness));
-                if (!sortOrderAscend) {
-                    Collections.reverse(flightData);
-                }
-                sortOrderAscend = !sortOrderAscend;
+                counter = 0;
+                refreshEntries();
+                break;
+            case "Lateness - Descending":
+                flightData.sort((FlightInfo a, FlightInfo b) -> Float.compare(a.lateness, b.lateness));
+                Collections.reverse(flightData);
+                counter = 0;
+                refreshEntries();
+                break;
+            case "Distance - Ascending":
+                flightData.sort((FlightInfo a, FlightInfo b) -> Float.compare(a.distance, b.distance));
+                counter = 0;
+                refreshEntries();
+                break;
+            case "Distance - Descending":
+                flightData.sort((FlightInfo a, FlightInfo b) -> Float.compare(a.distance, b.distance));
+                Collections.reverse(flightData);
                 counter = 0;
                 refreshEntries();
                 break;
