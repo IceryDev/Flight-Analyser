@@ -41,6 +41,15 @@ import com.still_processing.UILib.ImagePanel;
 import com.still_processing.UILib.InputFieldBuilder;
 import com.still_processing.UILib.RoundedHighlightBorder;
 import com.still_processing.UILib.TextPaneBuilder;
+import com.still_processing.UILib.RoundedButton;
+
+import static com.still_processing.DefaultSettings.Settings.HIGHLIGHT;
+import static com.still_processing.DefaultSettings.Settings.HIGHLIGHT_20;
+import static com.still_processing.DefaultSettings.Settings.LIGHT_HIGHLIGHT;
+import static com.still_processing.DefaultSettings.Settings.BOLD_FONT;
+import static com.still_processing.DefaultSettings.Settings.REGULAR_FONT;
+import static com.still_processing.DefaultSettings.Settings.LIME;
+import static com.still_processing.DefaultSettings.Settings.BACKGROUND;
 
 /**
  * @author Zhou Sun, Deea Zaharia
@@ -274,25 +283,14 @@ public class HomePage extends JPanel implements Scrollable {
         inputFieldContainer.add(Box.createHorizontalGlue());
 
         Dimension buttonSize = new Dimension(200, 40);
-        JButton mapButton = new ButtonBuilder()
-                .setSize(25, 25)
-                .setForeground(BACKGROUND)
-                .setBackground(HIGHLIGHT)
-                .setText("Map View")
-                .setFontSize(18)
-                .build();
+        JButton mapButton = new RoundedButton("Map View", 55, HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
         mapButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         mapButton.setMaximumSize(buttonSize);
         mapButton.setPreferredSize(buttonSize);
         mapButton.setMinimumSize(buttonSize);
 
-        JButton searchButton = new ButtonBuilder()
-                .setSize(25, 25)
-                .setForeground(BACKGROUND)
-                .setBackground(HIGHLIGHT)
-                .setText("Search")
-                .setFontSize(18)
-                .build();
+        JButton searchButton = new RoundedButton("Search", 55,HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
+        ((RoundedButton) searchButton).setButtonIcon(new ImageIcon((getClass().getResource("/Images/plane-white.PNG"))), 18);
         searchButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         searchButton.setMaximumSize(buttonSize);
         searchButton.setPreferredSize(buttonSize);
