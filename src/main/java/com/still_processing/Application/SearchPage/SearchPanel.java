@@ -49,6 +49,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
     private boolean sortOrderAscend = true;
     private ArrayList<String> airportList = new ArrayList<>();
     private boolean liveData = true;
+    private boolean dynamicTextMode = true;         //True/False -> Lateness/Distance
     private ImagePanel notFoundImage;
 
     private JTextField originInput;
@@ -527,9 +528,6 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
 
     }
 
-    private void add(Image image) {
-    }
-
     public void updateSearchBar() {
         originInput.setText(originAirport);
         destInput.setText(destAirport);
@@ -545,7 +543,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
             for (int i = counter; i < (counter + 25); i++) {
                 if (i >= flightData.size())
                     break;
-                flightEntries.add(new ExpandablePanel(flightData.get(i)));
+                flightEntries.add(new ExpandablePanel(flightData.get(i), this.dynamicTextMode));
             }
         }
         else{
@@ -567,22 +565,26 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
                 break;
             case "Lateness - Ascending":
                 flightData.sort((FlightInfo a, FlightInfo b) -> Float.compare(a.lateness, b.lateness));
+                dynamicTextMode = true;
                 counter = 0;
                 refreshEntries();
                 break;
             case "Lateness - Descending":
                 flightData.sort((FlightInfo a, FlightInfo b) -> Float.compare(a.lateness, b.lateness));
+                dynamicTextMode = true;
                 Collections.reverse(flightData);
                 counter = 0;
                 refreshEntries();
                 break;
             case "Distance - Ascending":
                 flightData.sort((FlightInfo a, FlightInfo b) -> Float.compare(a.distance, b.distance));
+                dynamicTextMode = false;
                 counter = 0;
                 refreshEntries();
                 break;
             case "Distance - Descending":
                 flightData.sort((FlightInfo a, FlightInfo b) -> Float.compare(a.distance, b.distance));
+                dynamicTextMode = false;
                 Collections.reverse(flightData);
                 counter = 0;
                 refreshEntries();

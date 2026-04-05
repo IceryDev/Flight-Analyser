@@ -36,6 +36,8 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
     private JPanel defaultDisplay;
     private JPanel expandedDisplay;
     private ToggleButton toggleButton;
+    private JTextPane latenessTitle;
+    private JTextPane lateness;
 
     private boolean isExpanded = false;
     private int toggleArrowAngle = 0;
@@ -54,7 +56,7 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
     private final String FLIGHT_TITLE_TEXT = "Flight Number:";
     private final String ORIGIN_NAME_TITLE = "Origin Airport:";
     private final String DEST_NAME_TITLE = "Destination Airport:";
-    private final String LATENESS_TITLE_TEXT = "Lateness";
+    private final String LATENESS_TITLE_TEXT = "Lateness:";
     private final String FLIGHT_DATE_TITLE_TEXT = "Flight Date:";
     private final String SCH_DEPT_TIME_TITLE_TEXT = "Scheduled Departure Time:";
     private final String ACT_DEPT_TIME_TITLE_TEXT = "Actual Departure Time:";
@@ -83,7 +85,7 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
     private MapContainer mapContainer;
     private ConfinedMapView map;
 
-    public ExpandablePanel(FlightInfo data) {
+    public ExpandablePanel(FlightInfo data, boolean dynamicTextMode) {
         if (data == null) {
             throw new IllegalArgumentException();
         }
@@ -105,10 +107,10 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
         if (tripDurationHour < 0) {
             tripDurationHour += 24;
         }
-        this.tripDuration = String.format("%dh%dm ", tripDurationHour, tripDurationMinutes);
+        this.tripDuration = String.format("%dh%dm  ", tripDurationHour, tripDurationMinutes);
         this.originIATA = data.origin.iataCode;
         this.destIATA = data.dest.iataCode;
-        this.latenessText = String.format("%.0fm ", data.lateness);
+        this.latenessText = String.format("%.0f min", data.lateness);
         this.flightDateText = data.flightDate;
         this.schDepTimeText = data.depTime;
         this.actDepTimeText = data.CRSDepTime;
@@ -173,7 +175,7 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
                 .setText(originIATA)
                 .setFont(textFont)
                 .build();
-        depTimePane.setMaximumSize(new Dimension(titleFontMetrics.stringWidth(depTime),
+        depTimePane.setMaximumSize(new Dimension(titleFontMetrics.stringWidth(depTime) + 5,
                 titleHeight));
         originIATAPane.setMaximumSize(new Dimension(titleFontMetrics.stringWidth(originIATA),
                 titleHeight));
@@ -198,7 +200,7 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
                 .setText(destIATA)
                 .setFont(textFont)
                 .build();
-        arrTimePane.setMaximumSize(new Dimension(titleFontMetrics.stringWidth(arrTime),
+        arrTimePane.setMaximumSize(new Dimension(titleFontMetrics.stringWidth(arrTime) + 5,
                 titleHeight));
         destIATAPane.setMaximumSize(new Dimension(titleFontMetrics.stringWidth(destIATA),
                 titleHeight));
@@ -214,20 +216,23 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
         JPanel latenessContainer = new JPanel();
         latenessContainer.setOpaque(false);
         latenessContainer.setLayout(new BoxLayout(latenessContainer, BoxLayout.Y_AXIS));
-        JTextPane latenessTitle = new TextPaneBuilder()
+        latenessTitle = new TextPaneBuilder()
                 .setText(LATENESS_TITLE_TEXT)
                 .setFont(titleFont)
                 .setFontSize(12)
                 .build();
-        JTextPane lateness = new TextPaneBuilder()
+        lateness = new TextPaneBuilder()
                 .setText(latenessText)
                 .setFont(textFont)
                 .build();
+
+        latenessTitle.setText((dynamicTextMode) ? "Lateness:" : "Distance:");
+        lateness.setText((dynamicTextMode) ? String.format("%.0f min", fInfo.lateness) : String.format("%.1f km", fInfo.distance/1000));
         latenessTitle.setMaximumSize(
                 new Dimension(titleFontMetrics.stringWidth(
-                        LATENESS_TITLE_TEXT),
+                        latenessTitle.getText() + 5),
                         titleHeight));
-        lateness.setMaximumSize(new Dimension(titleFontMetrics.stringWidth(latenessText),
+        lateness.setMaximumSize(new Dimension(titleFontMetrics.stringWidth(lateness.getText()) + 25,
                 titleHeight));
         latenessContainer.add(latenessTitle);
         latenessContainer.add(lateness);
