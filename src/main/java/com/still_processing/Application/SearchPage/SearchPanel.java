@@ -126,7 +126,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         Dimension inputFieldSize = new Dimension(300, 50);
 
         JLabel fromLabel = new JLabel("From");
-        fromLabel.setPreferredSize(new Dimension(98, inputFieldSize.height));
+        fromLabel.setPreferredSize(new Dimension(100, inputFieldSize.height));
         fromLabel.setFont(REGULAR_FONT.deriveFont(Font.PLAIN, 12));
         fromLabel.setForeground(HIGHLIGHT);
         fromLabel.setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 8));
@@ -138,7 +138,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         fromLabel.setIcon(new ImageIcon(scaledFromLabelIcon));
 
         JLabel destinationLabel = new JLabel("To");
-        destinationLabel.setPreferredSize(new Dimension(130, inputFieldSize.height));
+        destinationLabel.setPreferredSize(new Dimension(80, inputFieldSize.height));
         destinationLabel.setFont(REGULAR_FONT.deriveFont(Font.PLAIN, 12));
         destinationLabel.setForeground(HIGHLIGHT);
         destinationLabel.setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 8));
@@ -163,7 +163,6 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
                 .setForeground(HIGHLIGHT)
                 .build();
         originInput.setOpaque(false);
-        originInput.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 12));
         originInput.getDocument().addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) {
                 sync(e);
@@ -197,7 +196,6 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
                 .setForeground(HIGHLIGHT)
                 .build();
         destInput.setOpaque(false);
-        destInput.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 12));
         destInput.getDocument().addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) {
                 sync(e);

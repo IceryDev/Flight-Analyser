@@ -44,13 +44,13 @@ import com.still_processing.UILib.TextPaneBuilder;
 
 /**
  * @author Zhou Sun, Deea Zaharia
- * <br>
+ *         <br>
  *
- * Added icons and rounded borders to the input fields
+ *         Added icons and rounded borders to the input fields
  * @author Marco Fontana
- * <br>
+ *         <br>
  *
- * Added the calendar
+ *         Added the calendar
  * 
  * @author Jessica Chen
  */
@@ -98,25 +98,27 @@ public class HomePage extends JPanel implements Scrollable {
         Dimension inputFieldSize = new Dimension(300, 50);
 
         JLabel fromLabel = new JLabel("From");
-        fromLabel.setPreferredSize(new Dimension(98, inputFieldSize.height));
+        fromLabel.setPreferredSize(new Dimension(100, inputFieldSize.height));
         fromLabel.setFont(REGULAR_FONT.deriveFont(Font.PLAIN, 12));
         fromLabel.setForeground(HIGHLIGHT);
         fromLabel.setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 8));
         fromLabel.setHorizontalAlignment(SwingConstants.LEFT);
         fromLabel.setVerticalAlignment(SwingConstants.CENTER);
         Image fromLabelIcon = new ImageIcon(getClass().getResource("/Images/plane-departing.png")).getImage();
-        Image scaledFromLabelIcon = fromLabelIcon.getScaledInstance(inputFieldSize.height - 20, inputFieldSize.height - 20, Image.SCALE_SMOOTH);
+        Image scaledFromLabelIcon = fromLabelIcon.getScaledInstance(inputFieldSize.height - 20,
+                inputFieldSize.height - 20, Image.SCALE_SMOOTH);
         fromLabel.setIcon(new ImageIcon(scaledFromLabelIcon));
 
         JLabel destinationLabel = new JLabel("To");
-        destinationLabel.setPreferredSize(new Dimension(130, inputFieldSize.height));
+        destinationLabel.setPreferredSize(new Dimension(80, inputFieldSize.height));
         destinationLabel.setFont(REGULAR_FONT.deriveFont(Font.PLAIN, 12));
         destinationLabel.setForeground(HIGHLIGHT);
         destinationLabel.setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 8));
         destinationLabel.setHorizontalAlignment(SwingConstants.LEFT);
         destinationLabel.setVerticalAlignment(SwingConstants.CENTER);
         Image destinationLabelIcon = new ImageIcon(getClass().getResource("/Images/plane-landing.png")).getImage();
-        Image scaledDestinationLabelIcon = destinationLabelIcon.getScaledInstance(inputFieldSize.height - 20, inputFieldSize.height - 20, Image.SCALE_SMOOTH);
+        Image scaledDestinationLabelIcon = destinationLabelIcon.getScaledInstance(inputFieldSize.height - 20,
+                inputFieldSize.height - 20, Image.SCALE_SMOOTH);
         destinationLabel.setIcon(new ImageIcon(scaledDestinationLabelIcon));
 
         JPanel originInputContainer = new JPanel(new BorderLayout(6, 0));
@@ -220,7 +222,8 @@ public class HomePage extends JPanel implements Scrollable {
         startLabel.setHorizontalAlignment(SwingConstants.LEFT);
         startLabel.setVerticalAlignment(SwingConstants.CENTER);
         Image startLabelIcon = new ImageIcon(getClass().getResource("/Images/calendar.png")).getImage();
-        Image scaledStartLabelIcon = startLabelIcon.getScaledInstance(inputFieldSize.height - 20, inputFieldSize.height - 20, Image.SCALE_SMOOTH);
+        Image scaledStartLabelIcon = startLabelIcon.getScaledInstance(inputFieldSize.height - 20,
+                inputFieldSize.height - 20, Image.SCALE_SMOOTH);
         startLabel.setIcon(new ImageIcon(scaledStartLabelIcon));
 
         JLabel endLabel = new JLabel("Return");
@@ -232,14 +235,14 @@ public class HomePage extends JPanel implements Scrollable {
         endLabel.setHorizontalAlignment(SwingConstants.LEFT);
         endLabel.setVerticalAlignment(SwingConstants.CENTER);
         Image endLabelIcon = new ImageIcon(getClass().getResource("/Images/calendar.png")).getImage();
-        Image scaledEndLabelIcon = endLabelIcon.getScaledInstance(inputFieldSize.height - 20, inputFieldSize.height - 20, Image.SCALE_SMOOTH);
+        Image scaledEndLabelIcon = endLabelIcon.getScaledInstance(inputFieldSize.height - 20,
+                inputFieldSize.height - 20, Image.SCALE_SMOOTH);
         endLabel.setIcon(new ImageIcon(scaledEndLabelIcon));
 
         Dimension datePickerSize = new Dimension(300, 50);
         Border dateFieldBorder = BorderFactory.createCompoundBorder(
                 RoundedHighlightBorder.getRoundedBorder(HIGHLIGHT_20),
-                BorderFactory.createEmptyBorder(2, 4, 2, 14)
-        );
+                BorderFactory.createEmptyBorder(2, 4, 2, 14));
 
         JPanel startGroup = new JPanel(new BorderLayout(6, 0));
         startGroup.setBorder(dateFieldBorder);
