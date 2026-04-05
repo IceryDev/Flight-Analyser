@@ -551,6 +551,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
     public void refreshEntries() {
         flightEntries.removeAll();
         pageDisplay.setText(String.format("%d", (int) ((float) counter / 25) + 1));
+
         if (flightData != null && flightData.size() != 0) {
             resultCount.setText(
                     String.format("%d Result%s Found", flightData.size(), (flightData.size() == 1) ? "" : "s"));
@@ -582,8 +583,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
                 refreshEntries();
                 break;
             case "Lateness - Descending":
-                flightData.sort((FlightInfo a, FlightInfo b) -> Float.compare(a.lateness, b.lateness));
-                Collections.reverse(flightData);
+                flightData.sort((FlightInfo a, FlightInfo b) -> Float.compare(b.lateness, a.lateness));
                 counter = 0;
                 refreshEntries();
                 break;
@@ -593,8 +593,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
                 refreshEntries();
                 break;
             case "Distance - Descending":
-                flightData.sort((FlightInfo a, FlightInfo b) -> Float.compare(a.distance, b.distance));
-                Collections.reverse(flightData);
+                flightData.sort((FlightInfo a, FlightInfo b) -> Float.compare(b.distance, a.distance));
                 counter = 0;
                 refreshEntries();
                 break;
