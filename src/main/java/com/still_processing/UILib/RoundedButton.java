@@ -1,11 +1,8 @@
 package com.still_processing.UILib;
 
 import javax.swing.JButton;
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import javax.swing.border.Border;
+import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -17,13 +14,15 @@ public class RoundedButton extends JButton {
     private int radius;
     private Color hoverColor;
     private boolean isHovered = false;
+    private boolean showBorder = false;
+    private int borderThickness = 1;
 
     public RoundedButton(String text, int radius, Color backgroundColor, Color hoverColor, int fontSize){
         super(text);
         this.radius = radius;
         this.backgroundColor = backgroundColor;
         this.hoverColor = hoverColor;
-        setFont(BOLD_FONT.deriveFont((float)fontSize));
+        setFont(REGULAR_FONT.deriveFont((float)fontSize));
         setForeground(BACKGROUND);
 
         setContentAreaFilled(false);
@@ -56,11 +55,27 @@ public class RoundedButton extends JButton {
             g2d.setColor(backgroundColor);
         }
         g2d.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), radius, radius));
+
+        if(showBorder){
+            g2d.setColor(backgroundColor.darker());
+            g2d.setStroke(new BasicStroke(1));
+            int gap = borderThickness/2;
+            g2d.drawRoundRect(gap, gap, getWidth() - borderThickness, getHeight() - borderThickness, radius, radius);
+        }
         g2d.dispose();
         super.paintComponent(g);
     }
     @Override
     public boolean contains(int x, int y) {
         return new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), radius, radius).contains(x, y);
+    }
+
+    public void setShowBorder(boolean showBorder){
+        this.showBorder =showBorder;
+        repaint();
+    }
+    public void setBorderThickness(int borderThickness) {
+        this.borderThickness = borderThickness;
+        repaint();
     }
 }
