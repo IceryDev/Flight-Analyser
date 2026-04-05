@@ -3,6 +3,7 @@ package com.still_processing.UILib;
 import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.RoundRectangle2D;
@@ -17,11 +18,13 @@ public class RoundedButton extends JButton {
     private Color hoverColor;
     private boolean isHovered = false;
 
-    public RoundedButton(String text, int radius, Color backgroundColor, Color hoverColor){
+    public RoundedButton(String text, int radius, Color backgroundColor, Color hoverColor, int fontSize){
         super(text);
         this.radius = radius;
         this.backgroundColor = backgroundColor;
         this.hoverColor = hoverColor;
+        setFont(BOLD_FONT.deriveFont((float)fontSize));
+        setForeground(BACKGROUND);
 
         setContentAreaFilled(false);
         setBorderPainted(false);
@@ -29,6 +32,7 @@ public class RoundedButton extends JButton {
         setFocusPainted(false);
 
         addMouseListener(new MouseAdapter() {
+            @Override
             public void mouseEntered(MouseEvent e) {
                 isHovered = true;
                 repaint();
@@ -55,11 +59,8 @@ public class RoundedButton extends JButton {
         g2d.dispose();
         super.paintComponent(g);
     }
-
     @Override
     public boolean contains(int x, int y) {
-        return new RoundRectangle2D.Double(0, 0, getWidth(), getHeight(), radius, radius).contains(x, y);
+        return new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), radius, radius).contains(x, y);
     }
-
-
 }
