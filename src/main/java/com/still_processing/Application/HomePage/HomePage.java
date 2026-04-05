@@ -59,7 +59,7 @@ import static com.still_processing.DefaultSettings.Settings.BACKGROUND;
  * @author Marco Fontana
  * <br>
  *
- * Added the calendar
+ * Added the calendar and rounded buttons
  * 
  * @author Jessica Chen
  */

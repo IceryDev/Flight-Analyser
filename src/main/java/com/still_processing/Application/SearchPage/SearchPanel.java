@@ -32,7 +32,7 @@ import com.still_processing.UILib.*;
 import static com.still_processing.DefaultSettings.Settings.*;
 
 /**
- * @author Deea Zaharia, Jagoda Koczwara-Szuba
+ * @author Deea Zaharia, Jagoda Koczwara-Szuba, Jessica Chen
  * <br>
  *
  * Added icons and rounded borders to the input fields
@@ -84,13 +84,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         textPane.setSize(new Dimension(textWidth, textHeight));
         textPane.setMaximumSize(new Dimension(textWidth, textHeight));
 
-        JButton homeButton = new ButtonBuilder()
-                .setSize(25, 25)
-                .setForeground(BACKGROUND)
-                .setBackground(HIGHLIGHT)
-                .setText("Return Home")
-                .setFontSize(18)
-                .build();
+        JButton homeButton = new RoundedButton("Return Home", 55, HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
         homeButton.addActionListener(sceneSwitch);
         homeButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
 
@@ -287,13 +281,8 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         this.add(inputFieldContainer);
         this.add(Box.createRigidArea(new Dimension(0, 20)));
 
-        JButton refineSearch = new ButtonBuilder()
-                .setSize(25, 25)
-                .setForeground(BACKGROUND)
-                .setBackground(HIGHLIGHT)
-                .setText("Refine Search")
-                .setFontSize(18)
-                .build();
+        JButton refineSearch = new RoundedButton("Refine Search", 55,HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
+        ((RoundedButton) refineSearch).setButtonIcon(new ImageIcon((getClass().getResource("/Images/plane-white.PNG"))), 18);
         refineSearch.addActionListener(e -> {
             updateSearch();
             counter = 0;
@@ -301,13 +290,8 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         });
         refineSearch.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
 
-        JButton graphButton = new ButtonBuilder()
-                .setSize(25, 25)
-                .setForeground(BACKGROUND)
-                .setBackground(HIGHLIGHT)
-                .setText("View Graph")
-                .setFontSize(18)
-                .build();
+        JButton graphButton = new RoundedButton("View Graph", 55,HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
+        ((RoundedButton) graphButton).setButtonIcon(new ImageIcon((getClass().getResource("/Images/graph.PNG"))), 18);
         graphButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         graphButton.addActionListener(sceneSwitch);
 
@@ -322,16 +306,6 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         sortDropDown.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         sortDropDown.addActionListener(this);
 
-//        JButton sortButton = new ButtonBuilder()
-//                .setSize(25, 25)
-//                .setForeground(BACKGROUND)
-//                .setBackground(HIGHLIGHT)
-//                .setText("Sort By Lateness")
-//                .setFontSize(18)
-//                .build();
-//        sortButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
-//        sortButton.addActionListener(this);
-
         FontMetrics pageFont = getFontMetrics(BOLD_FONT.deriveFont(22f));
         int pageTextHeight = pageFont.getHeight() / 2 + pageFont.getMaxAscent();
         String pageText = String.format("%d", (int) ((float) counter / 25) + 1);
@@ -344,13 +318,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
                 .build();
         pageDisplay.setMaximumSize(new Dimension(pageFont.stringWidth(pageText), pageTextHeight));
 
-        JButton previousButton = new ButtonBuilder()
-                .setSize(25, 25)
-                .setForeground(BACKGROUND)
-                .setBackground(HIGHLIGHT)
-                .setText("<")
-                .setFontSize(18)
-                .build();
+        JButton previousButton = new RoundedButton("<", 20, HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
         previousButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         previousButton.addActionListener(e -> {
             counter -= (counter >= 25) ? 25 : 0;
@@ -358,13 +326,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
             pageDisplay.setText(String.format("%d", (int) ((float) counter / 25) + 1));
         });
 
-        JButton previousPreviousButton = new ButtonBuilder()
-                .setSize(25, 25)
-                .setForeground(BACKGROUND)
-                .setBackground(HIGHLIGHT)
-                .setText("<<")
-                .setFontSize(18)
-                .build();
+        JButton previousPreviousButton = new RoundedButton("<<", 20, HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
         previousPreviousButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         previousPreviousButton.addActionListener(e -> {
             counter -= (counter >= 250) ? 250 : counter;
@@ -373,13 +335,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
             pageDisplay.setText(String.format("%d", (int) ((float) counter / 25) + 1));
         });
 
-        JButton nextButton = new ButtonBuilder()
-                .setSize(25, 25)
-                .setForeground(BACKGROUND)
-                .setBackground(HIGHLIGHT)
-                .setText(">")
-                .setFontSize(18)
-                .build();
+        JButton nextButton = new RoundedButton(">", 20, HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
         nextButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         nextButton.addActionListener(e -> {
             if (flightData != null)
@@ -388,13 +344,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
             pageDisplay.setText(String.format("%d", (int) ((float) counter / 25) + 1));
         });
 
-        JButton nextNextButton = new ButtonBuilder()
-                .setSize(25, 25)
-                .setForeground(BACKGROUND)
-                .setBackground(HIGHLIGHT)
-                .setText(">>")
-                .setFontSize(18)
-                .build();
+        JButton nextNextButton = new RoundedButton(">>", 20, HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
         nextNextButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         nextNextButton.addActionListener(e -> {
             if (flightData != null) {
@@ -412,19 +362,17 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
             pageDisplay.setText(String.format("%d", (int) ((float) counter / 25) + 1));
         });
 
-        JButton liveDataButton = new ButtonBuilder()
-                .setSize(25, 25)
-                .setForeground(BACKGROUND)
-                .setBackground(GRAY)
-                .setText("LIVE")
-                .setFontSize(18)
-                .setBold(true)
-                .build();
+        JButton liveDataButton = new RoundedButton("LIVE", 55, GRAY, LIME, 18);
+        ((RoundedButton) liveDataButton).setButtonIcon(new ImageIcon((getClass().getResource("/Images/signal.PNG"))), 18);
         liveDataButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         liveDataButton.addActionListener(e -> {
             liveData = !liveData;
             if (liveData) liveDataButton.setBackground(GRAY);
-            else liveDataButton.setBackground(LIVE_BUTTON_COLOR);
+            else{
+                ((RoundedButton) liveDataButton).setBackgroundColor(LIVE_BUTTON_COLOR);
+                ((RoundedButton) liveDataButton).setHoverColor(LIVE_BUTTON_COLOR_LIGHT);
+            }
+
             Database.toggleSelectedFlights();
             updateSearch();
             refreshEntries();

@@ -15,6 +15,11 @@ import java.awt.event.MouseEvent;
 
 import static com.still_processing.DefaultSettings.Settings.*;
 
+/**
+ * Create a Rounded Button Class
+ * @author Jessica Chen
+ */
+
 public class RoundedButton extends JButton {
     private Color backgroundColor;
     private int radius;
@@ -50,6 +55,10 @@ public class RoundedButton extends JButton {
             }
         });
     }
+    /**
+     * Draw
+     * @author Jessica Chen
+     */
     @Override
     protected void paintComponent(Graphics g){
         Graphics2D g2d = (Graphics2D) g.create();
@@ -71,11 +80,19 @@ public class RoundedButton extends JButton {
         g2d.dispose();
         super.paintComponent(g);
     }
+    /**
+     * Ensure button has the right area for user hover and pressing.
+     * @author Jessica Chen
+     */
     @Override
     public boolean contains(int x, int y) {
         return new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), radius, radius).contains(x, y);
     }
 
+    /**
+     * Setters for scaling, drawing a border, and setting the background color and hover color.
+     * @author Jessica Chen
+     */
     public void setShowBorder(boolean showBorder){
         this.showBorder =showBorder;
         repaint();
@@ -87,6 +104,14 @@ public class RoundedButton extends JButton {
     public void setButtonIcon(ImageIcon icon, int iconSize) {
         setIcon(scaleIcon(icon, iconSize));
         setIconTextGap(8);
+        repaint();
+    }
+    public void setBackgroundColor(Color backgroundColor){
+        this.backgroundColor = backgroundColor;
+        repaint();
+    }
+    public void setHoverColor(Color hoverColor){
+        this.hoverColor = hoverColor;
         repaint();
     }
     public void setBorderThickness(int borderThickness) {
