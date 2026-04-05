@@ -1,8 +1,14 @@
 package com.still_processing.UILib;
 
 import javax.swing.JButton;
-import javax.swing.border.Border;
-import java.awt.*;
+import javax.swing.ImageIcon;
+import javax.swing.Icon;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.Image;
+import java.awt.Color;
+import java.awt.BasicStroke;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -72,6 +78,15 @@ public class RoundedButton extends JButton {
 
     public void setShowBorder(boolean showBorder){
         this.showBorder =showBorder;
+        repaint();
+    }
+    private Icon scaleIcon(ImageIcon icon, int size) {
+        Image scaled = icon.getImage().getScaledInstance(size, size, Image.SCALE_SMOOTH);
+        return new ImageIcon(scaled);
+    }
+    public void setButtonIcon(ImageIcon icon, int iconSize) {
+        setIcon(scaleIcon(icon, iconSize));
+        setIconTextGap(8);
         repaint();
     }
     public void setBorderThickness(int borderThickness) {
