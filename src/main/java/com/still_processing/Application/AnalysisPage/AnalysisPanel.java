@@ -82,13 +82,7 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         dropDown.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         dropDown.addActionListener(this);
 
-        JButton homeButton = new ButtonBuilder()
-                .setSize(25, 25)
-                .setForeground(BACKGROUND)
-                .setBackground(HIGHLIGHT)
-                .setText("Return Home")
-                .setFontSize(18)
-                .build();
+        JButton homeButton = new RoundedButton("Return Home", 55, HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
         homeButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         homeButton.addActionListener(sceneSwitch);
 
