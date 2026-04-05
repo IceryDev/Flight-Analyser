@@ -151,7 +151,7 @@ public class BarChartGraph extends JPanel implements Runnable {
 
             int totalGaps = barGap * (values.length - 1);
             int barWidth = (chartWidth - totalGaps) / values.length;
-            double maxValue = (values.length + 1) * yStep;
+            int maxValue = ((int) max / yStep + 1) * yStep;
 
             for (int i = 0; i < values.length; i++) {
                 int xPos = padding + i * (barWidth + barGap);
@@ -233,7 +233,7 @@ public class BarChartGraph extends JPanel implements Runnable {
             g2d.drawString(labels[i], tickX - labelWidth / 2, getHeight() - padding + 16);
 
         }
-        int maxYsteps = (int) Math.ceil(max / yStep);
+        int maxYsteps = ((int) max / yStep + 1);
         float scale = (float) chartHeight / maxYsteps;
 
         g2d.setFont(font.deriveFont(labelFontSize));
@@ -291,7 +291,7 @@ public class BarChartGraph extends JPanel implements Runnable {
 
         int totalGaps = barGap * (values.length - 1);
         int barWidth = (chartWidth - totalGaps) / values.length;
-        double maxValue = max + yStep;
+        double maxValue = ((int) max / yStep + 1) * yStep;
 
         int height = getHeight();
         int mouseX = event.getX();
