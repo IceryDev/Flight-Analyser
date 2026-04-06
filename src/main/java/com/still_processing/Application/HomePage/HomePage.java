@@ -283,7 +283,8 @@ public class HomePage extends JPanel implements Scrollable {
         inputFieldContainer.add(Box.createHorizontalGlue());
 
         Dimension buttonSize = new Dimension(200, 40);
-        JButton mapButton = new RoundedButton("Map View", 55, HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
+        JButton mapButton = new RoundedButton("Map View", 55, HIGHLIGHT, LIGHT_HIGHLIGHT, 17);
+        ((RoundedButton) mapButton).setButtonIcon(new ImageIcon((getClass().getResource("/Images/map.PNG"))), 14);
         mapButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         mapButton.setMaximumSize(buttonSize);
         mapButton.setPreferredSize(buttonSize);
