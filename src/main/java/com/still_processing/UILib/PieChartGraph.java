@@ -44,11 +44,11 @@ public class PieChartGraph extends JPanel implements Runnable {
     private int chartY;
 
     private JLabel title;
-    private Color color1 = LIGHT_BLUE;
-    private Color color2 = HIGHLIGHT;
+    private Color color1 = LIGHT_HIGHLIGHT;
+    private Color color2 = LIGHT_BLUE;
     private Color color3 = LIGHT_GREEN;
-    private Color color4 = CYAN;
-    private Color color5 = DARK_CYAN;
+    private Color color4 = HIGHLIGHT;
+    private Color color5 = CYAN;
     private Color color6 = LIGHT_BURGUNDY;
     private Color color7 = BURGUNDY;
 
