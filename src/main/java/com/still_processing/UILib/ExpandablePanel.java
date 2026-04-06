@@ -227,7 +227,7 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
                 .build();
 
         latenessTitle.setText((dynamicTextMode) ? "Lateness:" : "Distance:");
-        lateness.setText((dynamicTextMode) ? String.format("%.0f min", fInfo.lateness) : String.format("%.1f km", fInfo.distance/1000));
+        lateness.setText((dynamicTextMode) ? String.format("%.0f min", fInfo.lateness) : String.format("%.1f km", fInfo.distance));
         latenessTitle.setMaximumSize(
                 new Dimension(titleFontMetrics.stringWidth(
                         latenessTitle.getText() + 5),

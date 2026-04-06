@@ -207,7 +207,7 @@ public class FlightFetcher {
                                                     info.dest.longitude,
                                                     GeodesicMask.DISTANCE
                                             );
-                                            info.distance = (float) g.s12;
+                                            info.distance = (float) g.s12/1000;
                                         }
                                     } else {
                                         if (debug) {
