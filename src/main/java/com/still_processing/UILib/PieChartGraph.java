@@ -156,7 +156,7 @@ public class PieChartGraph extends JPanel implements Runnable {
             int chartDiameter = Math.min(panelWidth - legendWidth - padding * 2, panelHeight - padding * 4);
             chartDiameter = Math.max(chartDiameter, 100);
             int chartY = (panelHeight - chartDiameter) / 2 + TOP_BAR.getHeight() / 2;
-            int chartX = padding;
+            int chartX = (panelWidth - legendWidth - chartDiameter) / 2;
             double animatedSweep = sineMotion(animationProgress) * 360;
             List<String> keys = new ArrayList<>(data.keySet());
             int total = keys.stream().mapToInt(data::get).sum();
