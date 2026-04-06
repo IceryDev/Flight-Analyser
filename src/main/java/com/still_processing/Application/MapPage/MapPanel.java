@@ -1,19 +1,26 @@
 package com.still_processing.Application.MapPage;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import com.still_processing.DefaultSettings.Settings;
-import com.still_processing.FlightData.Database;
 import com.still_processing.FlightData.Utils.LiveDataHandler;
-import com.still_processing.UILib.ButtonBuilder;
 import com.still_processing.UILib.ImagePanel;
 import com.still_processing.UILib.RoundedButton;
 import com.still_processing.UILib.TextPaneBuilder;
@@ -54,7 +61,10 @@ public class MapPanel extends JPanel {
         textPane.setSize(new Dimension(textWidth, textHeight));
         textPane.setMaximumSize(new Dimension(textWidth, textHeight));
 
-        JButton homeButton = new RoundedButton("Return Home", 55, HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
+        JButton homeButton = new RoundedButton("Return Home", 40, HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
+        homeButton.setMinimumSize(new Dimension(215, 40));
+        homeButton.setPreferredSize(new Dimension(215, 40));
+        homeButton.setMaximumSize(new Dimension(215, 40));
         homeButton.addActionListener(sceneSwitch);
         homeButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
 

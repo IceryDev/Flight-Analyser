@@ -35,7 +35,6 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
-import com.still_processing.UILib.ButtonBuilder;
 import com.still_processing.UILib.CalendarSettings;
 import com.still_processing.UILib.ImagePanel;
 import com.still_processing.UILib.InputFieldBuilder;
@@ -274,14 +273,14 @@ public class HomePage extends JPanel implements Scrollable {
         inputFieldContainer.add(Box.createHorizontalGlue());
 
         Dimension buttonSize = new Dimension(200, 40);
-        JButton mapButton = new RoundedButton("Map View", 55, HIGHLIGHT, LIGHT_HIGHLIGHT, 17);
+        JButton mapButton = new RoundedButton("Map View", 40, HIGHLIGHT, LIGHT_HIGHLIGHT, 17);
         ((RoundedButton) mapButton).setButtonIcon(new ImageIcon((getClass().getResource("/Images/map.PNG"))), 14);
         mapButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         mapButton.setMaximumSize(buttonSize);
         mapButton.setPreferredSize(buttonSize);
         mapButton.setMinimumSize(buttonSize);
 
-        JButton searchButton = new RoundedButton("Search", 55, HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
+        JButton searchButton = new RoundedButton("Search", 40, HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
         ((RoundedButton) searchButton).setButtonIcon(new ImageIcon((getClass().getResource("/Images/plane-white.PNG"))),
                 18);
         searchButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));

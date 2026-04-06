@@ -101,7 +101,10 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         textPane.setSize(new Dimension(textWidth, textHeight));
         textPane.setMaximumSize(new Dimension(textWidth, textHeight));
 
-        JButton homeButton = new RoundedButton("Return Home", 55, HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
+        JButton homeButton = new RoundedButton("Return Home", 40, HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
+        homeButton.setMinimumSize(new Dimension(215, 40));
+        homeButton.setPreferredSize(new Dimension(215, 40));
+        homeButton.setMaximumSize(new Dimension(215, 40));
         homeButton.addActionListener(sceneSwitch);
         homeButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
 
@@ -300,7 +303,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         this.add(inputFieldContainer);
         this.add(Box.createRigidArea(new Dimension(0, 20)));
 
-        JButton refineSearch = new RoundedButton("Refine Search", 55, HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
+        JButton refineSearch = new RoundedButton("Refine Search", 40, HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
         ((RoundedButton) refineSearch).setButtonIcon(new ImageIcon((getClass().getResource("/Images/plane-white.PNG"))),
                 18);
         refineSearch.addActionListener(e -> {
@@ -308,12 +311,20 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
             counter = 0;
             refreshEntries();
         });
+        Dimension refineButtonSize = new Dimension(250, 40);
         refineSearch.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
+        refineSearch.setMinimumSize(refineButtonSize);
+        refineSearch.setPreferredSize(refineButtonSize);
+        refineSearch.setMaximumSize(refineButtonSize);
 
-        JButton graphButton = new RoundedButton("View Graph", 55, HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
+        JButton graphButton = new RoundedButton("View Graph", 40, HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
         ((RoundedButton) graphButton).setButtonIcon(new ImageIcon((getClass().getResource("/Images/graph.PNG"))), 18);
+        Dimension graphButtonSize = new Dimension(230, 40);
         graphButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         graphButton.addActionListener(sceneSwitch);
+        graphButton.setMinimumSize(graphButtonSize);
+        graphButton.setPreferredSize(graphButtonSize);
+        graphButton.setMaximumSize(graphButtonSize);
 
         String[] graphOptions = { "--Sort Option--", "Lateness - Ascending", "Lateness - Descending",
                 "Distance - Ascending", "Distance - Descending" };
@@ -383,33 +394,27 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
             pageDisplay.setText(String.format("%d", (int) ((float) counter / 25) + 1));
         });
 
-        JButton liveDataButton = new RoundedButton("LIVE", 55, GRAY, LIME, 18);
-        ((RoundedButton) liveDataButton).setButtonIcon(new ImageIcon((getClass().getResource("/Images/signal.PNG"))),
+        RoundedButton liveDataButton = new RoundedButton("LIVE", 40, GRAY, LIME, 18);
+        Dimension liveButtonSize = new Dimension(200, 40);
+        liveDataButton.setMinimumSize(liveButtonSize);
+        liveDataButton.setMaximumSize(liveButtonSize);
+        liveDataButton.setButtonIcon(new ImageIcon((getClass().getResource("/Images/signal.PNG"))),
                 18);
         liveDataButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         liveDataButton.addActionListener(e -> {
             liveData = !liveData;
             if (liveData) {
-                ((RoundedButton) liveDataButton).setBackgroundColor(GRAY.darker());
-                ((RoundedButton) liveDataButton).setHoverColor(GRAY);
+                liveDataButton.setBackgroundColor(GRAY.darker());
+                liveDataButton.setHoverColor(GRAY);
             } else {
-                ((RoundedButton) liveDataButton).setBackgroundColor(LIVE_BUTTON_COLOR);
-                ((RoundedButton) liveDataButton).setHoverColor(LIVE_BUTTON_COLOR_LIGHT);
+                liveDataButton.setBackgroundColor(LIVE_BUTTON_COLOR);
+                liveDataButton.setHoverColor(LIVE_BUTTON_COLOR_LIGHT);
             }
 
             Database.toggleSelectedFlights();
             updateSearch();
             refreshEntries();
         });
-
-        String resultCountText = String.format("%d Result%s Found", flightData.size(),
-                (flightData.size() == 1) ? "" : "s");
-        resultCount = new TextPaneBuilder()
-                .setText(resultCountText)
-                .setFontSize(22)
-                .setFont(BOLD_FONT)
-                .build();
-        resultCount.setMaximumSize(new Dimension(pageFont.stringWidth(resultCountText), pageTextHeight));
 
         JPanel buttonContainer = new JPanel();
         buttonContainer.setOpaque(false);
@@ -419,12 +424,9 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(graphButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
-        buttonContainer.add(sortDropDown);
-        buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(liveDataButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
-        buttonContainer.add(resultCount);
-        buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
+        buttonContainer.add(sortDropDown);
         buttonContainer.add(Box.createHorizontalGlue());
         buttonContainer.add(previousPreviousButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(10, 0)));
@@ -438,7 +440,18 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         this.add(buttonContainer);
 
+        String resultCountText = String.format("%d Result%s Found", flightData.size(),
+                (flightData.size() == 1) ? "" : "s");
+        resultCount = new TextPaneBuilder()
+                .setText(resultCountText)
+                .setFontSize(22)
+                .setFont(BOLD_FONT)
+                .build();
+        resultCount.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
+        this.add(resultCount);
+
         flightEntries = new JPanel();
+        flightEntries.setOpaque(false);
         flightEntries.setLayout(new BoxLayout(flightEntries, BoxLayout.Y_AXIS));
         notFoundImage = new ImagePanel("/Images/not-found-page.png", 900, 500);
         this.add(notFoundImage);

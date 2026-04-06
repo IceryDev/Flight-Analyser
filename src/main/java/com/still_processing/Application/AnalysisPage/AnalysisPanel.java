@@ -44,15 +44,8 @@ import static com.still_processing.FlightData.Statistics.*;
 import static com.still_processing.DefaultSettings.Settings.*;
 
 /**
- * @author Deea Zaharia (Jagoda Koczwara-Szuba)
- */
-
-/**
- * Add error handling to stop the program from crashing when the data is null
- * If data is null, then the graph is not added to the drop-down
- * If all the graph data is null, then an error image will be shown
- * Add Rounded Button
- * 
+ * @author Deea Zaharia
+ * @author Jagoda Koczwara-Szuba
  * @author Jessica Chen
  */
 
@@ -149,7 +142,10 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         textPane.setSize(new Dimension(textWidth, textHeight));
         textPane.setMaximumSize(new Dimension(textWidth, textHeight));
 
-        JButton homeButton = new RoundedButton("Return Home", 55, HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
+        JButton homeButton = new RoundedButton("Return Home", 40, HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
+        homeButton.setMinimumSize(new Dimension(215, 40));
+        homeButton.setPreferredSize(new Dimension(215, 40));
+        homeButton.setMaximumSize(new Dimension(215, 40));
         homeButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         homeButton.addActionListener(sceneSwitch);
 
