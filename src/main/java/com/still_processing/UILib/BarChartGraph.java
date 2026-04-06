@@ -42,6 +42,8 @@ public class BarChartGraph extends JPanel implements Runnable {
     private int yStep = 5;
     private int padding = 90;
     private int barGap = 8;
+    private String xLengend = "category";
+    private String yLengend = "value";
 
     private double renderPercentage = 0;
     private String chartTitle = "Bar Chart";
@@ -167,7 +169,7 @@ public class BarChartGraph extends JPanel implements Runnable {
                 g2d.drawRect(xPos, barTop, barWidth, barProgress);
             }
             drawAxis(g2d, max);
-            drawAxisTitles(g2d, "Category", "Value");
+            drawAxisTitles(g2d, xLengend, yLengend);
         }
         if (showToolTip) {
             drawHoverTooltip(g2d);
@@ -358,5 +360,13 @@ public class BarChartGraph extends JPanel implements Runnable {
         if (yStep > 0) {
             this.yStep = yStep;
         }
+    }
+
+    public void setXLegend(String xLengend) {
+        this.xLengend = xLengend;
+    }
+
+    public void setYLegend(String yLengend) {
+        this.yLengend = yLengend;
     }
 }

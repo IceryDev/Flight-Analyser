@@ -216,8 +216,10 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
                 maxDistance = (maxDistance > dataPoint) ? maxDistance : dataPoint;
             }
             int xStep = 50;
+            if (maxDistance > 5_000_000)
+                xStep = 2_000_000;
             if (maxDistance > 1_000_000)
-                xStep = 2_500_000;
+                xStep = 500_000;
             else if (maxDistance > 10000)
                 xStep = 2000;
             else if (maxDistance > 500)
@@ -225,8 +227,8 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
 
             distanceHistogram.setXStep(xStep);
             distanceHistogram.setYStep(distance.length / 10);
-            distanceHistogram.revalidate();
-            distanceHistogram.repaint();
+            distanceHistogram.setXLengendText("Distance (in kilometers)");
+            distanceHistogram.setYLengendText("Number of Flights");
 
             Object[][] distanceStats = {
                     { arithmeticMean(distance), median(distance), variance(distance), standardDeviation(distance) } };
@@ -263,6 +265,8 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
 
         barChart = new BarChartGraph(sortedTop10Airports);
         barChart.setPreferredSize(new Dimension(0, graphHeight));
+        barChart.setXLegend("Top 10 Origins");
+        barChart.setXLegend("Flight Counts");
 
         float maxCount = 0;
         for (String key : sortedTop10Airports.keySet()) {
