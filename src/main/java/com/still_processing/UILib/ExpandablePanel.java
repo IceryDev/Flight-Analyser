@@ -94,20 +94,27 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
         this.flightNumberText = (data.flightNumber == null) ? data.plane.icao24.toUpperCase() : data.iataCode + data.flightNumber;
         this.depTime = data.depTime;
         this.arrTime = data.arrTime;
-        int depHour = Integer.parseInt(depTime.substring(0, 2));
-        int depMinutes = Integer.parseInt(depTime.substring(3, 5));
-        int arrHour = Integer.parseInt(arrTime.substring(0, 2));
-        int arrMinutes = Integer.parseInt(arrTime.substring(3, 5));
-        int tripDurationHour = arrHour - depHour;
-        int tripDurationMinutes = arrMinutes - depMinutes;
-        if (tripDurationMinutes < 0) {
-            tripDurationHour--;
-            tripDurationMinutes += 60;
+        if (this.depTime != null && this.arrTime != null){
+            int depHour = Integer.parseInt(depTime.substring(0, 2));
+            int depMinutes = Integer.parseInt(depTime.substring(3, 5));
+            int arrHour = Integer.parseInt(arrTime.substring(0, 2));
+            int arrMinutes = Integer.parseInt(arrTime.substring(3, 5));
+            int tripDurationHour = arrHour - depHour;
+            int tripDurationMinutes = arrMinutes - depMinutes;
+            if (tripDurationMinutes < 0) {
+                tripDurationHour--;
+                tripDurationMinutes += 60;
+            }
+            if (tripDurationHour < 0) {
+                tripDurationHour += 24;
+            }
+            this.tripDuration = String.format("%dh%dm  ", tripDurationHour, tripDurationMinutes);
         }
-        if (tripDurationHour < 0) {
-            tripDurationHour += 24;
+        else{
+            this.depTime = data.origin.country;
+            this.arrTime = data.dest.country;
+            this.tripDuration = "LIVE  ";
         }
-        this.tripDuration = String.format("%dh%dm  ", tripDurationHour, tripDurationMinutes);
         this.originIATA = data.origin.iataCode;
         this.destIATA = data.dest.iataCode;
         this.latenessText = String.format("%.0f min", data.lateness);
