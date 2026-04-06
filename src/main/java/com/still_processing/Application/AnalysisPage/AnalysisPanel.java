@@ -262,7 +262,7 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         barChart.setPreferredSize(new Dimension(0, graphHeight));
         barChart.setYStep(50);
 
-        departureTimeGraph = new PieChartGraph(departureTimeOfDay);
+        departureTimeGraph = new PieChartGraph(departureTimeOfDay, false);
 
 
         if (scatterPlotData != null && scatterPlotData.data != null && scatterPlotData.data.length != 0) {

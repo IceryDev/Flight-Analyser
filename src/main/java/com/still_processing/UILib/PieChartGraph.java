@@ -33,6 +33,7 @@ public class PieChartGraph extends JPanel implements Runnable {
     private String chartTitle = "Pie Chart";
     private final int FPS = 60;
     private JPanel TOP_BAR;
+    private boolean showTopBar = false;
     private double animationProgress = 0.0;
     private static final double ANIMATION_DURATION = 300.0;
     private HashMap<String, Integer> data;
@@ -40,6 +41,7 @@ public class PieChartGraph extends JPanel implements Runnable {
     private int padding = 50;
     private int legendFontSize = 18;
     private int percentFontSize = 25;
+    private int chartY;
 
     private JLabel title;
     private Color color1 = LIGHT_BLUE;
@@ -64,13 +66,16 @@ public class PieChartGraph extends JPanel implements Runnable {
      *
      * @author Jessica Chen
      */
-    public PieChartGraph(HashMap<String, Integer> data) {
+    public PieChartGraph(HashMap<String, Integer> data, boolean showTopBar) {
+        this.showTopBar = showTopBar;
         if (data != null) {
             if(!data.isEmpty()){
                 this.data = data;
                 setLayout(new BorderLayout(0, 0));
-                TOP_BAR = buildTopBar();
-                add(TOP_BAR, BorderLayout.NORTH);
+                if (showTopBar) {
+                    TOP_BAR = buildTopBar();
+                    add(TOP_BAR, BorderLayout.NORTH);
+                }
             }
         }
         this.setPreferredSize(new Dimension(760, 600));
@@ -157,7 +162,12 @@ public class PieChartGraph extends JPanel implements Runnable {
 
             int chartDiameter = Math.min(panelWidth - legendWidth - padding * 2, panelHeight - padding * 4);
             chartDiameter = Math.max(chartDiameter, 100);
-            int chartY = (panelHeight - chartDiameter) / 2 + TOP_BAR.getHeight() / 2;
+            if(TOP_BAR != null) {
+                chartY = (panelHeight - chartDiameter) / 2 + TOP_BAR.getHeight() / 2;
+            }
+            else{
+                chartY = (panelHeight - chartDiameter) / 2;
+            }
             int chartX = (panelWidth - legendWidth - chartDiameter) / 2;
             double animatedSweep = sineMotion(animationProgress) * 360;
             List<String> keys = new ArrayList<>(data.keySet());
