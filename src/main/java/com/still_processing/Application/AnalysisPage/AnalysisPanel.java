@@ -32,11 +32,11 @@ import com.still_processing.FlightData.Database;
 import com.still_processing.FlightData.Graphs.PropertyType;
 import com.still_processing.FlightData.Graphs.ScatterPlotData;
 import com.still_processing.UILib.BarChartGraph;
-import com.still_processing.UILib.ButtonBuilder;
 import com.still_processing.UILib.DropdownBuilder;
 import com.still_processing.UILib.Histogram;
 import com.still_processing.UILib.ImagePanel;
 import com.still_processing.UILib.ScatterPlot;
+import com.still_processing.UILib.RoundedButton;
 import com.still_processing.UILib.TableBuilder;
 import com.still_processing.UILib.TextPaneBuilder;
 
@@ -48,16 +48,17 @@ import static com.still_processing.DefaultSettings.Settings.*;
  */
 
 /**
- * Add error handling
  * Add error handling to stop the program from crashing when the data is null
  * If data is null, then the graph is not added to the drop-down
  * If all the graph data is null, then an error image will be shown
- *
+ * Add Rounded Button
+ * 
  * @author Jessica Chen
  */
 
 public class AnalysisPanel extends JPanel implements Scrollable, ActionListener {
     JPanel graphDisplay;
+    Histogram histogram;
     Histogram latenessHistogram;
     Histogram distanceHistogram;
     ScatterPlot latenessVsDistance;
@@ -148,13 +149,7 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         textPane.setSize(new Dimension(textWidth, textHeight));
         textPane.setMaximumSize(new Dimension(textWidth, textHeight));
 
-        JButton homeButton = new ButtonBuilder()
-                .setSize(25, 25)
-                .setForeground(BACKGROUND)
-                .setBackground(HIGHLIGHT)
-                .setText("Return Home")
-                .setFontSize(18)
-                .build();
+        JButton homeButton = new RoundedButton("Return Home", 55, HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
         homeButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         homeButton.addActionListener(sceneSwitch);
 

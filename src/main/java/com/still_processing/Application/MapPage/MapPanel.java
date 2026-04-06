@@ -15,10 +15,10 @@ import com.still_processing.FlightData.Database;
 import com.still_processing.FlightData.Utils.LiveDataHandler;
 import com.still_processing.UILib.ButtonBuilder;
 import com.still_processing.UILib.ImagePanel;
+import com.still_processing.UILib.RoundedButton;
 import com.still_processing.UILib.TextPaneBuilder;
-import static com.still_processing.DefaultSettings.Settings.BACKGROUND;
-import static com.still_processing.DefaultSettings.Settings.BOLD_FONT;
-import static com.still_processing.DefaultSettings.Settings.HIGHLIGHT;
+
+import static com.still_processing.DefaultSettings.Settings.*;
 
 /**
  * @author Deea Zaharia, Ulaş İçer
@@ -54,13 +54,7 @@ public class MapPanel extends JPanel {
         textPane.setSize(new Dimension(textWidth, textHeight));
         textPane.setMaximumSize(new Dimension(textWidth, textHeight));
 
-        JButton homeButton = new ButtonBuilder()
-                .setSize(25, 25)
-                .setForeground(BACKGROUND)
-                .setBackground(HIGHLIGHT)
-                .setText("Return Home")
-                .setFontSize(18)
-                .build();
+        JButton homeButton = new RoundedButton("Return Home", 55, HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
         homeButton.addActionListener(sceneSwitch);
         homeButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
 
