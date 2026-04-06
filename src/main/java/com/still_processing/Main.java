@@ -4,7 +4,6 @@ import static com.still_processing.DefaultSettings.Settings.GRAY;
 
 import javax.swing.BorderFactory;
 import javax.swing.SwingUtilities;
-import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 
 import com.still_processing.Application.MainWindow;
