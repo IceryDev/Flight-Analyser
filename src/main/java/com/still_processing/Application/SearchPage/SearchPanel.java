@@ -367,7 +367,10 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         liveDataButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         liveDataButton.addActionListener(e -> {
             liveData = !liveData;
-            if (liveData) liveDataButton.setBackground(GRAY);
+            if (liveData) {
+                ((RoundedButton) liveDataButton).setBackgroundColor(GRAY.darker());
+                ((RoundedButton) liveDataButton).setHoverColor(GRAY);
+            }
             else{
                 ((RoundedButton) liveDataButton).setBackgroundColor(LIVE_BUTTON_COLOR);
                 ((RoundedButton) liveDataButton).setHoverColor(LIVE_BUTTON_COLOR_LIGHT);
