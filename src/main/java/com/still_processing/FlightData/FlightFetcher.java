@@ -372,7 +372,7 @@ public class FlightFetcher {
             }
             return ImageIO.read(URI.create(response.body()).toURL());
         }
-        catch (IOException e){
+        catch (Exception e){
             try {
                 return ImageIO.read(Objects.requireNonNull(FlightFetcher.class.getResource(Settings.NOT_FOUND_PLANE)));
             } catch (IOException ex) {
