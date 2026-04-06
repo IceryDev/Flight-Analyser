@@ -195,6 +195,7 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
             latenessDisplay.add(latenessStatsTable);
         }
         latenessDisplay.add(latenessHistogram);
+        latenessDisplay.setOpaque(false);
 
         JPanel distanceDisplay = new JPanel();
         distanceDisplay.setLayout(new BoxLayout(distanceDisplay, BoxLayout.Y_AXIS));
@@ -213,6 +214,8 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
                 xStep = 500_000;
             else if (maxDistance > 10000)
                 xStep = 2000;
+            else if (maxDistance > 5000)
+                xStep = 1000;
             else if (maxDistance > 500)
                 xStep = 250;
 
@@ -236,6 +239,7 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
             distanceDisplay.add(distanceStatsTable);
         }
         distanceDisplay.add(distanceHistogram);
+        distanceDisplay.setOpaque(false);
 
         Map<String, Float> sortedTop10Airports = new LinkedHashMap<>();
         if (flightOrigins != null && !flightOrigins.isEmpty()) {
@@ -255,6 +259,7 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         }
 
         barChart = new BarChartGraph(sortedTop10Airports);
+        barChart.setOpaque(false);
         barChart.setPreferredSize(new Dimension(0, graphHeight));
         barChart.setXLegend("Top 10 Origins");
         barChart.setXLegend("Flight Counts");
@@ -272,8 +277,9 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         barChart.setYStep(yStep);
 
         if (scatterPlotData != null && scatterPlotData.data != null && scatterPlotData.data.length != 0) {
-            latenessVsDistance = new ScatterPlot(scatterPlotData, "Test");
+            latenessVsDistance = new ScatterPlot(scatterPlotData, "Lateness Against Distance");
         }
+        latenessVsDistance.setOpaque(false);
 
         JPanel emptyPanel = new JPanel();
         emptyPanel.setBackground(BACKGROUND);
@@ -286,6 +292,7 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         }
         cardLayout = new CardLayout();
         graphDisplay = new JPanel(cardLayout);
+        graphDisplay.setOpaque(false);
         graphDisplay.add(emptyPanel, "empty");
         graphDisplay.add(latenessDisplay, "lateness");
         graphDisplay.add(distanceDisplay, "distance");
