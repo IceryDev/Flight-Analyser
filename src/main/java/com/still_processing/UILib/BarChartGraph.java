@@ -54,7 +54,7 @@ public class BarChartGraph extends JPanel implements Runnable {
     /**
      * @author Jessica Chen
      */
-    public BarChartGraph(Map<String, Float> data) {
+    public BarChartGraph(Map<String, Float> data, boolean showTopBar) {
 
         if (data != null && !data.isEmpty()) {
             this.data = data;
@@ -72,8 +72,10 @@ public class BarChartGraph extends JPanel implements Runnable {
                 i++;
             }
             setLayout(new BorderLayout(0, 0));
-            add(buildTopBar(), BorderLayout.NORTH);
-            // Add hover event the histogram
+            setLayout(new BorderLayout(0, 0));
+            if (showTopBar) {
+                add(buildTopBar(), BorderLayout.NORTH);
+            }
             this.addMouseMotionListener(new MouseMotionAdapter() {
                 @Override
                 public void mouseMoved(MouseEvent event) {

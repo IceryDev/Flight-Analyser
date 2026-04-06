@@ -258,7 +258,7 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
                 sortedTop10Airports.put(entry.getKey(), entry.getValue());
             }
         }
-        barChart = new BarChartGraph(sortedTop10Airports);
+        barChart = new BarChartGraph(sortedTop10Airports, false);
         barChart.setPreferredSize(new Dimension(0, graphHeight));
         barChart.setYStep(50);
 
