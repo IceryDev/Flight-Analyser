@@ -38,6 +38,8 @@ public class PieChartGraph extends JPanel implements Runnable {
     private HashMap<String, Integer> data;
     private int legendWidth = 180;
     private int padding = 50;
+    private int legendFontSize = 18;
+    private int percentFontSize = 25;
 
     private JLabel title;
     private Color color1 = LIGHT_BLUE;
@@ -185,7 +187,7 @@ public class PieChartGraph extends JPanel implements Runnable {
                     int labelY = chartY + chartDiameter / 2 - (int) (labelR * Math.sin(midAngle));
                     String pct = String.format("%.1f%%", 100.0 * value / total);
                     g2d.setColor(BACKGROUND);
-                    g2d.setFont(BOLD_FONT);
+                    g2d.setFont(BOLD_FONT.deriveFont((float) percentFontSize));
                     int textW = g2d.getFontMetrics().stringWidth(pct);
                     g2d.drawString(pct, labelX - textW / 2, labelY + 5);
                 }
@@ -196,7 +198,7 @@ public class PieChartGraph extends JPanel implements Runnable {
             int legendStartY = chartY + 80;
             int swatchSize = 16;
             int rowHeight = 28;
-            g2d.setFont(REGULAR_FONT);
+            g2d.setFont(REGULAR_FONT.deriveFont((float)  legendFontSize));
             for (int i = 0; i < keys.size(); i++) {
                 String label = keys.get(i);
                 int value = data.get(label);
@@ -242,6 +244,16 @@ public class PieChartGraph extends JPanel implements Runnable {
     public void setPadding(int padding) {
         if (padding > 0) {
             this.padding = padding;
+        }
+    }
+    public void setLegendFontSize(int legendFontSize) {
+        if (legendFontSize > 0) {
+            this.legendFontSize = legendFontSize;
+        }
+    }
+    public void setPercentFontSize(int percentFontSize) {
+        if (percentFontSize > 0) {
+            this.percentFontSize = percentFontSize;
         }
     }
 }
