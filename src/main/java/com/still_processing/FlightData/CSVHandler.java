@@ -17,6 +17,7 @@ public class CSVHandler {
     static final int MIN_IN_HRS = 60;
     static final int MIN_IN_DAY = 1440;
     static final int MIN_THRESHOLD = -1000;
+    static final double MILES_TO_KM = 1.609344;
     static final String TIME_DELIMITER = ":";
 
     /**
@@ -160,7 +161,7 @@ public class CSVHandler {
                             tmp.diverted = (args[i].equals("1"));
                             break;
                         case "DISTANCE":
-                            tmp.distance = Float.parseFloat(args[i]);
+                            tmp.distance = (float) (Float.parseFloat(args[i]) * MILES_TO_KM);
                             break;
                         default:
                             break;

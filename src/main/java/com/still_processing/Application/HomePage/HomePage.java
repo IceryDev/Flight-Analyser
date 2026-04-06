@@ -7,11 +7,12 @@ import static com.still_processing.DefaultSettings.Settings.HIGHLIGHT_20;
 import static com.still_processing.DefaultSettings.Settings.LIME;
 import static com.still_processing.DefaultSettings.Settings.REGULAR_FONT;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
@@ -19,12 +20,15 @@ import java.time.LocalDate;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.Scrollable;
+import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.SimpleAttributeSet;
@@ -35,14 +39,27 @@ import com.still_processing.UILib.ButtonBuilder;
 import com.still_processing.UILib.CalendarSettings;
 import com.still_processing.UILib.ImagePanel;
 import com.still_processing.UILib.InputFieldBuilder;
+import com.still_processing.UILib.RoundedHighlightBorder;
 import com.still_processing.UILib.TextPaneBuilder;
+import com.still_processing.UILib.RoundedButton;
+
+import static com.still_processing.DefaultSettings.Settings.HIGHLIGHT;
+import static com.still_processing.DefaultSettings.Settings.HIGHLIGHT_20;
+import static com.still_processing.DefaultSettings.Settings.LIGHT_HIGHLIGHT;
+import static com.still_processing.DefaultSettings.Settings.BOLD_FONT;
+import static com.still_processing.DefaultSettings.Settings.REGULAR_FONT;
+import static com.still_processing.DefaultSettings.Settings.LIME;
+import static com.still_processing.DefaultSettings.Settings.BACKGROUND;
 
 /**
  * @author Zhou Sun, Deea Zaharia
- */
-
-/**
- * Added the calendar
+ * <br>
+ *
+ * Added icons and rounded borders to the input fields
+ * @author Marco Fontana
+ * <br>
+ *
+ * Added the calendar and rounded buttons
  * 
  * @author Jessica Chen
  */
@@ -88,23 +105,45 @@ public class HomePage extends JPanel implements Scrollable {
         titlePanel.add(Box.createHorizontalGlue());
 
         Dimension inputFieldSize = new Dimension(300, 50);
-        JPanel originInputContainer = new JPanel();
-        originInputContainer.setBorder(BorderFactory.createLineBorder(HIGHLIGHT, 2));
+
+        JLabel fromLabel = new JLabel("From");
+        fromLabel.setPreferredSize(new Dimension(98, inputFieldSize.height));
+        fromLabel.setFont(REGULAR_FONT.deriveFont(Font.PLAIN, 12));
+        fromLabel.setForeground(HIGHLIGHT);
+        fromLabel.setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 8));
+        fromLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        fromLabel.setVerticalAlignment(SwingConstants.CENTER);
+        Image fromLabelIcon = new ImageIcon(getClass().getResource("/Images/plane-departing.png")).getImage();
+        Image scaledFromLabelIcon = fromLabelIcon.getScaledInstance(inputFieldSize.height - 20, inputFieldSize.height - 20, Image.SCALE_SMOOTH);
+        fromLabel.setIcon(new ImageIcon(scaledFromLabelIcon));
+
+        JLabel destinationLabel = new JLabel("To");
+        destinationLabel.setPreferredSize(new Dimension(130, inputFieldSize.height));
+        destinationLabel.setFont(REGULAR_FONT.deriveFont(Font.PLAIN, 12));
+        destinationLabel.setForeground(HIGHLIGHT);
+        destinationLabel.setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 8));
+        destinationLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        destinationLabel.setVerticalAlignment(SwingConstants.CENTER);
+        Image destinationLabelIcon = new ImageIcon(getClass().getResource("/Images/plane-landing.png")).getImage();
+        Image scaledDestinationLabelIcon = destinationLabelIcon.getScaledInstance(inputFieldSize.height - 20, inputFieldSize.height - 20, Image.SCALE_SMOOTH);
+        destinationLabel.setIcon(new ImageIcon(scaledDestinationLabelIcon));
+
+        JPanel originInputContainer = new JPanel(new BorderLayout(6, 0));
+        originInputContainer.setBorder(RoundedHighlightBorder.getRoundedBorder(HIGHLIGHT_20));
+        originInputContainer.setOpaque(false);
         originInputContainer.setMaximumSize(inputFieldSize);
         originInputContainer.setPreferredSize(inputFieldSize);
         originInputContainer.setMinimumSize(inputFieldSize);
         originInputContainer.setBackground(LIME);
+        originInputContainer.add(fromLabel, BorderLayout.WEST);
 
         originInput = new InputFieldBuilder()
                 .setFont(REGULAR_FONT)
                 .setForeground(HIGHLIGHT)
                 .build();
         originInput.setOpaque(false);
-        originInput.setMaximumSize(inputFieldSize);
-        originInput.setPreferredSize(inputFieldSize);
-        originInput.setMinimumSize(inputFieldSize);
-        originInput.setBorder(BorderFactory.createEmptyBorder(2, 10, 2, 20));
-        originInputContainer.add(originInput);
+        originInput.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 12));
+        originInputContainer.add(originInput, BorderLayout.CENTER);
         originInput.getDocument().addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) {
                 sync(e);
@@ -123,23 +162,22 @@ public class HomePage extends JPanel implements Scrollable {
             }
         });
 
-        JPanel destInputContainer = new JPanel();
-        destInputContainer.setBorder(BorderFactory.createLineBorder(HIGHLIGHT, 2));
+        JPanel destInputContainer = new JPanel(new BorderLayout(6, 0));
+        destInputContainer.setBorder(RoundedHighlightBorder.getRoundedBorder(HIGHLIGHT_20));
+        destInputContainer.setOpaque(false);
         destInputContainer.setMaximumSize(inputFieldSize);
         destInputContainer.setPreferredSize(inputFieldSize);
         destInputContainer.setMinimumSize(inputFieldSize);
         destInputContainer.setBackground(LIME);
+        destInputContainer.add(destinationLabel, BorderLayout.WEST);
 
         destInput = new InputFieldBuilder()
                 .setFont(REGULAR_FONT)
                 .setForeground(HIGHLIGHT)
                 .build();
         destInput.setOpaque(false);
-        destInput.setMaximumSize(inputFieldSize);
-        destInput.setPreferredSize(inputFieldSize);
-        destInput.setMinimumSize(inputFieldSize);
-        destInput.setBorder(BorderFactory.createEmptyBorder(2, 10, 2, 20));
-        destInputContainer.add(destInput);
+        destInput.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 12));
+        destInputContainer.add(destInput, BorderLayout.CENTER);
         destInput.getDocument().addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) {
                 sync(e);
@@ -181,34 +219,55 @@ public class HomePage extends JPanel implements Scrollable {
             }
         });
 
-        JLabel startLabel = new JLabel("Departure");
+        int dateLabelColumnWidth = 130;
+        JLabel startLabel = new JLabel("Depart");
+        startLabel.setPreferredSize(new Dimension(dateLabelColumnWidth, inputFieldSize.height));
+        startLabel.setMinimumSize(new Dimension(dateLabelColumnWidth, inputFieldSize.height));
         startLabel.setFont(REGULAR_FONT.deriveFont(Font.PLAIN, 12));
         startLabel.setForeground(HIGHLIGHT);
-        startLabel.setBorder(BorderFactory.createEmptyBorder(2, 10, 2, 20));
+        startLabel.setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 8));
+        startLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        startLabel.setVerticalAlignment(SwingConstants.CENTER);
+        Image startLabelIcon = new ImageIcon(getClass().getResource("/Images/calendar.png")).getImage();
+        Image scaledStartLabelIcon = startLabelIcon.getScaledInstance(inputFieldSize.height - 20, inputFieldSize.height - 20, Image.SCALE_SMOOTH);
+        startLabel.setIcon(new ImageIcon(scaledStartLabelIcon));
 
-        JLabel endLabel = new JLabel("Arrival");
+        JLabel endLabel = new JLabel("Return");
+        endLabel.setPreferredSize(new Dimension(dateLabelColumnWidth, inputFieldSize.height));
+        endLabel.setMinimumSize(new Dimension(dateLabelColumnWidth, inputFieldSize.height));
         endLabel.setFont(REGULAR_FONT.deriveFont(Font.PLAIN, 12));
         endLabel.setForeground(HIGHLIGHT);
-        endLabel.setBorder(BorderFactory.createEmptyBorder(2, 10, 2, 20));
+        endLabel.setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 8));
+        endLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        endLabel.setVerticalAlignment(SwingConstants.CENTER);
+        Image endLabelIcon = new ImageIcon(getClass().getResource("/Images/calendar.png")).getImage();
+        Image scaledEndLabelIcon = endLabelIcon.getScaledInstance(inputFieldSize.height - 20, inputFieldSize.height - 20, Image.SCALE_SMOOTH);
+        endLabel.setIcon(new ImageIcon(scaledEndLabelIcon));
 
         Dimension datePickerSize = new Dimension(300, 50);
-        JPanel startGroup = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 5));
-        startGroup.setBackground(HIGHLIGHT_20);
-        startGroup.setBorder(BorderFactory.createLineBorder(HIGHLIGHT, 2));
-        startGroup.add(startLabel);
-        startGroup.add(startPicker);
+        Border dateFieldBorder = BorderFactory.createCompoundBorder(
+                RoundedHighlightBorder.getRoundedBorder(HIGHLIGHT_20),
+                BorderFactory.createEmptyBorder(2, 4, 2, 14)
+        );
+
+        JPanel startGroup = new JPanel(new BorderLayout(6, 0));
+        startGroup.setBorder(dateFieldBorder);
+        startGroup.setOpaque(false);
+        startGroup.add(startLabel, BorderLayout.WEST);
+        startGroup.add(startPicker, BorderLayout.CENTER);
         startGroup.setMaximumSize(datePickerSize);
         startGroup.setPreferredSize(datePickerSize);
         startGroup.setMinimumSize(datePickerSize);
 
-        JPanel endGroup = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 5));
-        endGroup.setBackground(HIGHLIGHT_20);
-        endGroup.setBorder(BorderFactory.createLineBorder(HIGHLIGHT, 2));
-        endGroup.add(endLabel);
-        endGroup.add(endPicker);
+        JPanel endGroup = new JPanel(new BorderLayout(6, 0));
+        endGroup.setBorder(dateFieldBorder);
+        endGroup.setOpaque(false);
+        endGroup.add(endLabel, BorderLayout.WEST);
+        endGroup.add(endPicker, BorderLayout.CENTER);
         endGroup.setMaximumSize(datePickerSize);
         endGroup.setPreferredSize(datePickerSize);
         endGroup.setMinimumSize(datePickerSize);
+        endGroup.setBackground(HIGHLIGHT_20);
 
         JPanel inputFieldContainer = new JPanel();
         inputFieldContainer.setLayout(new BoxLayout(inputFieldContainer, BoxLayout.X_AXIS));
@@ -224,25 +283,15 @@ public class HomePage extends JPanel implements Scrollable {
         inputFieldContainer.add(Box.createHorizontalGlue());
 
         Dimension buttonSize = new Dimension(200, 40);
-        JButton mapButton = new ButtonBuilder()
-                .setSize(25, 25)
-                .setForeground(BACKGROUND)
-                .setBackground(HIGHLIGHT)
-                .setText("Map View")
-                .setFontSize(18)
-                .build();
+        JButton mapButton = new RoundedButton("Map View", 55, HIGHLIGHT, LIGHT_HIGHLIGHT, 17);
+        ((RoundedButton) mapButton).setButtonIcon(new ImageIcon((getClass().getResource("/Images/map.PNG"))), 14);
         mapButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         mapButton.setMaximumSize(buttonSize);
         mapButton.setPreferredSize(buttonSize);
         mapButton.setMinimumSize(buttonSize);
 
-        JButton searchButton = new ButtonBuilder()
-                .setSize(25, 25)
-                .setForeground(BACKGROUND)
-                .setBackground(HIGHLIGHT)
-                .setText("Search")
-                .setFontSize(18)
-                .build();
+        JButton searchButton = new RoundedButton("Search", 55,HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
+        ((RoundedButton) searchButton).setButtonIcon(new ImageIcon((getClass().getResource("/Images/plane-white.PNG"))), 18);
         searchButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         searchButton.setMaximumSize(buttonSize);
         searchButton.setPreferredSize(buttonSize);

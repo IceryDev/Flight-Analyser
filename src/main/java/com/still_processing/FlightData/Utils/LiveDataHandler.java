@@ -12,10 +12,8 @@ import net.sf.geographiclib.GeodesicData;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 
 import javax.swing.*;
-import javax.xml.crypto.Data;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -47,7 +45,7 @@ public class LiveDataHandler {
     private static final SwingWorker<Void, Void> requestWorker = new SwingWorker<Void, Void>() {
         @Override
         protected Void doInBackground() throws Exception {
-            FlightFetcher.fetchLiveFlightInfo(100);
+            FlightFetcher.fetchLiveFlightInfo(250);
             return null;
         }
     };
@@ -176,5 +174,15 @@ public class LiveDataHandler {
 
         requestWorker.execute();
         //runQueue();
+    }
+
+    public static void resetRefresh(){
+        LiveDataHandler.startRefresh();
+        if (mvf != null){
+            if (mvf.getSelectedInfo() != null)
+                mvf.getSelectedInfo().selected = false;
+            mvf.setSelectedInfo(null);
+            mvf.setLastSelected(null);
+        }
     }
 }

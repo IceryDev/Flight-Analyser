@@ -13,7 +13,7 @@ import javax.swing.*;
 /**
  * Some reuseable default settings
  * 
- * @author Zhou Sun, Jagoda Kocszwara-Szuba, Ulaş İçer
+ * @author Zhou Sun, Jagoda Kocszwara-Szuba, Ulaş İçer, Jessica Chen
  */
 public class Settings {
     private Settings() {
@@ -38,11 +38,14 @@ public class Settings {
 
     public static final Color TEXT_COLOR = new Color(0x001917);
     public static final Color BACKGROUND = new Color(0xeff2f1);
+    public static final Color LIGHT_HIGHLIGHT = new Color(0x4BA698);
     public static final Color HIGHLIGHT = new Color(0x01796f);
     public static final Color HIGHLIGHT_20 = new Color(1, 121, 111, 20);
     public static final Color HIGHLIGHT_90 = new Color(1, 121, 111, 90);
     public static final Color GRAY = new Color(0xaaaaaa);
     public static final Color LABEL_COLOR = new Color(0x3A3939);
+    public static final Color LIVE_BUTTON_COLOR = new Color(0x800000);
+    public static final Color LIVE_BUTTON_COLOR_LIGHT = new Color(0x7A4C4C);
 
     public static final Color LIME = new Color(0xd2e0de);
     public static final Color LIGHT_BLUE = new Color(0x4ECDC4);
