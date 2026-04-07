@@ -100,10 +100,10 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         ArrayList<String> graphOptionsTemp = new ArrayList<>();
         graphOptionsTemp.add("--Select Option--");
         if (latenessData != null && latenessData.length != 0) {
-            graphOptionsTemp.add("lateness");
+            graphOptionsTemp.add("Lateness");
         }
         if (distance != null && distance.length != 0) {
-            graphOptionsTemp.add("distance");
+            graphOptionsTemp.add("Distance");
         }
         if (flightOrigins != null && !flightOrigins.isEmpty()) {
             graphOptionsTemp.add("Top 10 Airports");
@@ -314,11 +314,11 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         switch ((String) dropDown.getSelectedItem()) {
             case "--Select Option--":
                 break;
-            case "lateness":
+            case "Lateness":
                 cardLayout.show(graphDisplay, "lateness");
                 latenessHistogram.animate();
                 break;
-            case "distance":
+            case "Distance":
                 cardLayout.show(graphDisplay, "distance");
                 distanceHistogram.animate();
                 break;
