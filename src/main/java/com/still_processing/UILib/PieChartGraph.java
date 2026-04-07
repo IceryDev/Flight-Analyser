@@ -189,7 +189,7 @@ public class PieChartGraph extends JPanel implements Runnable {
                 // Percentage label inside slice
                 // Due to inaccurate rounding in floating point numbers,
                 // add 0.01 to fix
-                if (remainingAngle + 0.01 >= sweep) {
+                if (sweep > 0.01 && remainingAngle + 0.01 >= sweep) {
                     double midAngle = Math.toRadians(startAngle + sweep / 2);
                     int labelR = chartDiameter / 4;
                     int labelX = chartX + chartDiameter / 2 + (int) (labelR * Math.cos(midAngle));
