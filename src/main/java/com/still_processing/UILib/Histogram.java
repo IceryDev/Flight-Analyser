@@ -78,24 +78,7 @@ public class Histogram extends JPanel implements Runnable, Graph {
                 this.xStep = xStep;
                 this.yStep = yStep;
 
-                // Getting the max and min value from the dataset
-                float max = data[0];
-                float min = data[0];
-                for (float dataPoint : data) {
-                    max = (max > dataPoint) ? max : dataPoint;
-                    min = (min < dataPoint) ? min : dataPoint;
-                }
-                min = (min > 0) ? 0 : min;
-
-                // Loading data to each bars
-                barValues = new int[(int) (max - min) / xStep + 1];
-                for (float dataPoint : data) {
-                    int interval = (int) dataPoint / xStep;
-                    int index = (int) (interval - min / xStep);
-                    barValues[index]++;
-                    barMaxValue = (barMaxValue > barValues[index]) ? barMaxValue : barValues[index];
-                }
-
+                loadBarValues();
 
                 // Add hover event the histogram
                 this.addMouseMotionListener(new MouseMotionAdapter() {
@@ -107,10 +90,29 @@ public class Histogram extends JPanel implements Runnable, Graph {
             }
         }
 
-
         this.setPreferredSize(new Dimension(0, 1440));
         this.setOpaque(false);
         this.setDoubleBuffered(true);
+    }
+
+    private void loadBarValues() {
+        // Getting the max and min value from the dataset
+        float max = data[0];
+        float min = data[0];
+        for (float dataPoint : data) {
+            max = (max > dataPoint) ? max : dataPoint;
+            min = (min < dataPoint) ? min : dataPoint;
+        }
+        min = (min > 0) ? 0 : min;
+
+        // Loading data to each bars
+        barValues = new int[(int) (max - min) / xStep + 1];
+        for (float dataPoint : data) {
+            int interval = (int) dataPoint / xStep;
+            int index = (int) (interval - min / xStep);
+            barValues[index]++;
+            barMaxValue = (barMaxValue > barValues[index]) ? barMaxValue : barValues[index];
+        }
     }
 
     /**
@@ -183,11 +185,13 @@ public class Histogram extends JPanel implements Runnable, Graph {
         if (barValues != null && barValues.length != 0) {
             int height = getHeight();
 
+            // Note floor div, don't simplify the equation naiively
+            int maxValue = (barMaxValue / yStep + 1) * yStep;
+            int maxHeight = -2 * padding + height;
             int barWidth = (getWidth() - 2 * padding) / barValues.length;
+
             for (int dataIndex = 0; dataIndex < barValues.length; dataIndex++) {
                 int xPos = barWidth * dataIndex + padding;
-                int maxValue = (barMaxValue / yStep + 1) * yStep;
-                int maxHeight = -2 * padding + height;
                 int yValue = maxHeight * barValues[dataIndex] / maxValue;
                 int barHeight = (int) (yValue * renderPercentage);
                 int barTop = height - padding - barHeight;
@@ -209,7 +213,7 @@ public class Histogram extends JPanel implements Runnable, Graph {
         if (barValues == null || barValues.length == 0) {
             try {
                 BufferedImage image = ImageIO.read(getClass().getResource("/Images/error-message.png"));
-                g2d.drawImage(image, getWidth()/2 - 300, getHeight()/2 - 300, 600, 600, null);
+                g2d.drawImage(image, getWidth() / 2 - 300, getHeight() / 2 - 300, 600, 600, null);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -326,8 +330,10 @@ public class Histogram extends JPanel implements Runnable, Graph {
     }
 
     public void setXStep(int xStep) {
-        if (xStep > 0)
+        if (xStep > 0 && data != null) {
             this.xStep = xStep;
+            loadBarValues();
+        }
     }
 
     public void setYStep(int yStep) {
