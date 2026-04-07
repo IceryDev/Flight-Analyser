@@ -140,7 +140,7 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
             }
         }
 
-        if (departureTimeOfDay != null && !departureTimeOfDay.isEmpty()) {
+        if (departureTimeOfDay != null && !departureTimeOfDay.isEmpty() && !departureTimeOfDay.values().stream().allMatch(x -> x == 0)) {
             graphOptionsTemp.add("Departure Times");
         }
 
