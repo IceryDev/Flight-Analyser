@@ -72,7 +72,7 @@ public class MainWindow extends JFrame implements ActionListener {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.getContentPane().setBackground(BACKGROUND);
         this.setSize(1390, 810);
-        this.setMinimumSize(new Dimension(960, 540));
+        this.setMinimumSize(new Dimension(1390, 810));
         this.setVisible(true);
     }
 
