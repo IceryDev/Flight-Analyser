@@ -175,7 +175,7 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
                 maxLateness = (maxLateness > dataPoint) ? maxLateness : dataPoint;
             }
             latenessHistogram.setXStep((maxLateness > 500) ? 250 : (maxLateness > 200) ? 50 : 10);
-            latenessHistogram.setYStep(latenessData.length / 10);
+            latenessHistogram.setYStep((latenessData.length <= 10) ? 1 : latenessData.length / 10);
             latenessHistogram.setXLengendText("Lateness (in minutes)");
             latenessHistogram.setYLengendText("Number of Flights");
             latenessHistogram.setPreferredSize(new Dimension(0, graphHeight));
@@ -220,7 +220,7 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
                 xStep = 250;
 
             distanceHistogram.setXStep(xStep);
-            distanceHistogram.setYStep(distance.length / 10);
+            distanceHistogram.setYStep((distance.length <= 10) ? 1 : distance.length / 10);
             distanceHistogram.setXLengendText("Distance (in kilometers)");
             distanceHistogram.setYLengendText("Number of Flights");
 
