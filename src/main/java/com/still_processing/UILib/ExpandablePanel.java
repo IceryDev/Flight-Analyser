@@ -95,26 +95,33 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
                 : data.iataCode + data.flightNumber;
         this.depTime = data.depTime;
         this.arrTime = data.arrTime;
-        int depHour = Integer.parseInt(depTime.substring(0, 2));
-        int depMinutes = Integer.parseInt(depTime.substring(3, 5));
-        int arrHour = Integer.parseInt(arrTime.substring(0, 2));
-        int arrMinutes = Integer.parseInt(arrTime.substring(3, 5));
-        int tripDurationHour = arrHour - depHour;
-        int tripDurationMinutes = arrMinutes - depMinutes;
-        if (tripDurationMinutes < 0) {
-            tripDurationHour--;
-            tripDurationMinutes += 60;
+        if (this.depTime != null && this.arrTime != null){
+            int depHour = Integer.parseInt(depTime.substring(0, 2));
+            int depMinutes = Integer.parseInt(depTime.substring(3, 5));
+            int arrHour = Integer.parseInt(arrTime.substring(0, 2));
+            int arrMinutes = Integer.parseInt(arrTime.substring(3, 5));
+            int tripDurationHour = arrHour - depHour;
+            int tripDurationMinutes = arrMinutes - depMinutes;
+            if (tripDurationMinutes < 0) {
+                tripDurationHour--;
+                tripDurationMinutes += 60;
+            }
+            if (tripDurationHour < 0) {
+                tripDurationHour += 24;
+            }
+            this.tripDuration = String.format("%dh%dm  ", tripDurationHour, tripDurationMinutes);
         }
-        if (tripDurationHour < 0) {
-            tripDurationHour += 24;
+        else{
+            this.depTime = data.origin.country;
+            this.arrTime = data.dest.country;
+            this.tripDuration = "LIVE  ";
         }
-        this.tripDuration = String.format("%dh%dm  ", tripDurationHour, tripDurationMinutes);
         this.originIATA = data.origin.iataCode;
         this.destIATA = data.dest.iataCode;
         this.latenessText = String.format("%.0f min", data.lateness);
         this.flightDateText = data.flightDate;
-        this.schDepTimeText = data.depTime;
-        this.actDepTimeText = data.CRSDepTime;
+        this.schDepTimeText = (data.depTime == null) ? "Not Available" : data.depTime;
+        this.actDepTimeText = (data.CRSDepTime == null) ? "Not Available" : data.CRSDepTime;
         this.flightCanceledText = (data.cancelled) ? "True" : "False";
         this.schArrTimeText = (data.CRSArrTime == null) ? "Not Available" : data.CRSArrTime;
         this.actArrTimeText = (data.arrTime == null) ? "Not Available" : data.arrTime;

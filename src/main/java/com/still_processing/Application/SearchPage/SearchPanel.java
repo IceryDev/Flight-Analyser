@@ -453,8 +453,9 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         flightEntries = new JPanel();
         flightEntries.setOpaque(false);
         flightEntries.setLayout(new BoxLayout(flightEntries, BoxLayout.Y_AXIS));
+        flightEntries.setOpaque(false);
         notFoundImage = new ImagePanel("/Images/not-found-page.png", 900, 500);
-        this.add(notFoundImage);
+        notFoundImage.setOpaque(false);
 
         updateFlightData(Database.offlineFlights);
 
@@ -533,6 +534,9 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
                 flightEntries.add(new ExpandablePanel(flightData.get(i), this.dynamicTextMode));
             }
         } else {
+            flightEntries.add(Box.createRigidArea(new Dimension(10, 200)));
+            flightEntries.add(notFoundImage);
+            flightEntries.add(Box.createVerticalGlue());
             resultCount.setText("No Results Found");
         }
         notFoundImage.setVisible(!this.isFound);
