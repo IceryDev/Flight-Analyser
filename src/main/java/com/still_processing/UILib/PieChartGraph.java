@@ -69,7 +69,7 @@ public class PieChartGraph extends JPanel implements Runnable {
     public PieChartGraph(HashMap<String, Integer> data, boolean showTopBar) {
         this.showTopBar = showTopBar;
         if (data != null) {
-            if(!data.isEmpty()){
+            if (!data.isEmpty()) {
                 this.data = data;
                 setLayout(new BorderLayout(0, 0));
                 if (showTopBar) {
@@ -156,16 +156,15 @@ public class PieChartGraph extends JPanel implements Runnable {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-        if (data != null){
+        if (data != null) {
             int panelWidth = getWidth();
             int panelHeight = getHeight();
 
             int chartDiameter = Math.min(panelWidth - legendWidth - padding * 2, panelHeight - padding * 4);
             chartDiameter = Math.max(chartDiameter, 100);
-            if(TOP_BAR != null) {
+            if (TOP_BAR != null) {
                 chartY = (panelHeight - chartDiameter) / 2 + TOP_BAR.getHeight() / 2;
-            }
-            else{
+            } else {
                 chartY = (panelHeight - chartDiameter) / 2;
             }
             int chartX = (panelWidth - legendWidth - chartDiameter) / 2;
@@ -208,7 +207,7 @@ public class PieChartGraph extends JPanel implements Runnable {
             int legendStartY = chartY + 80;
             int swatchSize = 16;
             int rowHeight = 28;
-            g2d.setFont(REGULAR_FONT.deriveFont((float)  legendFontSize));
+            g2d.setFont(REGULAR_FONT.deriveFont((float) legendFontSize));
             for (int i = 0; i < keys.size(); i++) {
                 String label = keys.get(i);
                 int value = data.get(label);
@@ -222,10 +221,10 @@ public class PieChartGraph extends JPanel implements Runnable {
                 g2d.drawString(label + " (" + value + ")", legendX + swatchSize + 8, rowY + swatchSize - 2);
             }
         }
-        if( data == null){
+        if (data == null) {
             try {
                 BufferedImage image = ImageIO.read(getClass().getResource("/Images/error-message.png"));
-                    g2d.drawImage(image, getWidth()/2 - 300, getHeight()/2 - 300, 600, 600, null);
+                g2d.drawImage(image, getWidth() / 2 - 300, getHeight() / 2 - 300, 600, 600, null);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -256,11 +255,13 @@ public class PieChartGraph extends JPanel implements Runnable {
             this.padding = padding;
         }
     }
+
     public void setLegendFontSize(int legendFontSize) {
         if (legendFontSize > 0) {
             this.legendFontSize = legendFontSize;
         }
     }
+
     public void setPercentFontSize(int percentFontSize) {
         if (percentFontSize > 0) {
             this.percentFontSize = percentFontSize;

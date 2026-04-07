@@ -14,7 +14,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.Scrollable;
+import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -27,29 +38,34 @@ import com.still_processing.FlightData.Database;
 import com.still_processing.FlightData.FlightInfo;
 import com.still_processing.FlightData.Filters.Filter;
 import com.still_processing.FlightData.Filters.FuzzySearch;
-import com.still_processing.UILib.*;
+import com.still_processing.UILib.ButtonBuilder;
+import com.still_processing.UILib.CalendarSettings;
+import com.still_processing.UILib.DropdownBuilder;
+import com.still_processing.UILib.ExpandablePanel;
+import com.still_processing.UILib.ImagePanel;
+import com.still_processing.UILib.InputFieldBuilder;
+import com.still_processing.UILib.RoundedHighlightBorder;
+import com.still_processing.UILib.TextPaneBuilder;
+import com.still_processing.UILib.RoundedButton;
 
+import static com.still_processing.FlightData.Database.flightData;
 import static com.still_processing.DefaultSettings.Settings.*;
 
 /**
- * @author Deea Zaharia, Jagoda Koczwara-Szuba, Jessica Chen
- * <br>
- *
- * Added icons and rounded borders to the input fields
+ * @author Deea Zaharia
+ * @author Jagoda Koczwara-Szuba
  * @author Marco Fontana
  */
 public class SearchPanel extends JPanel implements Scrollable, ActionListener {
     private JPanel flightEntries = new JPanel();
-    private ArrayList<FlightInfo> flightData = Database.offlineFlights;
     private int counter = 0;
     private LocalDate startDate = LocalDate.parse("2022-01-01");
     private LocalDate endDate = LocalDate.now();
     private String originAirport;
     private String destAirport;
-    private boolean sortOrderAscend = true;
     private ArrayList<String> airportList = new ArrayList<>();
     private boolean liveData = true;
-    private boolean dynamicTextMode = true;         //True/False -> Lateness/Distance
+    private boolean dynamicTextMode = true; // True/False -> Lateness/Distance
     private ImagePanel notFoundImage;
 
     private JTextField originInput;
@@ -85,7 +101,10 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         textPane.setSize(new Dimension(textWidth, textHeight));
         textPane.setMaximumSize(new Dimension(textWidth, textHeight));
 
-        JButton homeButton = new RoundedButton("Return Home", 55, HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
+        JButton homeButton = new RoundedButton("Return Home", 40, HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
+        homeButton.setMinimumSize(new Dimension(215, 40));
+        homeButton.setPreferredSize(new Dimension(215, 40));
+        homeButton.setMaximumSize(new Dimension(215, 40));
         homeButton.addActionListener(sceneSwitch);
         homeButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
 
@@ -106,25 +125,27 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         Dimension inputFieldSize = new Dimension(300, 50);
 
         JLabel fromLabel = new JLabel("From");
-        fromLabel.setPreferredSize(new Dimension(98, inputFieldSize.height));
+        fromLabel.setPreferredSize(new Dimension(100, inputFieldSize.height));
         fromLabel.setFont(REGULAR_FONT.deriveFont(Font.PLAIN, 12));
         fromLabel.setForeground(HIGHLIGHT);
         fromLabel.setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 8));
         fromLabel.setHorizontalAlignment(SwingConstants.LEFT);
         fromLabel.setVerticalAlignment(SwingConstants.CENTER);
         Image fromLabelIcon = new ImageIcon(getClass().getResource("/Images/plane-departing.png")).getImage();
-        Image scaledFromLabelIcon = fromLabelIcon.getScaledInstance(inputFieldSize.height - 20, inputFieldSize.height - 20, Image.SCALE_SMOOTH);
+        Image scaledFromLabelIcon = fromLabelIcon.getScaledInstance(inputFieldSize.height - 20,
+                inputFieldSize.height - 20, Image.SCALE_SMOOTH);
         fromLabel.setIcon(new ImageIcon(scaledFromLabelIcon));
 
         JLabel destinationLabel = new JLabel("To");
-        destinationLabel.setPreferredSize(new Dimension(130, inputFieldSize.height));
+        destinationLabel.setPreferredSize(new Dimension(80, inputFieldSize.height));
         destinationLabel.setFont(REGULAR_FONT.deriveFont(Font.PLAIN, 12));
         destinationLabel.setForeground(HIGHLIGHT);
         destinationLabel.setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 8));
         destinationLabel.setHorizontalAlignment(SwingConstants.LEFT);
         destinationLabel.setVerticalAlignment(SwingConstants.CENTER);
         Image destinationLabelIcon = new ImageIcon(getClass().getResource("/Images/plane-landing.png")).getImage();
-        Image scaledDestinationLabelIcon = destinationLabelIcon.getScaledInstance(inputFieldSize.height - 20, inputFieldSize.height - 20, Image.SCALE_SMOOTH);
+        Image scaledDestinationLabelIcon = destinationLabelIcon.getScaledInstance(inputFieldSize.height - 20,
+                inputFieldSize.height - 20, Image.SCALE_SMOOTH);
         destinationLabel.setIcon(new ImageIcon(scaledDestinationLabelIcon));
 
         JPanel originInputContainer = new JPanel(new BorderLayout(6, 0));
@@ -141,7 +162,6 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
                 .setForeground(HIGHLIGHT)
                 .build();
         originInput.setOpaque(false);
-        originInput.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 12));
         originInput.getDocument().addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) {
                 sync(e);
@@ -175,7 +195,6 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
                 .setForeground(HIGHLIGHT)
                 .build();
         destInput.setOpaque(false);
-        destInput.setBorder(BorderFactory.createEmptyBorder(2, 0, 2, 12));
         destInput.getDocument().addDocumentListener(new DocumentListener() {
             public void changedUpdate(DocumentEvent e) {
                 sync(e);
@@ -228,7 +247,8 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         startLabel.setHorizontalAlignment(SwingConstants.LEFT);
         startLabel.setVerticalAlignment(SwingConstants.CENTER);
         Image startLabelIcon = new ImageIcon(getClass().getResource("/Images/calendar.png")).getImage();
-        Image scaledStartLabelIcon = startLabelIcon.getScaledInstance(inputFieldSize.height - 20, inputFieldSize.height - 20, Image.SCALE_SMOOTH);
+        Image scaledStartLabelIcon = startLabelIcon.getScaledInstance(inputFieldSize.height - 20,
+                inputFieldSize.height - 20, Image.SCALE_SMOOTH);
         startLabel.setIcon(new ImageIcon(scaledStartLabelIcon));
 
         JLabel endLabel = new JLabel("Return");
@@ -240,7 +260,8 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         endLabel.setHorizontalAlignment(SwingConstants.LEFT);
         endLabel.setVerticalAlignment(SwingConstants.CENTER);
         Image endLabelIcon = new ImageIcon(getClass().getResource("/Images/calendar.png")).getImage();
-        Image scaledEndLabelIcon = endLabelIcon.getScaledInstance(inputFieldSize.height - 20, inputFieldSize.height - 20, Image.SCALE_SMOOTH);
+        Image scaledEndLabelIcon = endLabelIcon.getScaledInstance(inputFieldSize.height - 20,
+                inputFieldSize.height - 20, Image.SCALE_SMOOTH);
         endLabel.setIcon(new ImageIcon(scaledEndLabelIcon));
 
         Dimension datePickerSize = new Dimension(300, 50);
@@ -282,21 +303,31 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         this.add(inputFieldContainer);
         this.add(Box.createRigidArea(new Dimension(0, 20)));
 
-        JButton refineSearch = new RoundedButton("Refine Search", 55,HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
-        ((RoundedButton) refineSearch).setButtonIcon(new ImageIcon((getClass().getResource("/Images/plane-white.PNG"))), 18);
+        JButton refineSearch = new RoundedButton("Refine Search", 40, HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
+        ((RoundedButton) refineSearch).setButtonIcon(new ImageIcon((getClass().getResource("/Images/plane-white.PNG"))),
+                18);
         refineSearch.addActionListener(e -> {
             updateSearch();
             counter = 0;
             refreshEntries();
         });
+        Dimension refineButtonSize = new Dimension(250, 40);
         refineSearch.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
+        refineSearch.setMinimumSize(refineButtonSize);
+        refineSearch.setPreferredSize(refineButtonSize);
+        refineSearch.setMaximumSize(refineButtonSize);
 
-        JButton graphButton = new RoundedButton("View Graph", 55,HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
+        JButton graphButton = new RoundedButton("View Graph", 40, HIGHLIGHT, LIGHT_HIGHLIGHT, 18);
         ((RoundedButton) graphButton).setButtonIcon(new ImageIcon((getClass().getResource("/Images/graph.PNG"))), 18);
+        Dimension graphButtonSize = new Dimension(230, 40);
         graphButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         graphButton.addActionListener(sceneSwitch);
+        graphButton.setMinimumSize(graphButtonSize);
+        graphButton.setPreferredSize(graphButtonSize);
+        graphButton.setMaximumSize(graphButtonSize);
 
-        String[] graphOptions = {"--Sort Option--", "Lateness - Ascending", "Lateness - Descending", "Distance - Ascending", "Distance - Descending"};
+        String[] graphOptions = { "--Sort Option--", "Lateness - Ascending", "Lateness - Descending",
+                "Distance - Ascending", "Distance - Descending" };
 
         JComboBox<String> sortDropDown = new DropdownBuilder(graphOptions)
                 .setFontSize(18)
@@ -363,32 +394,27 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
             pageDisplay.setText(String.format("%d", (int) ((float) counter / 25) + 1));
         });
 
-        JButton liveDataButton = new RoundedButton("LIVE", 55, GRAY, LIME, 18);
-        ((RoundedButton) liveDataButton).setButtonIcon(new ImageIcon((getClass().getResource("/Images/signal.PNG"))), 18);
+        RoundedButton liveDataButton = new RoundedButton("LIVE", 40, GRAY, LIME, 18);
+        Dimension liveButtonSize = new Dimension(200, 40);
+        liveDataButton.setMinimumSize(liveButtonSize);
+        liveDataButton.setMaximumSize(liveButtonSize);
+        liveDataButton.setButtonIcon(new ImageIcon((getClass().getResource("/Images/signal.PNG"))),
+                18);
         liveDataButton.setBorder(BorderFactory.createEmptyBorder(10, 40, 10, 40));
         liveDataButton.addActionListener(e -> {
             liveData = !liveData;
             if (liveData) {
-                ((RoundedButton) liveDataButton).setBackgroundColor(GRAY.darker());
-                ((RoundedButton) liveDataButton).setHoverColor(GRAY);
-            }
-            else{
-                ((RoundedButton) liveDataButton).setBackgroundColor(LIVE_BUTTON_COLOR);
-                ((RoundedButton) liveDataButton).setHoverColor(LIVE_BUTTON_COLOR_LIGHT);
+                liveDataButton.setBackgroundColor(GRAY.darker());
+                liveDataButton.setHoverColor(GRAY);
+            } else {
+                liveDataButton.setBackgroundColor(LIVE_BUTTON_COLOR);
+                liveDataButton.setHoverColor(LIVE_BUTTON_COLOR_LIGHT);
             }
 
             Database.toggleSelectedFlights();
             updateSearch();
             refreshEntries();
         });
-
-        String resultCountText = String.format("%d Result%s Found", flightData.size(), (flightData.size() == 1) ? "" : "s");
-        resultCount = new TextPaneBuilder()
-                .setText(resultCountText)
-                .setFontSize(22)
-                .setFont(BOLD_FONT)
-                .build();
-        resultCount.setMaximumSize(new Dimension(pageFont.stringWidth(resultCountText), pageTextHeight));
 
         JPanel buttonContainer = new JPanel();
         buttonContainer.setOpaque(false);
@@ -398,12 +424,9 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(graphButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
-        buttonContainer.add(sortDropDown);
-        buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         buttonContainer.add(liveDataButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
-        buttonContainer.add(resultCount);
-        buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
+        buttonContainer.add(sortDropDown);
         buttonContainer.add(Box.createHorizontalGlue());
         buttonContainer.add(previousPreviousButton);
         buttonContainer.add(Box.createRigidArea(new Dimension(10, 0)));
@@ -417,10 +440,22 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         buttonContainer.add(Box.createRigidArea(new Dimension(20, 0)));
         this.add(buttonContainer);
 
+        String resultCountText = String.format("%d Result%s Found", flightData.size(),
+                (flightData.size() == 1) ? "" : "s");
+        resultCount = new TextPaneBuilder()
+                .setText(resultCountText)
+                .setFontSize(22)
+                .setFont(BOLD_FONT)
+                .build();
+        resultCount.setBorder(BorderFactory.createEmptyBorder(0, 20, 0, 0));
+        this.add(resultCount);
+
         flightEntries = new JPanel();
+        flightEntries.setOpaque(false);
         flightEntries.setLayout(new BoxLayout(flightEntries, BoxLayout.Y_AXIS));
+        flightEntries.setOpaque(false);
         notFoundImage = new ImagePanel("/Images/not-found-page.png", 900, 500);
-        this.add(notFoundImage);
+        notFoundImage.setOpaque(false);
 
         updateFlightData(Database.offlineFlights);
 
@@ -472,7 +507,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
             filteredList = filter.byDateRange(startDate, endDate);
         }
 
-        this.flightData = (ArrayList<FlightInfo>) filteredList;
+        flightData = (ArrayList<FlightInfo>) filteredList;
 
         this.isFound = (!(filteredList == null || filteredList.isEmpty()));
         this.refreshEntries();
@@ -489,15 +524,19 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
     public void refreshEntries() {
         flightEntries.removeAll();
         pageDisplay.setText(String.format("%d", (int) ((float) counter / 25) + 1));
+
         if (flightData != null && flightData.size() != 0) {
-            resultCount.setText(String.format("%d Result%s Found", flightData.size(), (flightData.size() == 1) ? "" : "s"));
+            resultCount.setText(
+                    String.format("%d Result%s Found", flightData.size(), (flightData.size() == 1) ? "" : "s"));
             for (int i = counter; i < (counter + 25); i++) {
                 if (i >= flightData.size())
                     break;
                 flightEntries.add(new ExpandablePanel(flightData.get(i), this.dynamicTextMode));
             }
-        }
-        else{
+        } else {
+            flightEntries.add(Box.createRigidArea(new Dimension(10, 200)));
+            flightEntries.add(notFoundImage);
+            flightEntries.add(Box.createVerticalGlue());
             resultCount.setText("No Results Found");
         }
         notFoundImage.setVisible(!this.isFound);
@@ -521,9 +560,8 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
                 refreshEntries();
                 break;
             case "Lateness - Descending":
-                flightData.sort((FlightInfo a, FlightInfo b) -> Float.compare(a.lateness, b.lateness));
+                flightData.sort((FlightInfo a, FlightInfo b) -> Float.compare(b.lateness, a.lateness));
                 dynamicTextMode = true;
-                Collections.reverse(flightData);
                 counter = 0;
                 refreshEntries();
                 break;
@@ -534,9 +572,8 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
                 refreshEntries();
                 break;
             case "Distance - Descending":
-                flightData.sort((FlightInfo a, FlightInfo b) -> Float.compare(a.distance, b.distance));
+                flightData.sort((FlightInfo a, FlightInfo b) -> Float.compare(b.distance, a.distance));
                 dynamicTextMode = false;
-                Collections.reverse(flightData);
                 counter = 0;
                 refreshEntries();
                 break;

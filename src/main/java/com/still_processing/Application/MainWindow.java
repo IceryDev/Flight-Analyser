@@ -7,9 +7,6 @@ import java.awt.CardLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -74,8 +71,8 @@ public class MainWindow extends JFrame implements ActionListener {
         this.setTitle("Flight Analyser");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.getContentPane().setBackground(BACKGROUND);
-        this.setSize(1024, 720);
-        this.setMinimumSize(new Dimension(512, 512));
+        this.setSize(1390, 810);
+        this.setMinimumSize(new Dimension(1390, 810));
         this.setVisible(true);
     }
 

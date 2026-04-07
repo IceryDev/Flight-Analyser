@@ -187,7 +187,7 @@ public class FlightFetcher {
                                     try {
                                         json = mapper.readTree(response.body());
                                     } catch (JsonProcessingException e) {
-                                        System.err.println("Skip: No match found for instance. Skipping...");
+                                        System.out.println("Skip: No match found for instance. Skipping...");
                                         return null;
                                     }
                                     String[] route;
@@ -211,7 +211,7 @@ public class FlightFetcher {
                                         }
                                     } else {
                                         if (debug) {
-                                            System.err.println("Skip: No match found for instance. Skipping...");
+                                            System.out.println("Skip: No match found for instance. Skipping...");
                                         }
                                     }
                                     return null;
@@ -303,10 +303,6 @@ public class FlightFetcher {
             tmp.plane.geoAltitude = flight.get(13).asDouble();
             tmp.plane.squawk = flight.get(14).isNull() ? null : flight.get(14).asText();
             tmp.flightDate = LocalDate.now().format(DateTimeFormatter.ofPattern("MM/dd/yyyy"));
-            tmp.depTime = "00:00";
-            tmp.CRSDepTime = "00:00";
-            tmp.arrTime = "00:00";
-            tmp.CRSArrTime = "00:00";
 
             array.add(tmp);
         }
@@ -372,7 +368,7 @@ public class FlightFetcher {
             }
             return ImageIO.read(URI.create(response.body()).toURL());
         }
-        catch (Exception e){
+        catch (IOException | IllegalArgumentException e){
             try {
                 return ImageIO.read(Objects.requireNonNull(FlightFetcher.class.getResource(Settings.NOT_FOUND_PLANE)));
             } catch (IOException ex) {

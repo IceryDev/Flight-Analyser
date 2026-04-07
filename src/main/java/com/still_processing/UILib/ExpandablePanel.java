@@ -91,29 +91,37 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
         }
         this.fInfo = data;
 
-        this.flightNumberText = (data.flightNumber == null) ? data.plane.icao24.toUpperCase() : data.iataCode + data.flightNumber;
+        this.flightNumberText = (data.flightNumber == null) ? data.plane.icao24.toUpperCase()
+                : data.iataCode + data.flightNumber;
         this.depTime = data.depTime;
         this.arrTime = data.arrTime;
-        int depHour = Integer.parseInt(depTime.substring(0, 2));
-        int depMinutes = Integer.parseInt(depTime.substring(3, 5));
-        int arrHour = Integer.parseInt(arrTime.substring(0, 2));
-        int arrMinutes = Integer.parseInt(arrTime.substring(3, 5));
-        int tripDurationHour = arrHour - depHour;
-        int tripDurationMinutes = arrMinutes - depMinutes;
-        if (tripDurationMinutes < 0) {
-            tripDurationHour--;
-            tripDurationMinutes += 60;
+        if (this.depTime != null && this.arrTime != null){
+            int depHour = Integer.parseInt(depTime.substring(0, 2));
+            int depMinutes = Integer.parseInt(depTime.substring(3, 5));
+            int arrHour = Integer.parseInt(arrTime.substring(0, 2));
+            int arrMinutes = Integer.parseInt(arrTime.substring(3, 5));
+            int tripDurationHour = arrHour - depHour;
+            int tripDurationMinutes = arrMinutes - depMinutes;
+            if (tripDurationMinutes < 0) {
+                tripDurationHour--;
+                tripDurationMinutes += 60;
+            }
+            if (tripDurationHour < 0) {
+                tripDurationHour += 24;
+            }
+            this.tripDuration = String.format("%dh%dm  ", tripDurationHour, tripDurationMinutes);
         }
-        if (tripDurationHour < 0) {
-            tripDurationHour += 24;
+        else{
+            this.depTime = data.origin.country;
+            this.arrTime = data.dest.country;
+            this.tripDuration = "LIVE  ";
         }
-        this.tripDuration = String.format("%dh%dm  ", tripDurationHour, tripDurationMinutes);
         this.originIATA = data.origin.iataCode;
         this.destIATA = data.dest.iataCode;
         this.latenessText = String.format("%.0f min", data.lateness);
         this.flightDateText = data.flightDate;
-        this.schDepTimeText = data.depTime;
-        this.actDepTimeText = data.CRSDepTime;
+        this.schDepTimeText = (data.depTime == null) ? "Not Available" : data.depTime;
+        this.actDepTimeText = (data.CRSDepTime == null) ? "Not Available" : data.CRSDepTime;
         this.flightCanceledText = (data.cancelled) ? "True" : "False";
         this.schArrTimeText = (data.CRSArrTime == null) ? "Not Available" : data.CRSArrTime;
         this.actArrTimeText = (data.arrTime == null) ? "Not Available" : data.arrTime;
@@ -122,6 +130,7 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
 
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBorder(BorderFactory.createEmptyBorder(padding, padding, 0, padding));
+        this.setOpaque(false);
 
         defaultDisplay = new JPanel();
         expandedDisplay = new JPanel();
@@ -227,7 +236,8 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
                 .build();
 
         latenessTitle.setText((dynamicTextMode) ? "Lateness:" : "Distance:");
-        lateness.setText((dynamicTextMode) ? String.format("%.0f min", fInfo.lateness) : String.format("%.1f km", fInfo.distance));
+        lateness.setText((dynamicTextMode) ? String.format("%.0f min", fInfo.lateness)
+                : String.format("%.1f km", fInfo.distance));
         latenessTitle.setMaximumSize(
                 new Dimension(titleFontMetrics.stringWidth(
                         latenessTitle.getText() + 5),

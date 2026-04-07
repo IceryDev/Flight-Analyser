@@ -73,7 +73,26 @@ public class MapSideOverlay extends JPanel implements Runnable{
         g2d.drawString("Origin Airport:", MARGIN, cumulativeY);
 
         cumulativeY += (int) (textHeight*1.5);
-        g2d.drawString(String.format("%s (%s)", tmpInfo.origin.name, tmpInfo.origin.iataCode), MARGIN, cumulativeY);
+
+        String fullOrigin = String.format("%s (%s)", tmpInfo.origin.name, tmpInfo.origin.iataCode);
+        int availableWidth = w - MARGIN * 2;
+
+        if(g2d.getFontMetrics().stringWidth(fullOrigin) > availableWidth){
+            String[] nameOrigin = tmpInfo.origin.name.split(" ");
+            String originCity;
+
+            if(nameOrigin.length >= 2){
+                originCity = nameOrigin[0] + " " + nameOrigin[1];
+            } else {
+                originCity = nameOrigin[0];
+            }
+
+            String shortOrigin = originCity + " ... (" + tmpInfo.origin.iataCode + ")";
+            g2d.drawString(shortOrigin, MARGIN, cumulativeY);
+        } else {
+            g2d.drawString(fullOrigin, MARGIN, cumulativeY);
+        }
+
         cumulativeY += (int) (textHeight*1.5);
         g2d.drawString(String.format("%s (%s)", tmpInfo.origin.municipality, tmpInfo.origin.country), MARGIN, cumulativeY);
 
@@ -85,7 +104,23 @@ public class MapSideOverlay extends JPanel implements Runnable{
         g2d.drawString("Destination Airport: ", MARGIN, cumulativeY);
 
         cumulativeY += (int) (textHeight*1.5);
-        g2d.drawString(String.format("%s (%s)", tmpInfo.dest.name, tmpInfo.dest.iataCode), MARGIN, cumulativeY);
+        String fullDest = String.format("%s (%s)", tmpInfo.dest.name, tmpInfo.dest.iataCode);
+
+        if(g2d.getFontMetrics().stringWidth(fullDest) > availableWidth){
+            String[] nameDest = tmpInfo.dest.name.split(" ");
+            String destCity;
+
+            if(nameDest.length >= 2){
+                destCity = nameDest[0] + " " + nameDest[1];
+            } else {
+                destCity = nameDest[0];
+            }
+
+            String shortDest = destCity + " ... (" + tmpInfo.dest.iataCode + ")";
+            g2d.drawString(shortDest, MARGIN, cumulativeY);
+        } else {
+            g2d.drawString(fullDest, MARGIN, cumulativeY);
+        }
 
         cumulativeY += (int) (textHeight*1.5);
         g2d.drawString(String.format("%s (%s)", tmpInfo.dest.municipality, tmpInfo.dest.country), MARGIN, cumulativeY);
@@ -165,6 +200,10 @@ public class MapSideOverlay extends JPanel implements Runnable{
 
             this.isExpanded = !this.isExpanded;
         }
+    }
+
+    public String[] toArray(String name){
+         return name.split(" ");
     }
 
     @Override

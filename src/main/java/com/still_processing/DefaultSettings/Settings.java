@@ -1,14 +1,15 @@
 package com.still_processing.DefaultSettings;
 
-import java.awt.Font;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 import java.io.InputStream;
-import io.github.cdimascio.dotenv.Dotenv;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+
+import io.github.cdimascio.dotenv.Dotenv;
 
 /**
  * Some reuseable default settings
@@ -77,12 +78,13 @@ public class Settings {
         }
     }
 
-    public static JPanel getGlassPane(){
+    public static JPanel getGlassPane() {
         return glassPane;
     }
 
-    public static void setGlassPane(JPanel pane){
-        if (glassPane != null) return;
+    public static void setGlassPane(JPanel pane) {
+        if (glassPane != null)
+            return;
         glassPane = pane;
     }
 }
