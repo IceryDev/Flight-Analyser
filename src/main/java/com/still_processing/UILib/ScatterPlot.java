@@ -3,8 +3,14 @@ package com.still_processing.UILib;
 import com.still_processing.DefaultSettings.Settings;
 import com.still_processing.FlightData.Graphs.ScatterPlotData;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Graphics;
+import java.awt.FontMetrics;
+import java.awt.BasicStroke;
+import java.awt.RenderingHints;
+import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;

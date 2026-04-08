@@ -51,7 +51,6 @@ import static com.still_processing.DefaultSettings.Settings.*;
 
 public class AnalysisPanel extends JPanel implements Scrollable, ActionListener {
     JPanel graphDisplay;
-    Histogram histogram;
     Histogram latenessHistogram;
     Histogram distanceHistogram;
     ScatterPlot latenessVsDistance;

@@ -16,7 +16,8 @@ import java.awt.RenderingHints;
 import java.awt.geom.Arc2D;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
 
 import static com.still_processing.DefaultSettings.Settings.*;
 
