@@ -13,22 +13,21 @@ import net.sf.geographiclib.GeodesicData;
 import net.sf.geographiclib.GeodesicMask;
 
 import javax.imageio.ImageIO;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLParameters;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.*;
 import java.net.http.HttpClient;
+import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
 
 /**
  * Fetches live OpenSky flight data, enriches the data with local database elements and

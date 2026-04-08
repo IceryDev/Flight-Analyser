@@ -11,8 +11,9 @@ import net.sf.geographiclib.Geodesic;
 import net.sf.geographiclib.GeodesicData;
 import org.openstreetmap.gui.jmapviewer.Coordinate;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import javax.swing.SwingWorker;
+import javax.swing.SwingUtilities;
 import java.awt.event.ComponentAdapter;
 import java.util.ArrayList;
 import java.util.List;

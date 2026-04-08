@@ -11,7 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -38,7 +37,6 @@ import com.still_processing.FlightData.Database;
 import com.still_processing.FlightData.FlightInfo;
 import com.still_processing.FlightData.Filters.Filter;
 import com.still_processing.FlightData.Filters.FuzzySearch;
-import com.still_processing.UILib.ButtonBuilder;
 import com.still_processing.UILib.CalendarSettings;
 import com.still_processing.UILib.DropdownBuilder;
 import com.still_processing.UILib.ExpandablePanel;

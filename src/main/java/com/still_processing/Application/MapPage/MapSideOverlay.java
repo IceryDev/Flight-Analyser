@@ -6,8 +6,12 @@ import com.still_processing.FlightData.FlightInfo;
 import com.still_processing.FlightData.Utils.LiveDataHandler;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import javax.swing.BoxLayout;
+import java.awt.Graphics2D;
+import java.awt.AlphaComposite;
+import java.awt.RenderingHints;
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Objects;
