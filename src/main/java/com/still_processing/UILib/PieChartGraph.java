@@ -1,10 +1,5 @@
 package com.still_processing.UILib;
 
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -14,9 +9,14 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.Arc2D;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import static com.still_processing.DefaultSettings.Settings.*;
 
@@ -26,7 +26,6 @@ import static com.still_processing.DefaultSettings.Settings.*;
  *
  * @author Jessica Chen
  */
-
 public class PieChartGraph extends JPanel implements Runnable {
 
     Thread graphThread;

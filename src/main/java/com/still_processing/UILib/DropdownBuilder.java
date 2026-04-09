@@ -9,9 +9,9 @@ import java.awt.Color;
 import java.awt.Font;
 
 /**
+ *
  * @author Jagoda Koczwara-Szuba
  */
-
 public class DropdownBuilder {
 
     private final int[] size;

@@ -1,18 +1,25 @@
 package com.still_processing.UILib;
 
-import com.github.lgooddatepicker.components.DatePicker;
-import com.github.lgooddatepicker.components.DatePickerSettings;
-import com.github.lgooddatepicker.components.DatePickerSettings.DateArea;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JTextField;
+
+import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
+
 import static com.still_processing.DefaultSettings.Settings.*;
 
 /**
+ * creates a Custom DatePciker with some default setups
+ * and updates the label
+ *
  * @author Jessica Chen
  */
 public class CalendarSettings extends DatePicker {

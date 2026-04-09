@@ -11,7 +11,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -38,7 +37,6 @@ import com.still_processing.FlightData.Database;
 import com.still_processing.FlightData.FlightInfo;
 import com.still_processing.FlightData.Filters.Filter;
 import com.still_processing.FlightData.Filters.FuzzySearch;
-import com.still_processing.UILib.ButtonBuilder;
 import com.still_processing.UILib.CalendarSettings;
 import com.still_processing.UILib.DropdownBuilder;
 import com.still_processing.UILib.ExpandablePanel;
@@ -52,8 +50,12 @@ import static com.still_processing.FlightData.Database.flightData;
 import static com.still_processing.DefaultSettings.Settings.*;
 
 /**
+ * Draw the Search Page
+ *
  * @author Deea Zaharia
  * @author Jagoda Koczwara-Szuba
+ * @author Jessica Chen
+ * @author Zhou Sun
  * @author Marco Fontana
  */
 public class SearchPanel extends JPanel implements Scrollable, ActionListener {
@@ -534,7 +536,7 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
                 flightEntries.add(new ExpandablePanel(flightData.get(i), this.dynamicTextMode));
             }
         } else {
-            flightEntries.add(Box.createRigidArea(new Dimension(10, 200)));
+            flightEntries.add(Box.createRigidArea(new Dimension(10, 100)));
             flightEntries.add(notFoundImage);
             flightEntries.add(Box.createVerticalGlue());
             resultCount.setText("No Results Found");
@@ -546,6 +548,11 @@ public class SearchPanel extends JPanel implements Scrollable, ActionListener {
         this.repaint();
     }
 
+    /**
+     * Sort Dropdown ActionListener
+     * 
+     * @author Jagoda Koczwara-Szuba
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         JComboBox<String> dropDown = (JComboBox<String>) e.getSource();

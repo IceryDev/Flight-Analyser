@@ -25,6 +25,8 @@ import static com.still_processing.DefaultSettings.Settings.*;
 /**
  * The {@code BarChartGraph} class is used to build a bar chart that has
  * animation.
+ *
+ * @author Jessica Chen
  */
 public class BarChartGraph extends JPanel implements Runnable {
     Thread graphThread;
