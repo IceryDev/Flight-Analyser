@@ -16,7 +16,8 @@ import java.awt.RenderingHints;
 import java.awt.geom.Arc2D;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
 
 import static com.still_processing.DefaultSettings.Settings.*;
 
@@ -33,18 +34,22 @@ public class PieChartGraph extends JPanel implements Runnable {
     private String chartTitle = "Pie Chart";
     private final int FPS = 60;
     private JPanel TOP_BAR;
+    private boolean showTopBar = false;
     private double animationProgress = 0.0;
     private static final double ANIMATION_DURATION = 300.0;
     private HashMap<String, Integer> data;
     private int legendWidth = 180;
     private int padding = 50;
+    private int legendFontSize = 18;
+    private int percentFontSize = 25;
+    private int chartY;
 
     private JLabel title;
-    private Color color1 = LIGHT_BLUE;
-    private Color color2 = HIGHLIGHT;
+    private Color color1 = LIGHT_HIGHLIGHT;
+    private Color color2 = LIGHT_BLUE;
     private Color color3 = LIGHT_GREEN;
-    private Color color4 = CYAN;
-    private Color color5 = DARK_CYAN;
+    private Color color4 = HIGHLIGHT;
+    private Color color5 = CYAN;
     private Color color6 = LIGHT_BURGUNDY;
     private Color color7 = BURGUNDY;
 
@@ -62,13 +67,16 @@ public class PieChartGraph extends JPanel implements Runnable {
      *
      * @author Jessica Chen
      */
-    public PieChartGraph(HashMap<String, Integer> data) {
+    public PieChartGraph(HashMap<String, Integer> data, boolean showTopBar) {
+        this.showTopBar = showTopBar;
         if (data != null) {
-            if(!data.isEmpty()){
+            if (!data.isEmpty()) {
                 this.data = data;
                 setLayout(new BorderLayout(0, 0));
-                TOP_BAR = buildTopBar();
-                add(TOP_BAR, BorderLayout.NORTH);
+                if (showTopBar) {
+                    TOP_BAR = buildTopBar();
+                    add(TOP_BAR, BorderLayout.NORTH);
+                }
             }
         }
         this.setPreferredSize(new Dimension(760, 600));
@@ -149,14 +157,18 @@ public class PieChartGraph extends JPanel implements Runnable {
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-        if (data != null){
+        if (data != null) {
             int panelWidth = getWidth();
             int panelHeight = getHeight();
 
             int chartDiameter = Math.min(panelWidth - legendWidth - padding * 2, panelHeight - padding * 4);
             chartDiameter = Math.max(chartDiameter, 100);
-            int chartY = (panelHeight - chartDiameter) / 2 + TOP_BAR.getHeight() / 2;
-            int chartX = padding;
+            if (TOP_BAR != null) {
+                chartY = (panelHeight - chartDiameter) / 2 + TOP_BAR.getHeight() / 2;
+            } else {
+                chartY = (panelHeight - chartDiameter) / 2;
+            }
+            int chartX = (panelWidth - legendWidth - chartDiameter) / 2;
             double animatedSweep = sineMotion(animationProgress) * 360;
             List<String> keys = new ArrayList<>(data.keySet());
             int total = keys.stream().mapToInt(data::get).sum();
@@ -178,14 +190,14 @@ public class PieChartGraph extends JPanel implements Runnable {
                 // Percentage label inside slice
                 // Due to inaccurate rounding in floating point numbers,
                 // add 0.01 to fix
-                if (remainingAngle + 0.01 >= sweep) {
+                if (sweep > 0.01 && remainingAngle + 0.01 >= sweep) {
                     double midAngle = Math.toRadians(startAngle + sweep / 2);
                     int labelR = chartDiameter / 4;
                     int labelX = chartX + chartDiameter / 2 + (int) (labelR * Math.cos(midAngle));
                     int labelY = chartY + chartDiameter / 2 - (int) (labelR * Math.sin(midAngle));
                     String pct = String.format("%.1f%%", 100.0 * value / total);
                     g2d.setColor(BACKGROUND);
-                    g2d.setFont(BOLD_FONT);
+                    g2d.setFont(BOLD_FONT.deriveFont((float) percentFontSize));
                     int textW = g2d.getFontMetrics().stringWidth(pct);
                     g2d.drawString(pct, labelX - textW / 2, labelY + 5);
                 }
@@ -196,7 +208,7 @@ public class PieChartGraph extends JPanel implements Runnable {
             int legendStartY = chartY + 80;
             int swatchSize = 16;
             int rowHeight = 28;
-            g2d.setFont(REGULAR_FONT);
+            g2d.setFont(REGULAR_FONT.deriveFont((float) legendFontSize));
             for (int i = 0; i < keys.size(); i++) {
                 String label = keys.get(i);
                 int value = data.get(label);
@@ -210,10 +222,10 @@ public class PieChartGraph extends JPanel implements Runnable {
                 g2d.drawString(label + " (" + value + ")", legendX + swatchSize + 8, rowY + swatchSize - 2);
             }
         }
-        if( data == null){
+        if (data == null) {
             try {
                 BufferedImage image = ImageIO.read(getClass().getResource("/Images/error-message.png"));
-                    g2d.drawImage(image, getWidth()/2 - 300, getHeight()/2 - 300, 600, 600, null);
+                g2d.drawImage(image, getWidth() / 2 - 300, getHeight() / 2 - 300, 600, 600, null);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -242,6 +254,18 @@ public class PieChartGraph extends JPanel implements Runnable {
     public void setPadding(int padding) {
         if (padding > 0) {
             this.padding = padding;
+        }
+    }
+
+    public void setLegendFontSize(int legendFontSize) {
+        if (legendFontSize > 0) {
+            this.legendFontSize = legendFontSize;
+        }
+    }
+
+    public void setPercentFontSize(int percentFontSize) {
+        if (percentFontSize > 0) {
+            this.percentFontSize = percentFontSize;
         }
     }
 }

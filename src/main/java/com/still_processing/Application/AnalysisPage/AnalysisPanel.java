@@ -29,32 +29,33 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import com.still_processing.FlightData.Database;
+import com.still_processing.FlightData.FlightInfo;
 import com.still_processing.FlightData.Graphs.PropertyType;
 import com.still_processing.FlightData.Graphs.ScatterPlotData;
 import com.still_processing.UILib.BarChartGraph;
 import com.still_processing.UILib.DropdownBuilder;
 import com.still_processing.UILib.Histogram;
 import com.still_processing.UILib.ImagePanel;
-import com.still_processing.UILib.ScatterPlot;
+import com.still_processing.UILib.PieChartGraph;
 import com.still_processing.UILib.RoundedButton;
+import com.still_processing.UILib.ScatterPlot;
 import com.still_processing.UILib.TableBuilder;
 import com.still_processing.UILib.TextPaneBuilder;
 
-import static com.still_processing.FlightData.Statistics.*;
 import static com.still_processing.DefaultSettings.Settings.*;
+import static com.still_processing.FlightData.Statistics.*;
 
 /**
  * @author Deea Zaharia
  * @author Jagoda Koczwara-Szuba
  * @author Jessica Chen
  */
-
 public class AnalysisPanel extends JPanel implements Scrollable, ActionListener {
     JPanel graphDisplay;
-    Histogram histogram;
     Histogram latenessHistogram;
     Histogram distanceHistogram;
     ScatterPlot latenessVsDistance;
+    PieChartGraph departureTimeGraph;
     CardLayout cardLayout;
     BarChartGraph barChart;
     ActionListener sceneSwitch;
@@ -88,6 +89,8 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         float[] distance = null;
         HashMap<String, Integer> flightOrigins = null;
         ScatterPlotData scatterPlotData = null;
+        HashMap<String, Integer> departureTimeOfDay = null;
+
         if (Database.flightData != null) {
             latenessData = Database.getLateness(Database.flightData);
             distance = Database.getDistance(Database.flightData);
@@ -95,6 +98,7 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
                     PropertyType.ORIGIN);
             scatterPlotData = Database.getScatterPlot(Database.flightData, PropertyType.LATENESS,
                     PropertyType.DISTANCE);
+            departureTimeOfDay = new HashMap<>();
         }
 
         ArrayList<String> graphOptionsTemp = new ArrayList<>();
@@ -110,6 +114,33 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         }
         if (scatterPlotData != null && scatterPlotData.data != null && scatterPlotData.data.length != 0) {
             graphOptionsTemp.add("ScatterPlot");
+        }
+
+        if (Database.flightData != null && !Database.flightData.isEmpty()) {
+            departureTimeOfDay.put("Early Morning (12am-6am)", 0);
+            departureTimeOfDay.put("Morning (6am-12pm)", 0);
+            departureTimeOfDay.put("Afternoon (12pm-6pm)", 0);
+            departureTimeOfDay.put("Evening (6pm-12am)", 0);
+
+            for (int i = 0; i < Database.flightData.size(); i++) {
+                FlightInfo flightInfo = Database.flightData.get(i);
+                if (flightInfo.depTime != null && !flightInfo.depTime.isEmpty()) {
+                    int hour = Integer.parseInt(flightInfo.depTime.split(":")[0]);
+                    if (hour < 6) {
+                        departureTimeOfDay.merge("Early Morning (12am-6am)", 1, Integer::sum);
+                    } else if (hour < 12) {
+                        departureTimeOfDay.merge("Morning (6am-12pm)", 1, Integer::sum);
+                    } else if (hour < 18) {
+                        departureTimeOfDay.merge("Afternoon (12pm-6pm)", 1, Integer::sum);
+                    } else {
+                        departureTimeOfDay.merge("Evening (6pm-12am)", 1, Integer::sum);
+                    }
+                }
+            }
+        }
+
+        if (departureTimeOfDay != null && !departureTimeOfDay.isEmpty() && !departureTimeOfDay.values().stream().allMatch(x -> x == 0)) {
+            graphOptionsTemp.add("Departure Times");
         }
 
         String[] graphOptions = new String[graphOptionsTemp.size()];
@@ -257,8 +288,7 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
                 sortedTop10Airports.put(entry.getKey(), entry.getValue());
             }
         }
-
-        barChart = new BarChartGraph(sortedTop10Airports);
+        barChart = new BarChartGraph(sortedTop10Airports, false);
         barChart.setOpaque(false);
         barChart.setPreferredSize(new Dimension(0, graphHeight));
         barChart.setXLegend("Top 10 Origins");
@@ -275,6 +305,8 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         else if (maxCount > 50)
             yStep = 10;
         barChart.setYStep(yStep);
+
+        departureTimeGraph = new PieChartGraph(departureTimeOfDay, false);
 
         if (scatterPlotData != null && scatterPlotData.data != null && scatterPlotData.data.length != 0) {
             latenessVsDistance = new ScatterPlot(scatterPlotData, "Lateness Against Distance");
@@ -298,6 +330,7 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         graphDisplay.add(distanceDisplay, "distance");
         graphDisplay.add(barChart, "Top 10 Airports");
         graphDisplay.add(latenessVsDistance, "ScatterPlot");
+        graphDisplay.add(departureTimeGraph, "Departure Times");
         this.add(graphDisplay);
     }
 
@@ -328,6 +361,10 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
                 break;
             case "ScatterPlot":
                 cardLayout.show(graphDisplay, "ScatterPlot");
+                break;
+            case "Departure Times":
+                cardLayout.show(graphDisplay, "Departure Times");
+                departureTimeGraph.animate();
                 break;
         }
     }

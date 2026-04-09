@@ -2,19 +2,20 @@ package com.still_processing.UILib;
 
 import com.still_processing.DefaultSettings.Settings;
 import com.still_processing.FlightData.Graphs.ScatterPlotData;
-import java.awt.BasicStroke;
+
+import javax.swing.JPanel;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Graphics;
+import java.awt.FontMetrics;
+import java.awt.BasicStroke;
 import java.awt.RenderingHints;
+import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import javax.swing.JPanel;
 
 /**
  * Generate a Scatter plot graph based on a 2D array of float values,

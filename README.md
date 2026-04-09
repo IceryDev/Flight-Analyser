@@ -22,3 +22,29 @@
 CLIENT_ID=YOUR_CLIENT_ID
 CLIENT_SECRET=YOUR_CLIENT_SECRET
 ```
+
+## Compiling with Maven
+
+On Macos or Linux, run the following command to create the `.jar file`.
+```bash
+./mvnw clean package
+```
+
+On Windows run this instead.
+```bash
+./mvnw.cmd clean package
+```
+
+The jar file should be in the `target` folder
+
+---
+
+To run the jar file you'll need to have `java` installed with `java` command in
+your `PATH` environment variable.
+
+Then run:
+```bash
+java -jar <path to jar file>
+```
+
+Make sure the `.env` is in the same directory you are running from.

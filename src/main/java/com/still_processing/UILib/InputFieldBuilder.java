@@ -1,12 +1,13 @@
 package com.still_processing.UILib;
 
-import javax.swing.*;
+import javax.swing.JTextField;
+import javax.swing.BorderFactory;
 import javax.swing.border.Border;
-import java.awt.*;
+import java.awt.Font;
+import java.awt.Dimension;
+import java.awt.Color;
 
 import static com.still_processing.DefaultSettings.Settings.*;
-import static com.still_processing.DefaultSettings.Settings.BACKGROUND;
-import static com.still_processing.DefaultSettings.Settings.GRAY;
 
 /**
  * @author Deea Zaharia
