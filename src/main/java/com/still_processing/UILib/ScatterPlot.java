@@ -3,8 +3,14 @@ package com.still_processing.UILib;
 import com.still_processing.DefaultSettings.Settings;
 import com.still_processing.FlightData.Graphs.ScatterPlotData;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JPanel;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Graphics;
+import java.awt.FontMetrics;
+import java.awt.BasicStroke;
+import java.awt.RenderingHints;
+import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
@@ -27,6 +33,11 @@ public class ScatterPlot extends JPanel implements Runnable {
     private final static int HOVER_OFFSET = 10;
     private final static double XY_PADDING_FRACTION = 0.05;
     private final static int MAX_RENDER_POINTS = 100;
+    private final static float LERP_PERCENTAGE = 0.35f;
+
+    private final ScatterPlotData plotData;
+    private final float[][] sampledData;
+    private final String title;
 
     Thread graphThread;
     private double minX;
@@ -35,10 +46,6 @@ public class ScatterPlot extends JPanel implements Runnable {
     private double maxY;
     private int toolTipIndex = -1;
     private boolean showToolTip = false;
-
-    private final ScatterPlotData plotData;
-    private final float[][] sampledData;
-    private final String title;
 
     public ScatterPlot(ScatterPlotData plotData, String title) {
         this.plotData = plotData;
@@ -72,28 +79,27 @@ public class ScatterPlot extends JPanel implements Runnable {
         }
     }
 
-    private float[][] sampleData(float[][] data) {
-        if (data.length <= MAX_RENDER_POINTS) {
-            return data;
-        }
-        // Getting a random sample of points to render by
-        // shuffling a copy of the original array and taking the first N points.
-        List<float[]> points = new ArrayList<>(data.length);
-        Collections.addAll(points, data);
-        Collections.shuffle(points);
-        float[][] sampled = new float[MAX_RENDER_POINTS][];
-        for (int index = 0; index < MAX_RENDER_POINTS; index++) {
-            sampled[index] = points.get(index);
-        }
-        return sampled;
+    /**
+     * Computes a clamped value staying within the specified range [lo, hi]
+     *
+     * @param v          The value to clamp
+     * @param lowerBound The lower bound of the range
+     * @param upperBound The upper bound of the range
+     * @return The clamped value, included to be between lowerBound and upperBound
+     */
+    private static double clamp(double v, double lowerBound, double upperBound) {
+        return Math.max(lowerBound, Math.min(upperBound, v));
     }
 
-    private static double clamp(double v, double lo, double hi) {
-        return Math.max(lo, Math.min(hi, v));
-    }
-
+    /**
+     * Moves the distance from {@code a} toward {@code b} by {@code LERP_PERCENTAGE} of the way.
+     *
+     * @param a The starting value
+     * @param b The target value
+     * @return The interpolated value between {@code a} and {@code b}
+     */
     private static double lerp(double a, double b) {
-        return a + (b - a) * 0.35;
+        return a + ((b - a) * LERP_PERCENTAGE);
     }
 
     private static String formatTickLabel(double value, double step) {
@@ -116,6 +122,22 @@ public class ScatterPlot extends JPanel implements Runnable {
         g2d.drawString(text, 0, 0);
         g2d.rotate(-Math.toRadians(angle));
         g2d.translate(-(float) x, -(float) y);
+    }
+
+    private float[][] sampleData(float[][] data) {
+        if (data.length <= MAX_RENDER_POINTS) {
+            return data;
+        }
+        // Getting a random sample of points to render by
+        // shuffling a copy of the original array and taking the first N points.
+        List<float[]> points = new ArrayList<>(data.length);
+        Collections.addAll(points, data);
+        Collections.shuffle(points);
+        float[][] sampled = new float[MAX_RENDER_POINTS][];
+        for (int index = 0; index < MAX_RENDER_POINTS; index++) {
+            sampled[index] = points.get(index);
+        }
+        return sampled;
     }
 
     @Override
@@ -143,10 +165,17 @@ public class ScatterPlot extends JPanel implements Runnable {
         g2d.drawString(title, (getWidth() - metrics.stringWidth(title)) / 2, STD_MARGIN / 2);
     }
 
+    /**
+     * Rounds a current step down to a "nice" tick step (It will be scaled by [1/2/5])
+     *
+     * @param currentStep The current step to round down
+     * @return The next lower "nice" tick step
+     */
     private double getLowerStepScale(double currentStep) {
         if (currentStep <= 0) {
             return 0;
         }
+        // Finding the closest lower step by normalizing the current step to a value between 1 and 10
         double decade = Math.pow(10, Math.floor(Math.log10(currentStep)));
         double normalizedStep = currentStep / decade;
         if (normalizedStep >= 5) {
@@ -158,10 +187,17 @@ public class ScatterPlot extends JPanel implements Runnable {
         return 5 * (decade / 10);
     }
 
+    /**
+     * Rounds a raw step up to a "nice" tick step (It will be scaled by [1/2/5])
+     *
+     * @param rawStep The raw step calculated from the visible range and desired tick count
+     * @return The next higher "nice" tick step
+     */
     private double getUpperStepScale(double rawStep) {
         if (rawStep <= 0) {
             return 1;
         }
+        // Finding the closest higher step by normalizing the raw step to a value between 1 and 10
         double decade = Math.pow(10, Math.floor(Math.log10(rawStep)));
         double normalizedStep = rawStep / decade;
         if (normalizedStep <= 1) {
@@ -202,8 +238,18 @@ public class ScatterPlot extends JPanel implements Runnable {
         return clamp(smoothed, 0.15, 0.45);
     }
 
+    /**
+     * Picks a readable tick gap for the current axis size.
+     *
+     * @param visibleMinimumAxis The current visible minimum value on the axis
+     * @param visibleMaximumAxis The current visible maximum value on the axis
+     * @param axisPixels         The number of pixels available for the axis
+     * @param minimumLabelPixels The minimum number of pixels needed to fit a label without overlap
+     * @param scale              The current scale of the axis, used to adjust tick steps for better readability
+     * @return A scaled "nice" tick step
+     */
     private double getTickStep(double visibleMinimumAxis, double visibleMaximumAxis, int axisPixels,
-            int minimumLabelPixels, double scale) {
+                               int minimumLabelPixels, double scale) {
         int desiredTickCount = axisPixels / minimumLabelPixels;
         if (desiredTickCount < 10) {
             desiredTickCount = 10;
@@ -218,6 +264,12 @@ public class ScatterPlot extends JPanel implements Runnable {
         return tickStep;
     }
 
+    /**
+     * Calculates graph bounds, scales, and axis positions used for drawing.
+     *
+     * @return An array containing all the necessary geometry values for drawing the graph,
+     *         or null if the plot area is too small to draw.
+     */
     private double[] getGraphGeometry() {
         int plotWidth = getWidth() - (STD_MARGIN * 2);
         int plotHeight = getHeight() - (STD_MARGIN * 2);
@@ -256,6 +308,8 @@ public class ScatterPlot extends JPanel implements Runnable {
         double offsetX = STD_PADDING;
         double xScaleNeg;
         double xScalePos;
+        // If the data includes both negative and positive values, we need to split the X axis in two parts
+        // with different scales. Otherwise, a single scale will be used for the whole axis.
         if (dataMinX < 0 && dataMaxX > 0) {
             xScaleNeg = negW / (0 - dataMinX);
             xScalePos = posW / (dataMaxX - 0);
@@ -289,12 +343,25 @@ public class ScatterPlot extends JPanel implements Runnable {
         axisXPx = clamp(axisXPx, STD_PADDING, getWidth() - STD_PADDING);
         double axisYPx = (getHeight() - offsetY) - (axisYValue - dataMinY) * yScale;
         axisYPx = clamp(axisYPx, STD_PADDING, getHeight() - STD_PADDING);
-        return new double[] { dataMinX, dataMaxX, dataMinY, dataMaxY, yScale, offsetX, offsetY, axisXPx, axisYPx, negW,
-                xScaleNeg, xScalePos, zeroXPx };
+        return new double[]{dataMinX, dataMaxX, dataMinY, dataMaxY, yScale, offsetX, offsetY, axisXPx, axisYPx, negW,
+                xScaleNeg, xScalePos, zeroXPx};
     }
 
+    /**
+     * Converts one X data value to a position matching screen coordinates.
+     *
+     * @param x         The X data value to convert
+     * @param dataMinX  The minimum X data value in the current view,
+     * @param negW      The width in pixels of the negative X area (for split scaling)
+     * @param xScaleNeg The scale factor for negative X values
+     * @param xScalePos The scale factor for positive X values
+     * @param zeroXPx   The pixel position of the zero X value
+     * @param offsetX   The pixel offset for the left edge of the plot area, used to shift all points
+     * @return The pixel X coordinate corresponding to the given data X value, accounting for split scaling if needed.
+     *
+     */
     private double mapX(double x, double dataMinX, double negW, double xScaleNeg, double xScalePos, double zeroXPx,
-            double offsetX) {
+                        double offsetX) {
         if (dataMinX < 0 && negW > 0) {
             if (x < 0) {
                 return offsetX + (x - dataMinX) * xScaleNeg;
@@ -305,7 +372,7 @@ public class ScatterPlot extends JPanel implements Runnable {
     }
 
     private void drawXTicks(Graphics2D g2d, FontMetrics metrics, double dataMinX, double dataMaxX, double offsetX,
-            double axisYPx, double negW, double xScaleNeg, double xScalePos, double zeroXPx) {
+                            double axisYPx, double negW, double xScaleNeg, double xScalePos, double zeroXPx) {
         int axisY = (int) Math.round(axisYPx);
         int axisPixelsX = Math.max(1, getWidth() - (STD_PADDING * 2));
         int maxLabelWidth = Math.max(metrics.stringWidth(formatTickLabel(dataMinX, 1)),
@@ -379,7 +446,7 @@ public class ScatterPlot extends JPanel implements Runnable {
     }
 
     private void drawYTicks(Graphics2D g2d, FontMetrics metrics, double dataMinY, double dataMaxY, double scale,
-            double offsetY, double axisXPx, double tickStep) {
+                            double offsetY, double axisXPx, double tickStep) {
         double firstTick = Math.ceil(dataMinY / tickStep) * tickStep;
         double lastTick = Math.floor(dataMaxY / tickStep) * tickStep;
         int axisX = (int) Math.round(axisXPx);
@@ -454,7 +521,7 @@ public class ScatterPlot extends JPanel implements Runnable {
     }
 
     private void drawHoverTooltip(Graphics2D g2d, double dataMinX, double dataMinY, double yScale, double offsetX,
-            double offsetY, double negW, double xScaleNeg, double xScalePos, double zeroXPx) {
+                                  double offsetY, double negW, double xScaleNeg, double xScalePos, double zeroXPx) {
         if (!showToolTip || toolTipIndex < 0 || toolTipIndex >= sampledData.length) {
             return;
         }

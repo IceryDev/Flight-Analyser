@@ -48,3 +48,7 @@ java -jar <path to jar file>
 ```
 
 Make sure the `.env` is in the same directory you are running from.
+
+## Running the Windows Release
+
+Head to Releases tab and download the ZIP file. Extract all the files, fill in the environment variables with the instructions above in the .env file available within the folder.

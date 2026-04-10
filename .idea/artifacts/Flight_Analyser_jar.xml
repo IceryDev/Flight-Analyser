@@ -1,0 +1,15 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Flight-Analyser:jar">
+    <output-path>$USER_HOME$/Desktop</output-path>
+    <root id="archive" name="Flight-Analyser.jar">
+      <element id="module-output" name="Flight-Analyser" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/github/lgooddatepicker/LGoodDatePicker/11.2.1/LGoodDatePicker-11.2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/sf/geographiclib/GeographicLib-Java/2.1/GeographicLib-Java-2.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/openstreetmap/jmapviewer/jmapviewer/2.24/jmapviewer-2.24.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-annotations/2.21/jackson-annotations-2.21.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/io/github/cdimascio/dotenv-java/3.2.0/dotenv-java-3.2.0.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-core/2.21.1/jackson-core-2.21.1.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-databind/2.21.1/jackson-databind-2.21.1.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

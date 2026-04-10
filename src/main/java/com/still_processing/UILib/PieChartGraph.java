@@ -15,8 +15,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JLabel;
 
 import static com.still_processing.DefaultSettings.Settings.*;
 
