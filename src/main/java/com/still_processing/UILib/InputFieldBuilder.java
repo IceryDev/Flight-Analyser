@@ -9,12 +9,13 @@ import static com.still_processing.DefaultSettings.Settings.BACKGROUND;
 import static com.still_processing.DefaultSettings.Settings.GRAY;
 
 /**
+ * A concrete builder to create a input field
+ *
  * @author Deea Zaharia
  */
-
 public class InputFieldBuilder {
 
-    private final int[] size = {200, 30};
+    private final int[] size = { 200, 30 };
 
     private int fontSize = FONT_SIZE;
     private Font font = REGULAR_FONT;
@@ -106,5 +107,3 @@ public class InputFieldBuilder {
     }
 
 }
-
-

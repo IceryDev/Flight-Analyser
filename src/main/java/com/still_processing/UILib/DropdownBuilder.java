@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.Font;
 
 /**
+ * A concrete builder class for creating a dropdown component
  *
  * @author Jagoda Koczwara-Szuba
  */

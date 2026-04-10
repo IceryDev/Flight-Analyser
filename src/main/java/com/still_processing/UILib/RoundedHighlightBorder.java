@@ -17,7 +17,8 @@ import javax.swing.border.AbstractBorder;
  */
 public final class RoundedHighlightBorder {
 
-    private RoundedHighlightBorder() {}
+    private RoundedHighlightBorder() {
+    }
 
     public static AbstractBorder getRoundedBorder(Color color) {
         return new AbstractBorder() {

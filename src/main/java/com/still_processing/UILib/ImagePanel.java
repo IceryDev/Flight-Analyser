@@ -9,6 +9,11 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
+/**
+ * Custom JPanel to display images
+ *
+ * @author Zhou Sun
+ */
 public class ImagePanel extends JPanel {
     private String path = "";
     private int width = 100;

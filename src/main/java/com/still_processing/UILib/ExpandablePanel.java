@@ -27,7 +27,10 @@ import com.still_processing.FlightData.Utils.MapHandler;
 import static com.still_processing.DefaultSettings.Settings.*;
 
 /**
- * @author Deea Zaharia, Zhou Sun
+ * Creates the collapsible panel
+ *
+ * @author Deea Zaharia
+ * @author Zhou Sun
  */
 public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
     private final int FPS = 60;
@@ -95,7 +98,7 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
                 : data.iataCode + data.flightNumber;
         this.depTime = data.depTime;
         this.arrTime = data.arrTime;
-        if (this.depTime != null && this.arrTime != null){
+        if (this.depTime != null && this.arrTime != null) {
             int depHour = Integer.parseInt(depTime.substring(0, 2));
             int depMinutes = Integer.parseInt(depTime.substring(3, 5));
             int arrHour = Integer.parseInt(arrTime.substring(0, 2));
@@ -110,8 +113,7 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
                 tripDurationHour += 24;
             }
             this.tripDuration = String.format("%dh%dm  ", tripDurationHour, tripDurationMinutes);
-        }
-        else{
+        } else {
             this.depTime = data.origin.country;
             this.arrTime = data.dest.country;
             this.tripDuration = "LIVE  ";
@@ -551,6 +553,11 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
     public void mouseReleased(MouseEvent e) {
     }
 
+    /**
+     * Creates the toggle button in the collapsible panel
+     *
+     * @author Zhou Sun
+     */
     private class ToggleButton extends JPanel {
         private int width;
         private int height;
@@ -590,6 +597,11 @@ public class ExpandablePanel extends JPanel implements Runnable, MouseListener {
         }
     }
 
+    /**
+     * Draws a plane with a line
+     *
+     * @author Zhou Sun
+     */
     private class CustomLine extends JPanel {
         private int width;
         private int height;
