@@ -20,6 +20,7 @@ public class Main {
         CSVHandler.loadOfflineFlightCSV();
         FlightFetcher.getAirlineCodes();
 
+        // OS specific settings
         String os = System.getProperty("os.name");
         if (os.equals("Mac OS X")) {
             System.setProperty("sun.java2d.uiScale", "2.0");

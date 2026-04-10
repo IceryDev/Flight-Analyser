@@ -4,6 +4,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * FuzzySearch functionality with the Levenshtein distance equation
+ */
 public class FuzzySearch {
     public static int partialLevenshtein(String query, String candidate) {
         int queryLength = query.length();

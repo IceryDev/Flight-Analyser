@@ -6,6 +6,11 @@ import java.util.ArrayList;
 
 import com.still_processing.FlightData.FlightInfo;
 
+/**
+ * A filter class with the filter methods
+ * 
+ * @author Zhou Sun
+ */
 public class Filter {
     private ArrayList<FlightInfo> initialList;
 

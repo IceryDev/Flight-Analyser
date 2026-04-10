@@ -46,9 +46,12 @@ import static com.still_processing.DefaultSettings.Settings.*;
 import static com.still_processing.FlightData.Statistics.*;
 
 /**
+ * Draws the Analysis Page
+ *
  * @author Deea Zaharia
  * @author Jagoda Koczwara-Szuba
  * @author Jessica Chen
+ * @author Zhou Sun
  */
 public class AnalysisPanel extends JPanel implements Scrollable, ActionListener {
     JPanel graphDisplay;
@@ -73,6 +76,12 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         this.add(graphDisplay);
     }
 
+    /**
+     * Rerender the graph with updated data
+     * remove/delete the old graphes and adds the new graphes
+     * 
+     * @author Zhou Sun
+     */
     public void refreshGraph() {
         graphDisplay.removeAll();
         this.remove(titlePanel);
@@ -84,6 +93,11 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         repaint();
     }
 
+    /**
+     * Render the graphes based on the filtered data
+     *
+     * @author Zhou Sun
+     */
     public void renderGraph() {
         float[] latenessData = null;
         float[] distance = null;
@@ -139,7 +153,8 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
             }
         }
 
-        if (departureTimeOfDay != null && !departureTimeOfDay.isEmpty() && !departureTimeOfDay.values().stream().allMatch(x -> x == 0)) {
+        if (departureTimeOfDay != null && !departureTimeOfDay.isEmpty()
+                && !departureTimeOfDay.values().stream().allMatch(x -> x == 0)) {
             graphOptionsTemp.add("Departure Times");
         }
 
@@ -307,6 +322,7 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         barChart.setYStep(yStep);
 
         departureTimeGraph = new PieChartGraph(departureTimeOfDay, false);
+        departureTimeGraph.setOpaque(false);
 
         if (scatterPlotData != null && scatterPlotData.data != null && scatterPlotData.data.length != 0) {
             latenessVsDistance = new ScatterPlot(scatterPlotData, "Lateness Against Distance");
@@ -334,12 +350,22 @@ public class AnalysisPanel extends JPanel implements Scrollable, ActionListener 
         this.add(graphDisplay);
     }
 
+    /**
+     * Triggers the graph animations
+     *
+     * @author Deea Zaharia
+     */
     public void startRender() {
         latenessHistogram.animate();
         distanceHistogram.animate();
         barChart.animate();
     }
 
+    /**
+     * Graph selection dropdown
+     *
+     * @author Jagoda Koczwara-Szuba
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         JComboBox<String> dropDown = (JComboBox<String>) e.getSource();

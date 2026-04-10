@@ -14,7 +14,10 @@ import io.github.cdimascio.dotenv.Dotenv;
 /**
  * Some reuseable default settings
  * 
- * @author Zhou Sun, Jagoda Kocszwara-Szuba, Ulaş İçer, Jessica Chen
+ * @author Zhou Sun
+ * @author Jagoda Kocszwara-Szuba
+ * @author Ulaş İçer
+ * @author Jessica Chen
  */
 public class Settings {
     private Settings() {

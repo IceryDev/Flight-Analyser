@@ -11,6 +11,8 @@ import javax.swing.text.DefaultCaret;
 import static com.still_processing.DefaultSettings.Settings.*;
 
 /**
+ * A concrete builder for JTextPane
+ *
  * @author Zhou Sun
  */
 public class TextPaneBuilder {

@@ -45,6 +45,8 @@ import com.still_processing.UILib.RoundedButton;
 import static com.still_processing.DefaultSettings.Settings.*;
 
 /**
+ * Draws the home page
+ *
  * @author Zhou Sun
  * @author Deea Zaharia
  * @author Marco Fontana
@@ -311,6 +313,11 @@ public class HomePage extends JPanel implements Scrollable {
         this.add(Box.createVerticalGlue());
     }
 
+    /**
+     * Syncs the search bar to search term variables
+     *
+     * @author Zhou Sun
+     */
     public void updateSearchBar() {
         originInput.setText(originAirport);
         destInput.setText(destAirport);

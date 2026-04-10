@@ -28,7 +28,10 @@ import com.still_processing.UILib.TextPaneBuilder;
 import static com.still_processing.DefaultSettings.Settings.*;
 
 /**
- * @author Deea Zaharia, Ulaş İçer
+ * Draws the map page
+ *
+ * @author Deea Zaharia
+ * @author Ulaş İçer
  */
 public class MapPanel extends JPanel {
 

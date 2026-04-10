@@ -22,9 +22,12 @@ import com.still_processing.FlightData.Utils.LiveDataHandler;
 import com.still_processing.UILib.ScrollPaneFactory;
 
 /**
- * @author Deea Zaharia, Jagoda Koczwara-Szuba, Zhou Sun
+ * Draw the window for the application
+ *
+ * @author Deea Zaharia
+ * @author Jagoda Koczwara-Szuba
+ * @author Zhou Sun
  */
-
 public class MainWindow extends JFrame implements ActionListener {
     private CardLayout cardLayout = new CardLayout();
     private JPanel cards = new JPanel(cardLayout);
@@ -77,9 +80,10 @@ public class MainWindow extends JFrame implements ActionListener {
     }
 
     /**
+     * Scene switch ActionListener
+     *
      * @author Deea Zaharia
      */
-
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {

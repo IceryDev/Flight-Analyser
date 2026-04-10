@@ -22,15 +22,8 @@ import static com.still_processing.DefaultSettings.Settings.*;
  * Create the histogram (subclass of JPanel)
  * 
  * @author Zhou Sun
- */
-
-/**
- * Restrict drawing of the chart if there is no data (null)
- * Add in error "result not found" image
- *
  * @author Jessica Chen
  */
-
 public class Histogram extends JPanel implements Runnable, Graph {
     // Variable parameters to parse data
     private float[] data = null;
