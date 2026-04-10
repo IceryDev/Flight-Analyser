@@ -1,6 +1,7 @@
 # Flight Analyser by Still Processing (Group 13)
 
 ## Programming Project
+[Repository Link for Offline Submission](https://github.com/IceryDev/Flight-Analyser)
 
 ### Team Members:
 - Ulaş İçer (IceryDev)
@@ -51,4 +52,4 @@ Make sure the `.env` is in the same directory you are running from.
 
 ## Running the Windows Release
 
-Head to Releases tab and download the ZIP file. Extract all the files, fill in the environment variables with the instructions above in the .env file available within the folder.
+Head to [Releases](https://github.com/IceryDev/Flight-Analyser/releases) tab and download the ZIP file. Extract all the files, fill in the environment variables with the instructions above in the .env file available within the folder.
